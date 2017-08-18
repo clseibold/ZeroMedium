@@ -1,0 +1,2 @@
+# ZeroMedium
+Medium for ZeroNet
