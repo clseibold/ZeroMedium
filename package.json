@@ -1,0 +1,33 @@
+{
+  "name": "18gaqewn4b7uum6rvjl2zh9oe4vfcntm18",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/krixano/ZeroMedium.git"
+  },
+  "keywords": [],
+  "author": "Christian Seibold",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/krixano/ZeroMedium/issues"
+  },
+  "homepage": "https://github.com/krixano/ZeroMedium#readme",
+  "description": "",
+  "devDependencies": {
+    "browserify": "^14.4.0",
+    "gulp": "^3.9.1",
+    "gulp-sourcemaps": "^2.6.1",
+    "gulp-typescript": "^3.2.2",
+    "gulp-uglify": "^3.0.0",
+    "gulp-util": "^3.0.8",
+    "tsify": "^3.0.1",
+    "typescript": "^2.5.2",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.9.0"
+  }
+}

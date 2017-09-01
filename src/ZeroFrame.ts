@@ -10,9 +10,39 @@ const CMD_PONG = 'pong'
 const CMD_WRAPPER_OPENED_WEBSOCKET = 'wrapperOpenedWebsocket'
 const CMD_WRAPPER_CLOSE_WEBSOCKET = 'wrapperClosedWebsocket'
 
+class SiteInfo {
+    address: string
+    auth_address: string
+    auth_key: string
+    bad_files: number
+    cert_user_id: string // TODO
+    content: any
+    content_updated: boolean
+    feed_follow_num: number
+    next_size_limit: number
+    peers: number
+    privatekey: boolean
+    settings: any
+    size_limit: number
+    started_task_num: number
+    tasks: number
+    workers: number
+}
+
+class Message {
+    cmd: string
+    id: number
+    params: any // object, TOOD: Make this a type?
+}
+
 class ZeroFrame {
-    constructor(url) {
-        this.url = url
+    waiting_cb: any
+    wrapper_nonce: string
+    next_message_id: number
+    target: Window
+
+    constructor(public url: string = null) {
+        //this.url = url
         this.waiting_cb = {}
         this.wrapper_nonce = document.location.href.replace(/.*wrapper_nonce=([A-Za-z0-9]+).*/, "$1")
         this.connect()
@@ -30,8 +60,8 @@ class ZeroFrame {
         this.cmd(CMD_INNER_READY)
     }
 
-    onMessage(e) {
-        let message = e.data
+    onMessage(e: any) { // TODO e should have a type (e.data must be of type Message)
+        let message = e.data // print out e
         let cmd = message.cmd
         if (cmd === CMD_RESPONSE) {
             if (this.waiting_cb[message.to] !== undefined) {
@@ -53,7 +83,7 @@ class ZeroFrame {
         }
     }
 
-    onRequest(cmd, message) {
+    onRequest(cmd: string, message: Message) { // TODO: message should have a type
         this.log("Unknown request", message)
     }
 
@@ -65,14 +95,14 @@ class ZeroFrame {
         })
     }
 
-    cmd(cmd, params={}, cb=null) {
+    cmd(cmd: string, params={}, cb: Function = null) {
         this.send({
             cmd: cmd,
             params: params
         }, cb)
     }
 
-    cmdp(cmd, params={}) {
+    cmdp(cmd: string, params={}) {
         return new Promise((resolve, reject) => {
             this.cmd(cmd, params, (res) => {
                 if (res.error) {
@@ -84,7 +114,7 @@ class ZeroFrame {
         })
     }
 
-    send(message, cb=null) {
+    send(message, cb: Function = null) { // TODO
         message.wrapper_nonce = this.wrapper_nonce
         message.id = this.next_message_id
         this.next_message_id++
@@ -94,7 +124,7 @@ class ZeroFrame {
         }
     }
 
-    log(...args) {
+    log(...args: any[]) {
         console.log.apply(console, ['[ZeroFrame]'].concat(args))
     }
 
@@ -113,12 +143,23 @@ class ZeroFrame {
 }
 
 class ZeroFakeXMLHttpRequest {
+    path: any
+    status: number
+    statusText: string
+    readyState: number
+    response: any
+    responseType: string
+    responseText: string
+    onload: Function
+    onreadystatechange: Function
+    zero_frame: any
+
     open (method, path) {
         this.path = path
         this.zero_frame = ZeroFakeXMLHttpRequest.zero_frame
     }
 
-    onResult (res) {
+    onResult (res: string) {
         this.status = 200
         this.statusText = "200 OK"
         this.readyState = 4 // Done
@@ -141,7 +182,9 @@ class ZeroFakeXMLHttpRequest {
     }
 
     send () {
-        this.zero_frame.cmd("fileGet", this.path, (res) => this.onResult(res))
+        this.zero_frame.cmd("fileGet", this.path, (res: string) => this.onResult(res))
 
     }
 }
+
+export {ZeroFrame, SiteInfo, Message};

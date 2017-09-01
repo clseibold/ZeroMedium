@@ -6,22 +6,26 @@
  "cloned_from": "1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D",
  "description": "",
  "files": {
-  "index.html": {
-   "sha512": "b47188737048fb958728dd1eb429f4f786e061db1e1f6529b4db58b60150f261",
-   "size": 1112
+  "README.md": {
+   "sha512": "6da2c8503a1734ea361ac923a4cc855981d4553b2d23a069a90b0f0eb4cb8f7f",
+   "size": 174
   },
-  "js/ZeroFrame.js": {
-   "sha512": "8bc18006f7bb457cca2338239ea345bc1db54a664b4bc9b8a34f4e4133d1776b",
-   "size": 3816
+  "index.html": {
+   "sha512": "278b52b1389d37895837d1798384d36066d271241d34a31ee9e0c529e765d850",
+   "size": 483
+  },
+  "js/bundle.js": {
+   "sha512": "ca8124434d9220088b00de77c7fa34de0d0382771cde57bff79825697620f1a9",
+   "size": 8117
   }
  },
- "ignore": "",
+ "ignore": "(node_modules|src|gulpfile.js|tsconfig.json|package(-lock)?.json|.gitignore|.git|.*map)",
  "inner_path": "content.json",
- "modified": 1503007115,
+ "modified": 1504290659,
  "postmessage_nonce_security": true,
  "signers_sign": "G+REVlm5udlHvEQb0T6Dnhc6o9aUlnPwOGHERBudgPO1K19N0TYDFq0nDTrcwCS+xF3DvtlUyfGd4I1YpURaRrw=",
  "signs": {
-  "18GAQeWN4B7Uum6rvJL2zh9oe4VfcnTM18": "G8S17RL9c2XKbz6D3oKxp2ifKz08yw5WJ9EooPjfJQauOoVro88Rlkf9sTAWIgl6QCrT4rV+Qqjs4Hfs1VkPzz8="
+  "18GAQeWN4B7Uum6rvJL2zh9oe4VfcnTM18": "G8jALqP1JokXoR/C1u1++hYwxVjObgum1AJI+cpYHKAVU/ealqaktQGsofMQkRhQf34IT4/BeV1Rcmealp5GqmM="
  },
  "signs_required": 1,
  "title": "my new site",
