@@ -2,6 +2,8 @@
 // Version 1.1.0 (2017-08-02) - Added cmdp function that returns promise instead of using callback
 // Version 1.2.0 (2017-08-02) - Added Ajax monkey patch to emulate XMLHttpRequest over ZeroFrame API
 
+declare var Promise: any;
+
 const CMD_INNER_READY = 'innerReady'
 const CMD_RESPONSE = 'response'
 const CMD_WRAPPER_READY = 'wrapperReady'
@@ -87,7 +89,7 @@ class ZeroFrame {
         this.log("Unknown request", message)
     }
 
-    response(to, result) {
+    response(to: any, result: any) {
         this.send({
             cmd: CMD_RESPONSE,
             to: to,
@@ -103,8 +105,8 @@ class ZeroFrame {
     }
 
     cmdp(cmd: string, params={}) {
-        return new Promise((resolve, reject) => {
-            this.cmd(cmd, params, (res) => {
+        return new Promise((resolve: any, reject: any) => {
+            this.cmd(cmd, params, (res: any) => {
                 if (res.error) {
                     reject(res.error)
                 } else {
@@ -114,7 +116,7 @@ class ZeroFrame {
         })
     }
 
-    send(message, cb: Function = null) { // TODO
+    send(message: any, cb: Function = null) { // TODO
         message.wrapper_nonce = this.wrapper_nonce
         message.id = this.next_message_id
         this.next_message_id++
@@ -137,8 +139,9 @@ class ZeroFrame {
     }
 
     monkeyPatchAjax() {
-        window.XMLHttpRequest = ZeroFakeXMLHttpRequest
-        ZeroFakeXMLHttpRequest.zero_frame = this
+        (<any>window).XMLHttpRequest = ZeroFakeXMLHttpRequest;
+        //ZeroFakeXMLHttpRequest.zero_frame = this
+        (<any>ZeroFakeXMLHttpRequest).zero_frame = this;
     }
 }
 
@@ -154,9 +157,9 @@ class ZeroFakeXMLHttpRequest {
     onreadystatechange: Function
     zero_frame: any
 
-    open (method, path) {
+    open (method: any, path: any) {
         this.path = path
-        this.zero_frame = ZeroFakeXMLHttpRequest.zero_frame
+        this.zero_frame = (<any>ZeroFakeXMLHttpRequest).zero_frame;
     }
 
     onResult (res: string) {
@@ -169,17 +172,17 @@ class ZeroFakeXMLHttpRequest {
         if (this.onreadystatechange) this.onreadystatechange()
     }
 
-    setRequestHeader (key, val) {
+    setRequestHeader (key: any, val: any) {
         return
     }
 
-    getAllResponseHeaders () {
+    /*getAllResponseHeaders (): string {
         return ""
     }
 
-    getAllResponseHeaders (name) {
+    getAllResponseHeaders (name: any): any {
         return null
-    }
+    }*/
 
     send () {
         this.zero_frame.cmd("fileGet", this.path, (res: string) => this.onResult(res))

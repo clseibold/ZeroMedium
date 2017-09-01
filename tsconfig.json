@@ -4,7 +4,7 @@
         "src/greet.ts"
     ],
     "compilerOptions": {
-        "noImplicitAny": true,
+        //"noImplicitAny": true,
         "target": "es5",
         "allowJs": true,
         "allowSyntheticDefaultImports": true

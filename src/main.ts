@@ -6,7 +6,7 @@ import * as Vue from "vue/dist/vue.min.js";
 
 let app = new Vue({
     el: "#app",
-    template: '<p>Hello to {{from}}!</p>',
+    template: '<p class="title is-3">Hello to {{from}}!</p>',
     data: {
         from: "[Loading...]"
     }
