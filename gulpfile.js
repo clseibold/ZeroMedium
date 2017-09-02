@@ -16,7 +16,7 @@ var concat = require("gulp-concat");
 var paths = {
     pages: ['src/**/*.html'],
     styles: ['src/sass/**/*.sass'],
-    scripts: ['src/**/*.js']
+    scripts: ['src/**/*.ts', 'src/**/*.js']
 };
 
 gulp.task("html", function() {
@@ -60,7 +60,7 @@ gulp.task('watch', function() {
     gulp.watch(paths.pages, ['html']);
 });
 
-gulp.task("default", ["watch"]);
+gulp.task("default", ["scripts", "styles", "html", "watch"]);
 
 /*var watchedBrowserify = watchify(browserify({
     basedir: '.',
