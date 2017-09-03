@@ -3,3 +3,6 @@ js/
 css/
 sass/
 index.html
+
+data/
+content.json

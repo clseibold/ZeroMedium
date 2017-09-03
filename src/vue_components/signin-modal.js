@@ -34,6 +34,13 @@ Vue.component('signin-modal', {
                 });
             });
         },
+        newUserData: function(name = null, about = null, interests = null) {
+            return {
+                name: name,
+                about: about,
+                interests: interests
+            }
+        },
         createId: function(from) {
             if (from == 'zeroid') {
                 page.cmd("wrapperOpenWindow", ["../zeroid.bit", "_blank"]);
@@ -70,10 +77,7 @@ Vue.component('signin-modal', {
                 if (exists) {
                     that.close();
                 } else {
-                    data = {
-                        "name": that.name,
-                        "about": that.about
-                    };
+                    data = that.newUserData(that.name, that.about);
 
                     var json_raw = unescape(encodeURIComponent(JSON.stringify(data, undefined, '\t')));
 

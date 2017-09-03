@@ -1,6 +1,6 @@
 {
     "db_name": "ZeroNetDevCenter",
-    "db_file": "data/zeronetdevcenter.db",
+    "db_file": "data/zeromedium.db",
     "version": 2,
     "maps": {
         "tutorials.json": {
