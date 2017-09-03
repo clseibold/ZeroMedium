@@ -152,4 +152,4 @@ function generateRouteLinkHTML(to, display, tagClass = "", tagStyle = "") {
 	return link;
 }
 
-export { Router, generateRouteLinkHTML }
+module.exports = Router;

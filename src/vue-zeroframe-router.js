@@ -71,4 +71,7 @@ function VueZeroFrameRouter_Init(Router, vueInstance, routes) {
 	Router.init();
 }
 
-export { VueZeroFrameRouter, VueZeroFrameRouter_Init }
+module.exports = {
+	VueZeroFrameRouter: VueZeroFrameRouter,
+	VueZeroFrameRouter_Init: VueZeroFrameRouter_Init
+}

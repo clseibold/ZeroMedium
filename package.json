@@ -19,6 +19,7 @@
   "description": "",
   "devDependencies": {
     "browserify": "^14.4.0",
+    "browserify-shim": "^3.8.14",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^4.0.0",
     "gulp-concat": "^2.6.1",
@@ -37,5 +38,16 @@
   "dependencies": {
     "bulma": "^0.5.1",
     "vue": "^2.4.2"
+  },
+  "browser": {
+    "vue": "vue/dist/vue.common.js"
+  },
+  "browserify-shim": {
+    "jquery": "$"
+  },
+  "browserify": {
+    "transform": [
+      "browserify-shim"
+    ]
   }
 }

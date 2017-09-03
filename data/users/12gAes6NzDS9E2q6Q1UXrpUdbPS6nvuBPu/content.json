@@ -1,0 +1,17 @@
+{
+ "address": "18GAQeWN4B7Uum6rvJL2zh9oe4VfcnTM18",
+ "cert_auth_type": "web",
+ "cert_sign": null,
+ "cert_user_id": "krixano@zeroid.bit",
+ "files": {
+  "data.json": {
+   "sha512": "36ac01b368e295880905a077b5ce02de4d527fe89fc3e162103a70bf16912edf",
+   "size": 45
+  }
+ },
+ "inner_path": "data/users/12gAes6NzDS9E2q6Q1UXrpUdbPS6nvuBPu/content.json",
+ "modified": 1504396656,
+ "signs": {
+  "12gAes6NzDS9E2q6Q1UXrpUdbPS6nvuBPu": "HO27oJiQWmg4pbIK4PTJHIIslyFubD6E/1fMEDYUyOtoOUXelIkCY1f0D9YJqfVlTyWe6ua09fydarMXk/Z1aJM="
+ }
+}

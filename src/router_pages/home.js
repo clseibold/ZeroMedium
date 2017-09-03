@@ -1,9 +1,10 @@
-import * as Vue from "vue/dist/vue.min.js";
+var Vue = require("vue/dist/vue.min.js");
 
 let Home = {
     methods: {
-        toggleSigninModal: function() {
-            this.signin_modal_visible = !this.signin_modal_visible;
+        showSigninModal: function() {
+            //this.signin_modal_visible = !this.signin_modal_visible;
+            this.$emit('show-signin-modal');
         }
     },
     data: function() {
@@ -18,16 +19,16 @@ let Home = {
                         <!-- Categories -->
                         <a class="navbar-item is-active">Home</a>
                         <a class="navbar-item">Popular</a>
+                        <a class="navbar-item">Staff Picks</a>
                         <a class="navbar-item">Technology</a>
                         <a class="navbar-item">Politics</a>
                         <a class="navbar-item">Creativity</a>
                         <a class="navbar-item">Programming</a>
                         <a class="navbar-item">Culture</a>
-                        <a class="navbar-item">Staff Picks</a>
                     </div>
                 </div>
             </nav>
-            <home-hero></home-hero>
+            <home-hero v-on:show-signin-modal="showSigninModal()"></home-hero>
             <section class="section">
                 <div class="container">
                     <p class="title is-4" style="border-bottom: 1px solid #AAAAAA; padding-bottom: 10px;">Today's Top Stories</p>
@@ -38,6 +39,11 @@ let Home = {
 };
 
 Vue.component('home-hero', {
+    methods: {
+        showSigninModal: function() {
+            this.$emit("show-signin-modal");
+        }
+    },
     template: `
         <div class="hero">
             <div class="container">
@@ -45,7 +51,7 @@ Vue.component('home-hero', {
                     <p class="title">ZeroMedium</p>
                     <p>Blogs on many different topics, from many different people.</p>
                     <br>
-                    <a class="button is-dark is-small">Get Started</a>
+                    <a class="button is-dark is-small" v-on:click.prevent="showSigninModal()">Get Started</a>
                     <a class="button is-small">Learn More</a>
                 </div>
             </div>
@@ -53,4 +59,4 @@ Vue.component('home-hero', {
         `
 });
 
-export { Home }
+module.exports = Home;

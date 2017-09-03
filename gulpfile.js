@@ -16,7 +16,7 @@ var concat = require("gulp-concat");
 var paths = {
     pages: ['src/**/*.html'],
     styles: ['src/sass/**/*.sass'],
-    scripts: ['src/**/*.ts', 'src/**/*.js']
+    scripts: ['src/**/*.js']
 };
 
 gulp.task("html", function() {
@@ -40,16 +40,17 @@ gulp.task("scripts", function() {
     return browserify({
         basedir: '.',
         debug: true,
-        entries: ['src/main.ts'],
+        entries: ['src/main.js'],
         cache: {},
-        packageCache: {}
+        packageCache: {},
+        insertGlobals: true
     })
-    .plugin(tsify)
+    //.plugin(tsify)
     .bundle()
     .pipe(source('bundle.js'))
     .pipe(buffer())
     .pipe(sourcemaps.init({loadMaps: true}))
-    .pipe(uglify())
+    //.pipe(uglify())
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest("./js/"));
 });

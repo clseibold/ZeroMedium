@@ -11,28 +11,40 @@
    "size": 174
   },
   "css/main.css": {
-   "sha512": "4a792c7db053b985e00af67babe6a9916f85d50ead8879b4eea2fce85d814991",
-   "size": 122910
+   "sha512": "4b614a6ec9a98302e61724f31a70e0d0816f41cbdf2f212ef30a143967e7f18e",
+   "size": 122964
+  },
+  "dbschema.json": {
+   "sha512": "f1c86eb112b884f3afc958b97e8ce80bcc69a30c0388cbd0a08d3fa06125e4fb",
+   "size": 1077
   },
   "index.html": {
    "sha512": "3dfe3134f39c98cb0cd452b8d35485611f172fbf19a10bd798d5824ed8e842b2",
    "size": 518
   },
   "js/bundle.js": {
-   "sha512": "24255dc4e98b26d9fb2793d4ec76abf9ee1c12d1940cc3a309e73165073ebed6",
-   "size": 85714
+   "sha512": "97e2baf25a788f02ce9b9744ebeee150e8f59392eedd05b95f6f97c95a73cd6a",
+   "size": 168375
   }
  },
- "ignore": "(node_modules|src|gulpfile.js|tsconfig.json|package(-lock)?.json|.gitignore|.git|.*map)",
+ "ignore": "(data/.*db|data/users/.*/.*|admin|node_modules|src|gulpfile.js|tsconfig.json|package(-lock)?.json|.gitignore|.git|.*map)",
+ "includes": {
+  "data/users/content.json": {
+   "current_size": 0,
+   "signers": [],
+   "signers_required": 1
+  }
+ },
  "inner_path": "content.json",
- "modified": 1504302466,
+ "modified": 1504396192,
  "postmessage_nonce_security": true,
  "signers_sign": "G+REVlm5udlHvEQb0T6Dnhc6o9aUlnPwOGHERBudgPO1K19N0TYDFq0nDTrcwCS+xF3DvtlUyfGd4I1YpURaRrw=",
  "signs": {
-  "18GAQeWN4B7Uum6rvJL2zh9oe4VfcnTM18": "GwsJpx/8C/h8gPvivZyPno8tb/q2X7b4CIdcqWcfxTtUMzVAjsDK7Yujzx1EiZBjvuVudIjQPzXjHFh31ASnLmI="
+  "18GAQeWN4B7Uum6rvJL2zh9oe4VfcnTM18": "G/4VQAsE1pQYcQ3IPRpEisB9uvRUukFb4s3/+BhTBMvAR54w1oNiSfLtU5f65Nyv8Tee73RW4Qa4Ls4fi+uBi78="
  },
  "signs_required": 1,
  "title": "my new site",
  "translate": ["js/all.js"],
+ "viewport": "width=device-width, initial-scale=1.0, shrink-to-fit=no",
  "zeronet_version": "0.5.7"
 }
