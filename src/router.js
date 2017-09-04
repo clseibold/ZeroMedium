@@ -1,6 +1,7 @@
 var Router = {
 	routes: [],
 	currentRoute: '',
+	currentParams: {},
 	root: '/',
 	notFoundFunction: null,
 	hookFunctions: {}, // hooks that are called for each route, functions for 'before' and 'after'.
@@ -10,7 +11,7 @@ var Router = {
 	},
 	getURL: function() { // get's current query string/hash & clears slashes from beginning and end, Note: only for initial load
 		var url = '';
-		url = window.location.search.replace(/&wrapper_nonce=([A-Za-z0-9]+)/, "").replace(/\?\//, '');
+		url = window.location.search.replace(/&wrapper_nonce=([A-Za-z0-9]+)/, "").replace(/\?wrapper_nonce=([A-Za-z0-9]+)/, "").replace(/\?\//, ''); // TODO: Fix this to replace the root instead of just a slash
 		return this.clearSlashes(url);
 	},
 	clearSlashes: function(path) {
@@ -56,6 +57,7 @@ var Router = {
 					object = this.routes[i].object;
 					object.params = routeParams;
 				}
+				this.currentParams = routeParams;
 				// Call 'before' hook
 				if (this.hookFunctions && this.hookFunctions["before"]) { // TODO: Move this into navigate function?
 					if (!this.hookFunctions["before"].call(object, this.routes[i].path, routeParams)) {
@@ -134,6 +136,12 @@ var Router = {
 
 // Note: Call right after creating all of your routes.
 Router.init = function() {
+	// if '?/' isn't on address - add it
+	var address = window.location.search.replace(/&wrapper_nonce=([A-Za-z0-9]+)/, "").replace(/\?wrapper_nonce=([A-Za-z0-9]+)/, ""); // TODO: Fix this to replace the root instead of just a slash
+	if (address == '') {
+		page.cmd('wrapperPushState', [{"route": ''}, null, this.root]);
+	}
+	// Resolve the initial route
 	Router.check(Router.getURL());
 }
 

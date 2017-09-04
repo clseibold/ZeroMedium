@@ -3,22 +3,12 @@
     "db_file": "data/zeromedium.db",
     "version": 2,
     "maps": {
-        "tutorials.json": {
-            "to_table": [
-                {
-                    "node": "tutorials",
-                    "table": "tutorials"
-                }
-            ]
-        },
-        "blog.json": {
-            "to_table": ["blogposts"]
-        },
-        "tags.json": {
-            "to_table": ["tags"]
+        "topics.json": {
+            "to_table": ["topics"]
         },
         "users/.+/data.json": {
-            "to_keyvalue": [ "name", "about", "interests" ]
+            "to_table": ["stories"],
+            "to_keyvalue": [ "next_story_id", "name", "about", "interests" ]
         },
         "users/.+/content.json": {
             "to_json_table": ["cert_user_id"],
@@ -35,6 +25,31 @@
             ],
             "indexes": ["CREATE UNIQUE INDEX path ON json(directory, file_name)"],
             "schema_changed": 12
+        },
+        "topics": {
+            "cols": [
+                ["topic_id", "INTEGER PRIMARY KEY"],
+                ["name", "TEXT"],
+                ["slug", "TEXT"],
+                ["json_id", "INTEGER REFERENCES json (json_id)"]
+            ],
+            "indexes": ["CREATE UNIQUE INDEX tag_key ON topics (json_id, topic_id)"],
+            "schema_changed": 12
+        },
+        "stories": {
+            "cols": [
+                ["story_id", "INTEGER"],
+                ["title", "TEXT"],
+                ["slug", "TEXT"],
+                ["description", "TEXT"],
+                ["body", "TEXT"],
+                ["tags", "TEXT"],
+                ["date_updated", "INTEGER"],
+                ["date_added", "INTEGER"],
+                ["json_id", "INTEGER REFERENCES json (json_id)"]
+            ],
+            "indexes": ["CREATE UNIQUE INDEX story_key ON stories (json_id, story_id)"],
+            "schema_changed": 13
         }
     }
 }

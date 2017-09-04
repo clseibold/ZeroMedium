@@ -37,6 +37,9 @@
   },
   "dependencies": {
     "bulma": "^0.5.1",
+    "medium-editor": "^5.23.2",
+    "moment": "^2.18.1",
+    "sanitize-html": "^1.14.1",
     "vue": "^2.4.2"
   },
   "browser": {
