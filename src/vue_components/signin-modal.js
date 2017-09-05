@@ -8,13 +8,19 @@ Vue.component('signin-modal', {
         this.slideTitle = "";
         this.name = "";
         this.about = "";
+        var that = this;
+        page.getTopics((topics) => {
+            that.topics = topics;
+        });
     },
     data: function() {
         return {
             currentSlide: 0,
             slideTitle: "",
             name: "",
-            about: ""
+            about: "",
+            topics: [],
+            interests: []
         }
     },
     methods: {
@@ -83,6 +89,8 @@ Vue.component('signin-modal', {
 
                     page.cmd("fileWrite", [data_inner_path, btoa(json_raw)], (res) => {
                         if (res == "ok") {
+                            // Get user info again
+                            that.$emit('get-user-info'); // TODO
                             page.cmd("siteSign", {"inner_path": content_inner_path}, (res) => {
                                 page.cmd("sitePublish", {"inner_path": content_inner_path, "sign": false});
                             });
@@ -127,7 +135,10 @@ Vue.component('signin-modal', {
 
                     <button class="button" v-on:click.prevent="showNext()">Next</button>
                 </section>
-                <section class="modal-card-body" v-if="currentSlide == 2">
+                <section class="modal-card-body" v-if="currentSlide == 2 && topics">
+                    <div v-for="topic in topics" :key="topic.slug">
+                        <a style="margin-right: 10px;">{{ topic.name }}</a>
+                    </div>
                     <button class="button" v-on:click.prevent="finish()">Finish</button>
                 </section>
             </div>

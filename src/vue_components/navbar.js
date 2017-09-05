@@ -49,13 +49,13 @@ Vue.component('custom-nav', {
                     </div>
                     <div class="navbar-menu" v-bind:class="{ 'is-active': menuShown }">
                         <div class="navbar-start is-hidden-touch">
-                            <a class="navbar-item" href="./?/newstory" v-on:click.prevent="goto('newstory')">Write a story</a>
+                            <a class="navbar-item" href="./?/me/newstory" v-on:click.prevent="goto('me/newstory')">Write a story</a>
                         </div>
                         <div class="navbar-end">
                             <div class="navbar-item has-dropdown is-hoverable">
                                 <a class="navbar-link">{{ userInfo ? userInfo.keyvalue.name : "" }}</a>
                                 <div class="navbar-dropdown is-right">
-                                    <a class="navbar-item" href="./?/newstory" v-on:click.prevent="goto('newstory')">New Story</a>
+                                    <a class="navbar-item" href="./?/me/newstory" v-on:click.prevent="goto('me/newstory')">New Story</a>
                                     <a class="navbar-item" href="./?/me/stories" v-on:click.prevent="goto('me/stories')">Stories</a>
                                     <a class="navbar-item">Series</a>
                                     

@@ -32,6 +32,9 @@ var MeStories = {
 		},
 		getStoryUrl(story) {
 			return this.userInfo.auth_address + '/' + story.slug;
+		},
+		getStoryEditUrl(story) {
+			return 'me/stories/' + story.slug + '/edit';
 		}
 	},
 	template: `
@@ -40,7 +43,7 @@ var MeStories = {
 	            <div class="container">
 	                <div class="hero-body">
 	                    <span class="title">Your Stories</span><br>
-	                    <a href="./?/newstory" v-on:click.prevent="goto('newstory')" class="button is-success is-small is-outlined" style="margin-top: 10px;">Write a story</a>
+	                    <a href="./?/me/newstory" v-on:click.prevent="goto('me/newstory')" class="button is-success is-small is-outlined" style="margin-top: 10px;">Write a story</a>
 	                    <a v-if="userInfo" :href="'./?/' + userInfo.auth_address" v-on:click.prevent="goto(userInfo.auth_address)" class="button is-info is-small is-outlined" style="margin-top: 10px;">Profile</a>
 	                </div>
 	            </div>
@@ -48,8 +51,8 @@ var MeStories = {
 	        <div class="navbar is-transparent has-shadow" style="border-top: 1px solid rgba(0,0,0,.05);">
 				<div class="container">
 				    <div class="navbar-brand" style="overflow-x: hidden;">
-				        <a class="navbar-item is-active is-tab">Drafts</a>
-				        <a class="navbar-item is-tab">Public</a>
+				        <a class="navbar-item is-active is-tab">Public</a>
+				        <!--<a class="navbar-item is-tab">Drafts</a>-->
 				        <a class="navbar-item is-tab">Unlisted</a>
 				    </div>
 				</div>
@@ -57,9 +60,26 @@ var MeStories = {
 			<section class="section" v-if="stories">
 				<div class="container">
 					<div class="box" v-for="story in stories" :key="story.story_id">
-						<p class="title is-5"><a :href="'./?/' + getStoryUrl(story)" v-on:click.prevent="goto(getStoryUrl(story))">{{ story.title }}</p>
-						<p>{{ story.description }}</p>
-						<p><em>You posted {{ datePosted(story.date_added) }}</em></p>
+						<p class="title is-5" style="margin-bottom: 5px;"><a :href="'./?/' + getStoryUrl(story)" v-on:click.prevent="goto(getStoryUrl(story))">{{ story.title }}</p>
+						<p style="margin-bottom: 5px;">{{ story.description }}</p>
+						<small>
+							Published {{ datePosted(story.date_added) }}
+							<div class="dropdown is-hoverable">
+								<div class="dropdown-trigger">
+									<a style="margin-left: 5px;">
+										<span class="icon is-small">
+								        	<i class="fa fa-angle-down" aria-hidden="true"></i>
+								      	</span>
+									</a>
+								</div>
+								<div class="dropdown-menu" id="dropdown-menu" role="menu">
+								    <div class="dropdown-content">
+								    	<a class="dropdown-item" :href="getStoryEditUrl(story)" v-on:click.prevent="goto(getStoryEditUrl(story))">Edit Story</a>
+								    	<a class="dropdown-item">Delete Story</a>
+								    </div>
+								</div>
+							</div>
+						</small>
 					</div>
 				</div>
 			</section>

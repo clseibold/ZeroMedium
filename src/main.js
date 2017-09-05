@@ -22,7 +22,7 @@ var app = new Vue({
     template: `
         <div>
             <custom-nav v-on:show-signin-modal="showSigninModal()" v-bind:user-info="userInfo" v-bind:shadow="navbarShadow"></custom-nav>
-            <component v-bind:is="currentView" v-on:show-signin-modal="showSigninModal()" v-on:navbar-shadow-on="navbarShadowOn()" v-on:navbar-shadow-off="navbarShadowOff()" v-bind:user-info="userInfo"></component>
+            <component v-bind:is="currentView" v-on:show-signin-modal="showSigninModal()" v-on:navbar-shadow-on="navbarShadowOn()" v-on:navbar-shadow-off="navbarShadowOff()" v-on:get-user-info="getUserInfo()" v-bind:user-info="userInfo"></component>
             <signin-modal v-model="signin_modal_active" v-if="signin_modal_active"></signin-modal>
         </div>
         `,
@@ -117,8 +117,11 @@ class ZeroApp extends ZeroFrame {
         var userProfileInfo = {};
         userProfileInfo["auth_address"] = auth_address;
         // Get Keyvalue data
-        page.cmd('dbQuery', ['SELECT key, value FROM keyvalue LEFT JOIN json USING (json_id) WHERE directory="users/' + auth_address + '"'], (rows) => {
-            console.log(rows); // TODO
+        page.cmd('dbQuery', ['SELECT key, value, cert_user_id FROM keyvalue LEFT JOIN json USING (json_id) WHERE directory="users/' + auth_address + '"'], (rows) => {
+            //console.log(rows); // TODO
+            if (rows && rows.length > 0 && rows[0]) {
+                userProfileInfo["cert_user_id"] = rows[0].cert_user_id;
+            }
             for (var i = 0; i < rows.length; i++) {
                 var row = rows[i];
                 if (row.key == 'name') userProfileInfo["name"] = row.value;
@@ -129,7 +132,6 @@ class ZeroApp extends ZeroFrame {
             if (getStoryList) {
                 userProfileInfo["stories"] = [];
                 page.cmd('dbQuery', ['SELECT title, slug, description, tags, date_updated, date_added, cert_user_id FROM stories LEFT JOIN json USING (json_id) WHERE directory="users/' + auth_address + '"'], (stories) => {
-                    userProfileInfo["cert_user_id"] = stories[0].cert_user_id;
                     userProfileInfo["stories"] = stories;
 
                     if (f != null && typeof f == 'function') f(userProfileInfo);
@@ -167,6 +169,7 @@ class ZeroApp extends ZeroFrame {
         page.cmd('fileGet', {"inner_path": data_inner_path, "required": false}, (data) => {
             if (!data) {
                 // TODO: Show registration modal.
+                return;
             } else {
                 data = JSON.parse(data);
             }
@@ -201,9 +204,64 @@ class ZeroApp extends ZeroFrame {
         });
     }
 
+    editStory(story_id, title, description, body, tags, f = null) {
+        if (!app.userInfo || !app.userInfo.cert_user_id) {
+            this.cmd("wrapperNotification", ["info", "Please login to publish."]);
+            page.selectUser(); // TODO: Check if user has data, if not, show the registration modal.
+            return;
+        }
+
+        var data_inner_path = "data/users/" + app.userInfo.auth_address + "/data.json";
+        var content_inner_path = "data/users/" + app.userInfo.auth_address + "/content.json";
+
+        page.cmd('fileGet', {"inner_path": data_inner_path, "required": false}, (data) => {
+            if (!data) {
+                // TODO: Error out
+                console.log("ERROR");
+                return;
+            } else {
+                data = JSON.parse(data);
+            }
+
+            if (!data["stories"]) {
+                // TODO: Error out
+                console.log("ERROR");
+                return;
+            }
+
+            for (var i = 0; i < data["stories"].length; i++) {
+                var story = data["stories"][i];
+                if (story.story_id == story_id) {
+                    story.title = title;
+                    story.slug = sanitizeStringForUrl(title); // TODO: IFFY
+                    story.body = this.sanitizeHtml(body);
+                    story.tags = tags;
+                    story.description = description;
+                    story.date_updated = Date.now();
+                    break;
+                }
+            }
+
+            var json_raw = unescape(encodeURIComponent(JSON.stringify(data, undefined, '\t')));
+
+            page.cmd('fileWrite', [data_inner_path, btoa(json_raw)], (res) => {
+                if (res == "ok") {
+                    page.cmd('siteSign', {"inner_path": content_inner_path}, (res) => {
+                        if (f != null && typeof f == 'function') f();
+                        page.cmd('sitePublish', {"inner_path": content_inner_path, "sign": false});
+                    });
+                }
+            });
+        });
+    }
+
     getStory(auth_address, slug, f = null) {
         // TODO: If two stories have the same title, go with the oldest (ORDER BY ___)
-        page.cmd('dbQuery', ['SELECT title, slug, description, body, tags, date_updated, date_added FROM stories LEFT JOIN json USING (json_id) WHERE directory="users/' + auth_address + '" AND slug="' + slug + '"'], (stories) => {
+        page.cmd('dbQuery', ['SELECT * FROM stories LEFT JOIN json USING (json_id) WHERE directory="users/' + auth_address + '" AND slug="' + slug + '"'], (stories) => {
+            if (!stories || stories.length == 0) {
+                f(null);
+                return;
+            }
             if (f != null && typeof f == 'function') f(stories[0]);
         });
     }
@@ -218,10 +276,12 @@ var Newstory = require("./router_pages/newstory.js");
 var Profile = require("./router_pages/profile.js");
 var ProfileStory = require("./router_pages/profile_story.js");
 var MeStories = require("./router_pages/me_stories.js");
+var EditStory = require("./router_pages/edit_story.js");
 
 VueZeroFrameRouter.VueZeroFrameRouter_Init(Router, app, [
     { route: 'topic/:slug', component: TopicSlug },
-    { route: 'newstory', component: Newstory },
+    { route: 'me/newstory', component: Newstory },
+    { route: 'me/stories/:slug/edit', component: EditStory },
     { route: 'me/stories', component: MeStories },
     { route: ':userauthaddress/:slug', component: ProfileStory },
     { route: ':userauthaddress', component: Profile }, // TODO: Have tabs use '&tab='

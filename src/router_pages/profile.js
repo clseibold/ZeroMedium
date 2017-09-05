@@ -35,9 +35,9 @@ var Profile = {
 				<div class="container" v-if="profileInfo">
 					<p class="title is-4" style="border-bottom: 1px solid #AAAAAA; padding-bottom: 10px;">Latest</p>
 					<div class="box" v-for="story in profileInfo.stories" :key="story.story_id">
-						<p class="title is-5"><a :href="'./?/' + getStoryUrl(story)" v-on:click.prevent="goto(getStoryUrl(story))">{{ story.title }}</a></p>
-						<p>{{ story.description }}</p>
-						<p><em>Posted {{ datePosted(story.date_added) }}</em></p>
+						<p class="title is-5" style="margin-bottom: 5px;"><a :href="'./?/' + getStoryUrl(story)" v-on:click.prevent="goto(getStoryUrl(story))">{{ story.title }}</a></p>
+						<p style="margin-bottom: 5px;">{{ story.description }}</p>
+						<small>Published {{ datePosted(story.date_added) }}</small>
 					</div>
 				</div>
 			</section>

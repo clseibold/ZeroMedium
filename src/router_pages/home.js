@@ -2,7 +2,7 @@ var Vue = require("vue/dist/vue.min.js");
 var Router = require("../router.js");
 
 var Home = {
-    mounted: function() {
+    beforeMount: function() {
         this.$emit("navbar-shadow-off");
         var that = this;
         page.getTopics((topics) => {
