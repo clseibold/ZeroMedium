@@ -32,12 +32,14 @@ var Profile = {
 			<profile-hero :name="profileInfo.name" :about="profileInfo.about" :cert-user-id="profileInfo.cert_user_id"></profile-hero>
 			<profile-navbar></profile-navbar>
 			<section class="section">
-				<div class="container" v-if="profileInfo">
-					<p class="title is-4" style="border-bottom: 1px solid #AAAAAA; padding-bottom: 10px;">Latest</p>
-					<div class="box" v-for="story in profileInfo.stories" :key="story.story_id">
-						<p class="title is-5" style="margin-bottom: 5px;"><a :href="'./?/' + getStoryUrl(story)" v-on:click.prevent="goto(getStoryUrl(story))">{{ story.title }}</a></p>
-						<p style="margin-bottom: 5px;">{{ story.description }}</p>
-						<small>Published {{ datePosted(story.date_added) }}</small>
+				<div class="columns is-centered" v-if="profileInfo">
+					<div class="column is-three-quarters-tablet is-three-quarters-desktop">
+						<p class="title is-4" style="border-bottom: 1px solid #AAAAAA; padding-bottom: 10px;">Latest</p>
+						<div class="box" v-for="story in profileInfo.stories" :key="story.story_id">
+							<p class="title is-5" style="margin-bottom: 5px;"><a :href="'./?/' + getStoryUrl(story)" v-on:click.prevent="goto(getStoryUrl(story))">{{ story.title }}</a></p>
+							<p style="margin-bottom: 5px;">{{ story.description }}</p>
+							<small>Published {{ datePosted(story.date_added) }}</small>
+						</div>
 					</div>
 				</div>
 			</section>
@@ -69,9 +71,9 @@ Vue.component('profile-navbar', {
 			<div class="container">
 			    <div class="navbar-brand" style="overflow-x: hidden;">
 			        <a class="navbar-item is-active is-tab">Profile</a>
-			        <a class="navbar-item is-tab">Latest</a>
+			        <a class="navbar-item is-tab" onclick="page.unimplemented();">Latest</a>
 			        <!--<a class="navbar-item is-tab">Highlights</a>--> <!-- TODO: FUTURE -->
-			        <a class="navbar-item is-tab">Responses</a>
+			        <a class="navbar-item is-tab" onclick="page.unimplemented();">Responses</a>
 			    </div>
 			</div>
 		</div>

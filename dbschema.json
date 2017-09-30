@@ -31,10 +31,11 @@
                 ["topic_id", "INTEGER PRIMARY KEY"],
                 ["name", "TEXT"],
                 ["slug", "TEXT"],
+                ["tags", "TEXT"],
                 ["json_id", "INTEGER REFERENCES json (json_id)"]
             ],
             "indexes": ["CREATE UNIQUE INDEX tag_key ON topics (json_id, topic_id)"],
-            "schema_changed": 12
+            "schema_changed": 13
         },
         "stories": {
             "cols": [

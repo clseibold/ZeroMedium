@@ -31,7 +31,7 @@ var Newstory = {
 			});
 		},
 		save: function(tags, description) {
-			console.log("save");
+			page.unimplemented();
 		}
 	},
 	template: `
@@ -40,10 +40,12 @@ var Newstory = {
 				<span slot="status">{{status}}</span>
 			</editor-nav>
 			<section class="section">
-				<div class="container">
-					<input class="input title" type="text" placeholder="Title" style="border: none; border-left: 1px solid #CCCCCC; background: inherit; box-shadow: none;" v-model="title">
-					<!--<textarea class="textarea" style="border: none; background: inherit; box-shadow: none;" placeholder="Tell your story..."></textarea>-->
-					<div class="editable" placeholder="Tell your story..."></div>
+				<div class="columns is-centered">
+					<div class="column is-three-quarters-tablet is-three-quarters-desktop">
+						<input class="input title" type="text" placeholder="Title" style="border: none; border-left: 1px solid #CCCCCC; background: inherit; box-shadow: none;" v-model="title">
+						<!--<textarea class="textarea" style="border: none; background: inherit; box-shadow: none;" placeholder="Tell your story..."></textarea>-->
+						<div class="editable" placeholder="Tell your story..."></div>
+					</div>
 				</div>
 			</section>
 		</div>

@@ -267,13 +267,32 @@ class ZeroApp extends ZeroFrame {
             if (f != null && typeof f == 'function') f(stories[0]);
         });
     }
+
+    getAllStories(includeTestFunction, f = null) {
+        page.cmd('dbQuery', ['SELECT * FROM stories LEFT JOIN json USING (json_id)'], (stories) => {
+            var storiesToInclude = [];
+            for (var i = 0; i < stories.length; i++) {
+                if (includeTestFunction(stories[i])) {
+                    storiesToInclude.push(stories[i]);
+                }
+            }
+
+            if (f && typeof f == 'function') f(storiesToInclude);
+        });
+    }
+
+    unimplemented() {
+        page.cmd("wrapperNotification", ["info", "Unimplemented!"]);
+    }
 }
 
 page = new ZeroApp();
 
 // Router Pages
 var Home = require("./router_pages/home.js");
+var Search = require("./router_pages/search.js");
 var TopicSlug = require("./router_pages/topic_slug.js");
+var TagSlug = require("./router_pages/tag_slug.js");
 var Newstory = require("./router_pages/newstory.js");
 var Profile = require("./router_pages/profile.js");
 var ProfileStory = require("./router_pages/profile_story.js");
@@ -281,7 +300,9 @@ var MeStories = require("./router_pages/me_stories.js");
 var EditStory = require("./router_pages/edit_story.js");
 
 VueZeroFrameRouter.VueZeroFrameRouter_Init(Router, app, [
+    { route: 'search', component: Search },
     { route: 'topic/:slug', component: TopicSlug },
+    { route: 'tag/:slug', component: TagSlug },
     { route: 'me/newstory', component: Newstory },
     { route: 'me/stories/:slug/edit', component: EditStory },
     { route: 'me/stories', component: MeStories },

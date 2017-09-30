@@ -114,7 +114,7 @@ Vue.component('signin-modal', {
                         }
                     });
                     that.close();
-                    // TODO: Navigate to a certain page after signup
+                    // TODO: Navigate to a certain page after signup?
                 }
             });
         },

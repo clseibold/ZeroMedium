@@ -20,9 +20,11 @@ var ProfileStory = {
 	template: `
 		<div>
 			<section class="section">
-				<div class="container" v-if="profileInfo && story">
-					<p class="title is-3">{{ story.title }}</p>
-					<div v-html="story.body">
+				<div class="columns is-centered" v-if="profileInfo && story">
+					<div class="column is-three-quarters-tablet is-three-quarters-desktop">
+						<p class="title is-3">{{ story.title }}</p>
+						<div v-html="story.body">
+						</div>
 					</div>
 				</div>
 			</section>

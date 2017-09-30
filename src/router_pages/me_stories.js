@@ -30,11 +30,14 @@ var MeStories = {
 		datePosted: function(date) {
 			return moment(date).fromNow();
 		},
-		getStoryUrl(story) {
+		getStoryUrl: function(story) {
 			return this.userInfo.auth_address + '/' + story.slug;
 		},
-		getStoryEditUrl(story) {
+		getStoryEditUrl: function(story) {
 			return 'me/stories/' + story.slug + '/edit';
+		},
+		deleteStory: function(story) {
+			page.unimplemented();
 		}
 	},
 	template: `
@@ -53,33 +56,35 @@ var MeStories = {
 				    <div class="navbar-brand" style="overflow-x: hidden;">
 				        <a class="navbar-item is-active is-tab">Public</a>
 				        <!--<a class="navbar-item is-tab">Drafts</a>-->
-				        <a class="navbar-item is-tab">Unlisted</a>
+				        <a class="navbar-item is-tab" onclick="page.unimplemented();">Unlisted</a>
 				    </div>
 				</div>
 			</div>
 			<section class="section" v-if="stories">
-				<div class="container">
-					<div class="box" v-for="story in stories" :key="story.story_id">
-						<p class="title is-5" style="margin-bottom: 5px;"><a :href="'./?/' + getStoryUrl(story)" v-on:click.prevent="goto(getStoryUrl(story))">{{ story.title }}</p>
-						<p style="margin-bottom: 5px;">{{ story.description }}</p>
-						<small>
-							Published {{ datePosted(story.date_added) }}
-							<div class="dropdown is-hoverable">
-								<div class="dropdown-trigger">
-									<a style="margin-left: 5px;">
-										<span class="icon is-small">
-								        	<i class="fa fa-angle-down" aria-hidden="true"></i>
-								      	</span>
-									</a>
+				<div class="columns is-centered">
+					<div class="column is-three-quarters-tablet is-three-quarters-desktop">
+						<div class="box" v-for="story in stories" :key="story.story_id">
+							<p class="title is-5" style="margin-bottom: 5px;"><a :href="'./?/' + getStoryUrl(story)" v-on:click.prevent="goto(getStoryUrl(story))">{{ story.title }}</p>
+							<p style="margin-bottom: 5px;">{{ story.description }}</p>
+							<small>
+								Published {{ datePosted(story.date_added) }}
+								<div class="dropdown is-hoverable">
+									<div class="dropdown-trigger">
+										<a style="margin-left: 5px;">
+											<span class="icon is-small">
+									        	<i class="fa fa-angle-down" aria-hidden="true"></i>
+									      	</span>
+										</a>
+									</div>
+									<div class="dropdown-menu" id="dropdown-menu" role="menu">
+									    <div class="dropdown-content">
+									    	<a class="dropdown-item" :href="getStoryEditUrl(story)" v-on:click.prevent="goto(getStoryEditUrl(story))">Edit Story</a>
+									    	<a class="dropdown-item" v-on:click.prevent="deleteStory(story)">Delete Story</a>
+									    </div>
+									</div>
 								</div>
-								<div class="dropdown-menu" id="dropdown-menu" role="menu">
-								    <div class="dropdown-content">
-								    	<a class="dropdown-item" :href="getStoryEditUrl(story)" v-on:click.prevent="goto(getStoryEditUrl(story))">Edit Story</a>
-								    	<a class="dropdown-item">Delete Story</a>
-								    </div>
-								</div>
-							</div>
-						</small>
+							</small>
+						</div>
 					</div>
 				</div>
 			</section>
