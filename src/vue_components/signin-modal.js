@@ -102,6 +102,24 @@ Vue.component('signin-modal', {
                     // TODO: Navigate to a certain page after signup
                 }
             });
+        },
+        toggleInterest(name) {
+            for (var i = 0; i < this.interests.length; i++) {
+                if (this.interests[i] == name) {
+                    this.interests.splice(i, 1);
+                    return;
+                }
+            }
+            this.interests.push(name);
+        },
+        isChecked(name) {
+            for (var i = 0; i < this.interests.length; i++) {
+                if (this.interests[i] == name) {
+                    return true;
+                }
+            }
+
+            return false;
         }
     },
     template: `
@@ -136,10 +154,16 @@ Vue.component('signin-modal', {
                     <button class="button" v-on:click.prevent="showNext()">Next</button>
                 </section>
                 <section class="modal-card-body" v-if="currentSlide == 2 && topics">
-                    <div v-for="topic in topics" :key="topic.slug">
-                        <a style="margin-right: 10px;">{{ topic.name }}</a>
+                    <div v-for="topic in topics" :key="topic.slug" style="float: left; margin-right: 10px;">
+                        <a style="margin-right: 10px; display: inline-block;" v-on:click.prevent="toggleInterest(topic.name)">
+                            <span v-if="isChecked(topic.name)" class="icon is-small">
+                                <i class="fa fa-check" aria-hidden="true"></i>
+                            </span>
+                            {{ topic.name }}
+                        </a>
                     </div>
-                    <button class="button" v-on:click.prevent="finish()">Finish</button>
+                    <div style="clear: both;"></div>
+                    <button class="button" v-on:click.prevent="finish()" style="margin-top: 5px;">Finish</button>
                 </section>
             </div>
         </div>
