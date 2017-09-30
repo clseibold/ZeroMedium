@@ -52,8 +52,9 @@ Vue.component('custom-nav', {
                             <a class="navbar-item" href="./?/me/newstory" v-on:click.prevent="goto('me/newstory')">Write a story</a>
                         </div>
                         <div class="navbar-end">
-                            <div class="navbar-item has-dropdown is-hoverable">
+                            <div class="navbar-item has-dropdown is-hoverable" v-if="isLoggedIn">
                                 <a class="navbar-link">{{ userInfo ? userInfo.keyvalue.name : "" }}</a>
+                                <!--<a class="navbar-link" v-on:click.prevent="showSigninModal()" v-else>Sign in / Sign up</a>-->
                                 <div class="navbar-dropdown is-right">
                                     <a class="navbar-item" href="./?/me/newstory" v-on:click.prevent="goto('me/newstory')">New Story</a>
                                     <a class="navbar-item" href="./?/me/stories" v-on:click.prevent="goto('me/stories')">Stories</a>

@@ -21,9 +21,9 @@ var app = new Vue({
     el: "#app",
     template: `
         <div>
-            <custom-nav v-on:show-signin-modal="showSigninModal()" v-bind:user-info="userInfo" v-bind:shadow="navbarShadow"></custom-nav>
+            <custom-nav v-on:show-signin-modal="showSigninModal()" v-on:get-user-info="getUserInfo()" v-bind:user-info="userInfo" v-bind:shadow="navbarShadow"></custom-nav>
             <component v-bind:is="currentView" v-on:show-signin-modal="showSigninModal()" v-on:navbar-shadow-on="navbarShadowOn()" v-on:navbar-shadow-off="navbarShadowOff()" v-on:get-user-info="getUserInfo()" v-bind:user-info="userInfo"></component>
-            <signin-modal v-model="signin_modal_active" v-if="signin_modal_active"></signin-modal>
+            <signin-modal v-model="signin_modal_active" v-on:get-user-info="getUserInfo()" v-if="signin_modal_active" v-bind:user-info="userInfo"></signin-modal>
         </div>
         `,
     data: {
@@ -61,6 +61,7 @@ var app = new Vue({
                     var row = rows[i];
                     keyvalue[row.key] = row.value;
                 }
+                if (!keyvalue.name || keyvalue.name == "") return;
                 that.userInfo = {
                     cert_user_id: that.siteInfo.cert_user_id,
                     auth_address: that.siteInfo.auth_address,
@@ -88,6 +89,7 @@ class ZeroApp extends ZeroFrame {
             this.site_info = message.params;
             //app.from = this.site_info.auth_address;
             app.siteInfo = this.site_info;
+            app.getUserInfo();
         }
         Router.listenForBack(cmd, message);
         console.log(message);
@@ -101,7 +103,7 @@ class ZeroApp extends ZeroFrame {
     selectUser(f = null) {
         this.cmd("certSelect", {accepted_domains: ["zeroid.bit", "kaffie.bit", "cryptoid.bit"]}, () => {
             // TODO: Will this work always?
-            app.getUserInfo();
+            //app.getUserInfo();
             if (f != null && typeof f == 'function') f();
         });
         return false;

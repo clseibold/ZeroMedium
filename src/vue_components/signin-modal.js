@@ -1,13 +1,19 @@
 var Vue = require("vue/dist/vue.min.js");
 
 Vue.component('signin-modal', {
-    props: ['value'],
+    props: ['value', 'userInfo'],
     beforeMount: function() {
-        if (page.site_info.cert_user_id != null) this.close();
+        if (page.site_info.cert_user_id != null && this.userInfo.keyvalue.name) {
+            this.close();
+        }
         this.currentSlide = 0;
         this.slideTitle = "";
         this.name = "";
         this.about = "";
+        if (page.site_info.cert_user_id != null && !this.userInfo.keyvalue.name) {
+            this.currentSlide = 1;
+            this.slideTitle += "Setup Profile";
+        }
         var that = this;
         page.getTopics((topics) => {
             that.topics = topics;
@@ -41,10 +47,18 @@ Vue.component('signin-modal', {
             });
         },
         newUserData: function(name = null, about = null, interests = null) {
+            var interestsString = "";
+            for (i = 0; i < interests.length; i++) {
+                interestsString += interests[i];
+                if (i < interests.length - 1) {
+                    interestsString += ",";
+                }
+            }
+
             return {
                 name: name,
                 about: about,
-                interests: interests
+                interests: interestsString
             }
         },
         createId: function(from) {
@@ -83,16 +97,17 @@ Vue.component('signin-modal', {
                 if (exists) {
                     that.close();
                 } else {
-                    data = that.newUserData(that.name, that.about);
+                    data = that.newUserData(that.name, that.about, that.interests);
 
                     var json_raw = unescape(encodeURIComponent(JSON.stringify(data, undefined, '\t')));
 
                     page.cmd("fileWrite", [data_inner_path, btoa(json_raw)], (res) => {
                         if (res == "ok") {
                             // Get user info again
-                            that.$emit('get-user-info'); // TODO
                             page.cmd("siteSign", {"inner_path": content_inner_path}, (res) => {
-                                page.cmd("sitePublish", {"inner_path": content_inner_path, "sign": false});
+                                page.cmd("sitePublish", {"inner_path": content_inner_path, "sign": false}, () => {
+                                    that.$emit('get-user-info'); // TODO: Doesn't seem to be working
+                                });
                             });
                         } else {
                             page.cmd("wrapperNotification", ["error", "File write error: #{res}"]);
@@ -137,6 +152,7 @@ Vue.component('signin-modal', {
                     <a class="button" style="width: 100%; padding-top: 25px; padding-bottom: 25px; margin-top: 5px;" v-on:click.prevent="createId('cryptoid')">Register with CryptoId</a>
                 </section>
                 <section class="modal-card-body" v-if="currentSlide == 1">
+                    <p><a v-on:click.prevent="signin()">{{ userInfo ? userInfo.cert_user_id : "" }}</a></p>
                     <div class="field">
                         <label class="label">Name</label>
                         <div class="control">
@@ -154,6 +170,7 @@ Vue.component('signin-modal', {
                     <button class="button" v-on:click.prevent="showNext()">Next</button>
                 </section>
                 <section class="modal-card-body" v-if="currentSlide == 2 && topics">
+                    <p><a v-on:click.prevent="signin()">{{ userInfo ? userInfo.cert_user_id : "" }}</a></p>
                     <div v-for="topic in topics" :key="topic.slug" style="float: left; margin-right: 10px;">
                         <a style="margin-right: 10px; display: inline-block;" v-on:click.prevent="toggleInterest(topic.name)">
                             <span v-if="isChecked(topic.name)" class="icon is-small">
