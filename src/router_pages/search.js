@@ -20,7 +20,8 @@ var Search = {
 			topics: [],
 			allStories: [],
 			listedStories: [],
-			searchInput: ""
+			searchInput: "",
+			isSearchStrict: false
 		}
 	},
 	methods: {
@@ -35,7 +36,72 @@ var Search = {
         },
         getStoryAuthAddress(story) {
             return story.directory.replace(/users\//, '').replace(/\//g, '');
-        }
+        },
+        toggleStrictness: function() {
+			this.isSearchStrict = !this.isSearchStrict;
+		}
+	},
+	computed: {
+        getStories() { // TODO: Add ability to search name also
+        	var list = this.allStories;
+			if (this.searchInput == "" || !this.searchInput) return list;
+			var searchInputWords = this.searchInput.trim().split(' '); // TODO
+			var that = this;
+			list = list.filter(function(story) {
+				story.order = 0;
+				var matches = 0;
+				for (var i = 0; i < searchInputWords.length; i++) {
+					var word = searchInputWords[i].trim().toLowerCase();
+					if (story.tags && story.tags.toLowerCase().includes(word)) {
+						story.order += 3;
+						matches++;
+						continue;
+					}
+					if (story.title.toLowerCase().includes(word)) {
+						story.order += 2;
+						matches++;
+						continue;
+					}
+					if (word[0] == "@") {
+						var wordId = word.substring(1, word.length);
+						if (story.cert_user_id.replace(/@.*\.bit/, '').toLowerCase().includes(wordId)) {
+							story.order += 1;
+							matches++;
+							continue;
+						}
+					}
+					if (story.cert_user_id.toLowerCase().includes(word)) {
+						story.order += 1;
+						matches++;
+						continue;
+					}
+					if (story.body.toLowerCase().includes(word)) {
+						continue;
+						matches++;
+					}
+					if (that.isSearchStrict) {
+						return false;
+					} else {
+						story.order--;
+					}
+				}
+				//console.log(that.isSearchStrict);
+				if (!that.isSearchStrict) {
+					if (matches == 0) return false;
+					else return true;
+				} else {
+					return true;
+				}
+			});
+			list.sort(function(a, b) {
+				return b.order - a.order;
+			});
+			return list;
+        },
+        getStrictText: function() {
+			if (this.isSearchStrict) return "Inclusive";
+			else return "Strict";
+		}
 	},
 	template: `
 		<div>
@@ -54,8 +120,9 @@ var Search = {
 								<a href="./?/me/newstory" v-on:click.prevent="goto('me/newstory')" class="button is-primary">Write A Story</route-link>
 							</div>
 						</div>
+						<a class="button is-link" v-on:click.prevent="toggleStrictness()">Use {{ getStrictText }}</a>\
 						<hr>
-						<div class="box" v-for="story in listedStories" :key="story.story_id">
+						<div class="box" v-for="story in getStories" :key="story.story_id">
                             <p class="title is-5" style="margin-bottom: 5px;"><a :href="'./?/' + getStoryUrl(story)" v-on:click.prevent="goto(getStoryUrl(story))">{{ story.title }}</a></p>
                             <p style="margin-bottom: 5px;">{{ story.description }}</p>
                             <small>Published {{ datePosted(story.date_added) }}</small>
