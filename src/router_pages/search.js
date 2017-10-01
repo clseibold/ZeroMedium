@@ -112,7 +112,7 @@ var Search = {
 		<div>
 			<section class="section">
 				<div class="columns is-centered">
-					<div class="column is-three-quarters-tablet is-three-quarters-desktop">
+					<div class="column is-three-quarters-tablet is-half-desktop">
 						<div class="field has-addons">
 							 <p class="control has-icons-left is-expanded">
 								<input type="search" class="input" v-model="searchInput" style="display: inline; margin-bottom: 10px;" placeholder="Search ...">
@@ -128,7 +128,8 @@ var Search = {
 						<a class="button is-link" v-on:click.prevent="toggleStrictness()">Use {{ getStrictText }}</a>\
 						<hr>
 						<div class="box" v-for="story in getStories" :key="story.story_id">
-                            <p class="title is-5" style="margin-bottom: 5px;"><a :href="'./?/' + getStoryUrl(story)" v-on:click.prevent="goto(getStoryUrl(story))">{{ story.title }}</a></p>
+                            <p class="title is-5" style="margin-bottom: 0;"><a :href="'./?/' + getStoryUrl(story)" v-on:click.prevent="goto(getStoryUrl(story))">{{ story.title }}</a></p>
+                        	<small style="margin-bottom: 10px;">By <a :href="'./?/' + getStoryAuthAddress(story)" v-on:click.prevent="goto(getStoryAuthAddress(story))">{{ story.value }}</a></small>
                             <p style="margin-bottom: 5px;">{{ story.description }}</p>
                             <small>Published {{ datePosted(story.date_added) }}</small>
                         </div>

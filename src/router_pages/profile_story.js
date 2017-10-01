@@ -12,7 +12,8 @@ var ProfileStory = {
 			story: null,
 			storyAuthor: "",
 			sanitizedBody: "", // NOTE: Use this instead of story.body for security reasons - it's sanitized
-			responses: []
+			responses: [],
+			claps: []
 		}
 	},
 	beforeMount: function() {
@@ -25,8 +26,8 @@ var ProfileStory = {
 				that.storyAuthor = story.value;
 				that.sanitizedBody = page.sanitizeHtml(story.body);
 				page.getResponses(that.profileInfo.auth_address, that.story.story_id, "s", (responses) => {
-					console.log(that.profileInfo.auth_address + ", " + that.story.story_id);
 					that.responses = responses;
+					that.getClaps();
 				});
 			});
 		});
@@ -40,6 +41,12 @@ var ProfileStory = {
 		});
 	},
 	methods: {
+		getClaps: function() {
+			var that = this;
+			page.getClaps(that.profileInfo.auth_address, that.story.story_id, "s", (claps) => {
+				that.claps = claps;
+			});
+		},
 		getTagSlug(tag) {
 			return tag.replace(/ /, '-');
 		},
@@ -57,6 +64,12 @@ var ProfileStory = {
 		},
 		datePosted: function(date) {
 			return moment(date).fromNow();
+		},
+		clap: function() {
+			var that = this;
+			page.postClap(this.profileInfo.auth_address, this.story.story_id, "s", () => {
+				that.getClaps();
+			});
 		}
 	},
 	computed: {
@@ -64,6 +77,34 @@ var ProfileStory = {
 			return this.story.tags.split(',').map(function(tag) {
 				return tag.toLowerCase().trim();
 			});
+		},
+		getClapAmount: function() {
+			var amount = 0;
+			for (var i = 0; i < this.claps.length; i++) {
+				var clap = this.claps[i];
+				amount += clap.number;
+			}
+
+			if (amount > 0) {
+				return amount.toString();
+			} else {
+				return "";
+			}
+		},
+		isClapped: function() {
+			if (!this.userInfo) return false;
+			for (var i = 0; i < this.claps.length; i++) {
+				var clap = this.claps[i];
+				var clap_auth_address = clap.directory.replace(/users\//, '').replace(/\//g, '');
+				if (clap_auth_address == this.userInfo.auth_address) {
+					if (clap.number > 0) {
+						return true;
+					} else {
+						return false;
+					}
+				}
+			}
+			return false;
 		}
 	},
 	template: `
@@ -78,6 +119,7 @@ var ProfileStory = {
 							<div class="tags" style="margin-top: 10px;">
 								<a class='tag' v-for="tag in getTags" :href="'./?/tag/' + getTagSlug(tag)" v-on:click.prevent="goto('tag/' + getTagSlug(tag))">{{ tag }}</a>
 							</div>
+							<a v-on:click="clap()" class="button is-small is-info" :class="{ 'is-outlined': !isClapped }">Clap</a><span style="margin-left: 10px;">{{ getClapAmount }}</span>
 						</div>
 						<div v-show="profileInfo && story">
 							<hr>

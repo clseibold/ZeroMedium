@@ -361,6 +361,86 @@ class ZeroApp extends ZeroFrame {
         page.cmd('dbQuery', ['SELECT * FROM responses LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE reference_auth_address="' + reference_auth_address + '" AND reference_id=' + reference_id + ' AND reference_type="' + reference_type + '" AND key="name" ORDER BY date_added DESC'], f);
     }
 
+    // Reference Types:
+    //  s - story
+    //  r - response
+    postClap(reference_auth_address, reference_id, reference_type, f = null) {
+        if (!app.userInfo || !app.userInfo.cert_user_id) {
+            this.cmd("wrapperNotification", ["info", "Please login to publish."]);
+            page.selectUser(); // TODO: Check if user has data, if not, show the registration modal.
+            return;
+        }
+
+        var data_inner_path = "data/users/" + app.userInfo.auth_address + "/data.json";
+        var content_inner_path = "data/users/" + app.userInfo.auth_address + "/content.json";
+
+        page.cmd('fileGet', {"inner_path": data_inner_path, "required": false}, (data) => {
+            if (!data) {
+                // TODO: Show registration modal.
+                return;
+            } else {
+                data = JSON.parse(data);
+            }
+
+            if (!data["claps"]) data["claps"] = [];
+
+            var alreadyVoted = false;
+            var voteIndex = null;
+            for (var i = 0; i < data.claps.length; i++) {
+                if (data.claps[i].reference_id == reference_id && data.claps[i].reference_auth_address == reference_auth_address) {
+                    alreadyVoted = true;
+                    voteIndex = i;
+                    break;
+                }
+            }
+
+            if (alreadyVoted) {
+                if (data.claps[voteIndex].number == 0) {
+                    data.claps[voteIndex].number = 1;
+                } else {
+                    data.claps[voteIndex].number = 0;
+                }
+                /*if (data.claps[voteIndex].number < 0 && downvote) {
+                    data.claps[voteIndex].number = 0;
+                } else if (data.claps[voteIndex].number > 0 && !downvote) {
+                    data.claps[voteIndex].number = 0;
+                } else if (data.claps[voteIndex].number >= 0 && downvote) {
+                    data.claps[voteIndex].number = -1;
+                } else if (data.claps[voteIndex].number <= 0 && !downvote) {
+                    data.claps[voteIndex].number = 1;
+                }*/
+            } else {
+                data.claps.push({
+                    "clap_id": app.userInfo.keyvalue["next_clap_id"] || 1,
+                    "reference_auth_address": reference_auth_address,
+                    "reference_id": reference_id,
+                    "reference_type": reference_type,
+                    "number": 1,
+                    "date_added": Date.now()
+                });
+
+                if (!app.userInfo.keyvalue["next_clap_id"] || app.userInfo.keyvalue["next_clap_id"] == null) app.userInfo.keyvalue["next_clap_id"] = 1;
+                app.userInfo.keyvalue["next_clap_id"]++;
+                data["next_clap_id"] = app.userInfo.keyvalue["next_clap_id"];
+            }
+
+            var json_raw = unescape(encodeURIComponent(JSON.stringify(data, undefined, '\t')));
+
+            page.cmd('fileWrite', [data_inner_path, btoa(json_raw)], (res) => {
+                if (res == "ok") {
+                    page.cmd('siteSign', {"inner_path": content_inner_path}, (res) => {
+                        if (f != null && typeof f == 'function') f();
+                        page.cmd('sitePublish', {"inner_path": content_inner_path, "sign": false});
+                    });
+                }
+            });
+        });
+    }
+
+    getClaps(reference_auth_address, reference_id, reference_type, f) {
+        page.cmd('dbQuery', ['SELECT * FROM claps LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE reference_auth_address="' + reference_auth_address + '" AND reference_id=' + reference_id + ' AND reference_type="' + reference_type + '" AND key="name" ORDER BY date_added DESC'], f);
+    }
+
     unimplemented() {
         page.cmd("wrapperNotification", ["info", "Unimplemented!"]);
     }

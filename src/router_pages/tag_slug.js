@@ -44,7 +44,7 @@ var TagSlug = {
 		<div>
 			<section class="section">
 				<div class="columns is-centered">
-					<div class="column is-three-quarters-tablet is-three-quarters-desktop">
+					<div class="column is-three-quarters-tablet is-half-desktop">
 						<p class="title is-4">{{ tagName }}</p>
 						<hr>
 						<p>This function has not been implemented yet!</p>

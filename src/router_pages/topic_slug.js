@@ -74,14 +74,15 @@ var TopicSlug = {
 		<div>
 			<section class="section">
 				<div class="columns is-centered">
-					<div class="column is-three-quarters-tablet is-three-quarters-desktop">
+					<div class="column is-three-quarters-tablet is-half-desktop">
 						<p class="title is-4">{{ topicName }}</p>
 						<!--<div class="tags">
 							<a class="tag" v-for="tag in topicTags" :key="tag" :href="'./?/tag/' + getTagSlug(tag)" v-on:click.prevent="goto('tag/' + getTagSlug(tag))">{{ tag }}</span>
 						</div>-->
 						<hr>
 						<div class="box" v-for="story in stories" :key="story.story_id">
-							<p class="title is-5" style="margin-bottom: 5px;"><a :href="'./?/' + getStoryUrl(story)" v-on:click.prevent="goto(getStoryUrl(story))">{{ story.title }}</a></p>
+							<p class="title is-5" style="margin-bottom: 0;"><a :href="'./?/' + getStoryUrl(story)" v-on:click.prevent="goto(getStoryUrl(story))">{{ story.title }}</a></p>
+							<small style="margin-bottom: 10px;">By <a :href="'./?/' + getStoryAuthAddress(story)" v-on:click.prevent="goto(getStoryAuthAddress(story))">{{ story.value }}</a></small>
 							<p style="margin-bottom: 5px;">{{ story.description }}</p>
 							<small>Published {{ datePosted(story.date_added) }}</small>
 						</div>
