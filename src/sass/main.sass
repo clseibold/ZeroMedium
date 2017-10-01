@@ -1,0 +1,27 @@
+@import "node_modules/medium-editor/dist/css/medium-editor"
+@import "node_modules/medium-editor/dist/css/themes/default"
+
+@import "node_modules/bulma/sass/utilities/initial-variables"
+
+$title-weight: $weight-normal
+$subtitle-weight: $weight-light
+
+@import "node_modules/bulma/bulma"
+
+.button .button-rounder
+    border-radius: 100px !important
+
+h1
+	@extend .title.is-3
+h2
+	@extend .title.is-4
+h3
+	@extend .title.is-5
+h4
+	@extend .title.is-6
+
+.editable
+	outline: none
+	padding-left: calc(.625em - 1px)
+.editableResponse
+	outline: none

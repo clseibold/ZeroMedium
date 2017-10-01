@@ -5,3 +5,6 @@ Medium for ZeroNet
 * The `src` folder should be ignored by ZeroNet.
 
 Update: ZeroMedium no longer uses Typescript (there were problems with it and vue and I didn't want to spend forever trying to figure them out).
+
+TODO: 
+* Change gulp-minify-css to gulp-clean-css
