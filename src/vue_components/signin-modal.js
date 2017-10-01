@@ -105,6 +105,7 @@ Vue.component('signin-modal', {
                         if (res == "ok") {
                             // Get user info again
                             page.cmd("siteSign", {"inner_path": content_inner_path}, (res) => {
+                                page.cmd("wrapperNotification", ["error", "Please Refresh the page after publish!"]);
                                 page.cmd("sitePublish", {"inner_path": content_inner_path, "sign": false}, () => {
                                     that.$emit('get-user-info'); // TODO: Doesn't seem to be working
                                 });
