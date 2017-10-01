@@ -8,12 +8,7 @@ var Search = {
 		page.getTopics((topics) => {
             that.topics = topics;
         });
-        page.getAllStories(function(story) {
-            return true;
-        }, (stories) => {
-            that.allStories = stories;
-            that.listedStories = stories;
-        });
+        this.getStories();
 	},
 	data: function() {
 		return {
@@ -25,6 +20,15 @@ var Search = {
 		}
 	},
 	methods: {
+		getStories: function() {
+			var that = this;
+			page.getAllStories(function(story) {
+			    return true;
+			}, (stories) => {
+			    that.allStories = stories;
+			    that.listedStories = stories;
+			});
+		},
 		goto: function(to) {
 			Router.navigate(to);
 		},

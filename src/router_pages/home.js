@@ -9,19 +9,23 @@ var Home = {
         page.getTopics((topics) => {
             that.topics = topics;
         });
-        page.getAllStories(function(story) {
-            var now = Date.now();
-            return (now - story.date_added) < 8.64e+7;
-        }, (stories) => {
-            // Limit to 5 stories - NOTE/TODO: Performance can be improved by putting the limit into the dbquery instead!
-            for (i = 0; i < 5 && i < stories.length; i++) {
-                that.stories.push(stories[i]);
-            }
-            //that.stories = stories;
-        });
+        this.getStories();
         // TODO: Do a sort based on number of likes/claps and maybe responses (only responses made during that day).
     },
     methods: {
+        getStories: function() {
+            var that = this;
+            that.stories = [];
+            page.getAllStories(function(story) {
+                var now = Date.now();
+                return (now - story.date_added) < 8.64e+7;
+            }, (stories) => {
+                // Limit to 5 stories - NOTE/TODO: Performance can be improved by putting the limit into the dbquery instead!
+                for (i = 0; i < 5 && i < stories.length; i++) {
+                    that.stories.push(stories[i]);
+                }
+            });
+        },
         showSigninModal: function() {
             //this.signin_modal_visible = !this.signin_modal_visible;
             this.$emit('show-signin-modal');

@@ -22,7 +22,7 @@ var app = new Vue({
     template: `
         <div>
             <custom-nav v-on:show-signin-modal="showSigninModal()" v-on:get-user-info="getUserInfo()" v-bind:user-info="userInfo" v-bind:shadow="navbarShadow"></custom-nav>
-            <component v-bind:is="currentView" v-on:show-signin-modal="showSigninModal()" v-on:navbar-shadow-on="navbarShadowOn()" v-on:navbar-shadow-off="navbarShadowOff()" v-on:get-user-info="getUserInfo()" v-bind:user-info="userInfo"></component>
+            <component ref="view" v-bind:is="currentView" v-on:show-signin-modal="showSigninModal()" v-on:navbar-shadow-on="navbarShadowOn()" v-on:navbar-shadow-off="navbarShadowOff()" v-on:get-user-info="getUserInfo()" v-bind:user-info="userInfo"></component>
             <signin-modal v-model="signin_modal_active" v-on:get-user-info="getUserInfo()" v-if="signin_modal_active" v-bind:user-info="userInfo"></signin-modal>
         </div>
         `,
@@ -91,6 +91,12 @@ class ZeroApp extends ZeroFrame {
             app.getUserInfo();
         }
         Router.listenForBack(cmd, message);
+        if (message.params.event[0] == "file_done") {
+            //getTags(true);
+            if (Router.currentRoute == "" || Router.currentRoute == "search" || Router.currentRouter == "topic/:slug") {
+                app.$refs.view.getStories();
+            }
+        }
         /*for (var i = 0; i < app.userInfo.keyvalue.length; i++) {
             console.log(app.userInfo.keyvalue[i]);
         }*/
