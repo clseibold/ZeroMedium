@@ -3,20 +3,23 @@ var Vue = require("vue/dist/vue.min.js");
 Vue.component('signin-modal', {
     props: ['value', 'userInfo'],
     beforeMount: function() {
-        if (page.site_info.cert_user_id != null && this.userInfo.keyvalue.name) {
+        if (page.site_info.cert_user_id != null) {
             this.close();
         }
         this.currentSlide = 0;
         this.slideTitle = "";
         this.name = "";
         this.about = "";
-        if (page.site_info.cert_user_id != null && !this.userInfo.keyvalue.name) {
+        /*if (page.site_info.cert_user_id != null && !this.userInfo.keyvalue.name) {
             this.currentSlide = 1;
             this.slideTitle += "Setup Profile";
-        }
+        }*/
         var that = this;
         page.getTopics((topics) => {
             that.topics = topics;
+        });
+        page.getUsers((users) => {
+            that.existingUsers = users;
         });
     },
     data: function() {
@@ -26,7 +29,8 @@ Vue.component('signin-modal', {
             name: "",
             about: "",
             topics: [],
-            interests: []
+            interests: [],
+            existingUsers: []
         }
     },
     methods: {
@@ -83,6 +87,27 @@ Vue.component('signin-modal', {
             });
         },
         showNext: function() {
+            if (this.currentSlide == 1) {
+                // Username blacklist
+                var name = this.name.toLowerCase();
+                if (name == "admin" || name == "Admin" || name == "account" || name == "blog"
+                    || name == "api" || name == "cache" || name == "changelog" || name == "enterprise"
+                    || name == "gist" || name == "help" || name == "jobs" || name == "lists" || name == "login"
+                    || name == "logout" || name == "mine" || name == "news" || name == "plans"
+                    || name == "popular" || name == "projects" || name == "security" || name == "shop" || name == "translations"
+                    || name == "signup" || name == "register" || name == "status" || name == "wiki" || name == "stories" || name == "medium"
+                    || name == "organizations" || name == "better" || name == "compare" || name == "hosting" || name == "tour" || name == "styleguide") {
+                    page.cmd("wrapperNotification", ["error", "You aren't allowed to use this username!"]);
+                    return;
+                }
+                for (var i = 0; i < this.existingUsers.length; i++) {
+                    var existingName = this.existingUsers[i].value.toLowerCase().trim();
+                    if (existingName == name) {
+                        page.cmd("wrapperNotification", ["error", "Username already taken!"]);
+                        return;
+                    }
+                }
+            }
             this.currentSlide++;
             this.slideTitle = " - ";
             if (this.currentSlide == 1) {
@@ -97,7 +122,7 @@ Vue.component('signin-modal', {
                 if (exists) {
                     that.close();
                 } else {
-                    data = that.newUserData(that.name, that.about, that.interests);
+                    data = that.newUserData(that.name.trim(), that.about.trim(), that.interests);
 
                     var json_raw = unescape(encodeURIComponent(JSON.stringify(data, undefined, '\t')));
 
