@@ -59,6 +59,7 @@ var ProfileStory = {
 				// Get the responses again.
 				page.getResponses(that.profileInfo.auth_address, that.story.story_id, "s", (responses) => {
 					that.responses = responses;
+					that.responseEditor.resetContent();
 				});
 			});
 		},
@@ -116,9 +117,10 @@ var ProfileStory = {
 							<p class="title is-3">{{ story.title }}</p>
 							<p class="subtitle is-5">By <a :href="'./?/' + profileInfo.auth_address" v-on:click.prevent="goto(profileInfo.auth_address)">{{ storyAuthor }}</a> - {{ datePosted(story.date_added) }}</p>
 							<div v-html="sanitizedBody"></div>
-							<div class="tags" style="margin-top: 10px;">
+							<div class="tags" style="margin-top: 10px;" v-if="story.tags != ''">
 								<a class='tag' v-for="tag in getTags" :href="'./?/tag/' + getTagSlug(tag)" v-on:click.prevent="goto('tag/' + getTagSlug(tag))">{{ tag }}</a>
 							</div>
+							<div style="margin-top: 20px;" v-if="story.tags == ''"></div>
 							<a v-on:click="clap()" class="button is-small is-info" :class="{ 'is-outlined': !isClapped }">Clap</a><span style="margin-left: 10px;">{{ getClapAmount }}</span>
 						</div>
 						<div v-show="profileInfo && story">
