@@ -81,7 +81,6 @@ class ZeroApp extends ZeroFrame {
             app.siteInfo = this.site_info;
             app.getUserInfo();
         });
-        this.cmd("wrapperNotification", ["info", "This is still in development!"]);
     }
     
     onRequest(cmd, message) {
