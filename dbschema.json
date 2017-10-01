@@ -8,7 +8,7 @@
         },
         "users/.+/data.json": {
             "to_table": ["stories", "responses", "claps"],
-            "to_keyvalue": [ "next_story_id", "next_response_id", "name", "about", "interests" ]
+            "to_keyvalue": [ "next_story_id", "next_response_id", "next_clap_id", "name", "about", "interests" ]
         },
         "users/.+/content.json": {
             "to_json_table": ["cert_user_id"],
