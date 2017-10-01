@@ -46,7 +46,7 @@ var Search = {
 		}
 	},
 	computed: {
-        getStories() { // TODO: Add ability to search name also
+        getSearchedStories() { // TODO: Add ability to search name also
         	var list = this.allStories;
 			if (this.searchInput == "" || !this.searchInput) return list;
 			var searchInputWords = this.searchInput.trim().split(' '); // TODO
@@ -131,7 +131,7 @@ var Search = {
 						</div>
 						<a class="button is-link" v-on:click.prevent="toggleStrictness()">Use {{ getStrictText }}</a>\
 						<hr>
-						<div class="box" v-for="story in getStories" :key="story.story_id">
+						<div class="box" v-for="story in getSearchedStories" :key="story.story_id">
                             <p class="title is-5" style="margin-bottom: 0;"><a :href="'./?/' + getStoryUrl(story)" v-on:click.prevent="goto(getStoryUrl(story))">{{ story.title }}</a></p>
                         	<small style="margin-bottom: 10px;">By <a :href="'./?/' + getStoryAuthAddress(story)" v-on:click.prevent="goto(getStoryAuthAddress(story))">{{ story.value }}</a></small>
                             <p style="margin-bottom: 5px;">{{ story.description }}</p>
