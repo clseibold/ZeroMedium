@@ -19,7 +19,7 @@ var Newstory = {
 		this.editor = new MediumEditor('.editable', {
 			placeholder: {
 				text: "Tell your story...",
-				hideOnClick: true
+				hideOnClick: false
 			}
 		});
 	},
@@ -41,10 +41,10 @@ var Newstory = {
 			</editor-nav>
 			<section class="section">
 				<div class="columns is-centered">
-					<div class="column is-three-quarters-tablet is-three-quarters-desktop">
+					<div class="column is-three-quarters-tablet is-half-desktop">
 						<input class="input title" type="text" placeholder="Title" style="border: none; border-left: 1px solid #CCCCCC; background: inherit; box-shadow: none;" v-model="title">
-						<!--<textarea class="textarea" style="border: none; background: inherit; box-shadow: none;" placeholder="Tell your story..."></textarea>-->
-						<div class="editable" placeholder="Tell your story..."></div>
+						<!--<textarea class="textarea" style="border: none; background: inherit; box-shadow: none;"></textarea>-->
+						<div class="editable"></div>
 					</div>
 				</div>
 			</section>
@@ -86,7 +86,7 @@ Vue.component('editor-nav', {
                 	<div class="navbar-start">
                 	</div>
                 	<div class="navbar-end">
-                		<a class="navbar-item" v-on:click.prevent="save">Save</a>
+                		<a class="navbar-item" v-on:click.prevent="save">Save Draft</a>
                 		<div class="navbar-item has-dropdown is-hoverable">
                 			<a class="navbar-link">Publish</a>
                 			<div class="navbar-dropdown is-right" style="width: 300px;">

@@ -66,7 +66,7 @@ var EditStory = {
 			</editor-nav>
 			<section class="section">
 				<div class="columns is-centered">
-					<div class="column is-three-quarters-tablet is-three-quarters-desktop">
+					<div class="column is-three-quarters-tablet is-half-desktop">
 						<input class="input title" type="text" placeholder="Title" style="border: none; border-left: 1px solid #CCCCCC; background: inherit; box-shadow: none;" v-model="title">
 						<!--<textarea class="textarea" style="border: none; background: inherit; box-shadow: none;" placeholder="Tell your story..."></textarea>-->
 						<div class="editable" placeholder="Tell your story..."></div>

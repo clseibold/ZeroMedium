@@ -7,8 +7,8 @@
             "to_table": ["topics"]
         },
         "users/.+/data.json": {
-            "to_table": ["stories"],
-            "to_keyvalue": [ "next_story_id", "name", "about", "interests" ]
+            "to_table": ["stories", "responses"],
+            "to_keyvalue": [ "next_story_id", "next_response_id", "name", "about", "interests" ]
         },
         "users/.+/content.json": {
             "to_json_table": ["cert_user_id"],
@@ -51,6 +51,20 @@
             ],
             "indexes": ["CREATE UNIQUE INDEX story_key ON stories (json_id, story_id)"],
             "schema_changed": 13
+        },
+        "responses": {
+            "cols": [
+                ["response_id", "INTEGER"],
+                ["body", "TEXT"],
+                ["reference_id", "INTEGER"],
+                ["reference_auth_address", "TEXT"],
+                ["reference_type", "TEXT"],
+                ["date_updated", "INTEGER"],
+                ["date_added", "INTEGER"],
+                ["json_id", "INTEGER REFERENCES json (json_id)"]
+            ],
+            "indexes": ["CREATE UNIQUE INDEX response_key ON responses (json_id, response_id)"],
+            "schema_changed": 11
         }
     }
 }

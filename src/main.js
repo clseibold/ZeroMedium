@@ -92,12 +92,9 @@ class ZeroApp extends ZeroFrame {
             app.getUserInfo();
         }
         Router.listenForBack(cmd, message);
-        console.log(message);
-        console.log(app.userInfo.keyvalue);
-        console.log();
-        for (var i = 0; i < app.userInfo.keyvalue.length; i++) {
+        /*for (var i = 0; i < app.userInfo.keyvalue.length; i++) {
             console.log(app.userInfo.keyvalue[i]);
-        }
+        }*/
     }
     
     selectUser(f = null) {
@@ -183,13 +180,13 @@ class ZeroApp extends ZeroFrame {
                 "title": title,
                 "slug": sanitizeStringForUrl(title),
                 "description": description,
-                "body": this.sanitizeHtml(body),
+                "body": page.sanitizeHtml(body),
                 "tags": tags,
                 "date_added": Date.now()
             });
 
             if (!app.userInfo.keyvalue["next_story_id"] || app.userInfo.keyvalue["next_story_id"] == null) app.userInfo.keyvalue["next_story_id"] = 1;
-            console.log(app.userInfo.keyvalue);
+            //console.log(app.userInfo.keyvalue);
             app.userInfo.keyvalue["next_story_id"]++;
             data["next_story_id"] = app.userInfo.keyvalue["next_story_id"];
 
@@ -236,7 +233,7 @@ class ZeroApp extends ZeroFrame {
                 if (story.story_id == story_id) {
                     story.title = title;
                     story.slug = sanitizeStringForUrl(title); // TODO: IFFY
-                    story.body = this.sanitizeHtml(body);
+                    story.body = page.sanitizeHtml(body);
                     story.tags = tags;
                     story.description = description;
                     story.date_updated = Date.now();
@@ -279,6 +276,60 @@ class ZeroApp extends ZeroFrame {
 
             if (f && typeof f == 'function') f(storiesToInclude);
         });
+    }
+
+    // Reference types:
+    //  s - story
+    //  r - response
+    postResponse(reference_auth_address, reference_id, reference_type, body, f = null) {
+        if (!app.userInfo || !app.userInfo.cert_user_id) {
+            this.cmd("wrapperNotification", ["info", "Please login to publish."]);
+            page.selectUser(); // TODO: Check if user has data, if not, show the registration modal.
+            return;
+        }
+
+        var data_inner_path = "data/users/" + app.userInfo.auth_address + "/data.json";
+        var content_inner_path = "data/users/" + app.userInfo.auth_address + "/content.json";
+
+        page.cmd('fileGet', {"inner_path": data_inner_path, "required": false}, (data) => {
+            if (!data) {
+                // TODO: Show registration modal.
+                return;
+            } else {
+                data = JSON.parse(data);
+            }
+
+            if (!data["responses"]) data["responses"] = [];
+
+            data["responses"].push({
+                "response_id": app.userInfo.keyvalue["next_response_id"] || 1,
+                "body": page.sanitizeHtml(body),
+                "reference_id": reference_id,
+                "reference_auth_address": reference_auth_address,
+                "reference_type": reference_type,
+                "date_added": Date.now()
+            });
+
+            if (!app.userInfo.keyvalue["next_response_id"] || app.userInfo.keyvalue["next_response_id"] == null) app.userInfo.keyvalue["next_response_id"] = 1;
+            //console.log(app.userInfo.keyvalue);
+            app.userInfo.keyvalue["next_response_id"]++;
+            data["next_response_id"] = app.userInfo.keyvalue["next_response_id"];
+
+            var json_raw = unescape(encodeURIComponent(JSON.stringify(data, undefined, '\t')));
+
+            page.cmd('fileWrite', [data_inner_path, btoa(json_raw)], (res) => {
+                if (res == "ok") {
+                    page.cmd('siteSign', {"inner_path": content_inner_path}, (res) => {
+                        if (f != null && typeof f == 'function') f();
+                        page.cmd('sitePublish', {"inner_path": content_inner_path, "sign": false});
+                    });
+                }
+            });
+        });
+    }
+
+    getResponses(reference_auth_address, reference_id, reference_type, f) {
+        page.cmd('dbQuery', ['SELECT * FROM responses LEFT JOIN json USING (json_id) WHERE reference_auth_address="' + reference_auth_address + '" AND reference_id=' + reference_id + ' AND reference_type="' + reference_type + '" ORDER BY date_added DESC'], f);
     }
 
     unimplemented() {
