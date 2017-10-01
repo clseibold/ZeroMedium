@@ -12,7 +12,7 @@ var Profile = {
 	beforeMount: function() {
 		this.$emit('navbar-shadow-off');
 		var that = this;
-		page.getUserProfileInfo(Router.currentParams["userauthaddress"], true, (profileInfo) => {
+		page.getUserProfileInfo(Router.currentParams["userauthaddress"], true, true, (profileInfo) => {
 			that.profileInfo = profileInfo;
 		});
 	},
@@ -40,6 +40,10 @@ var Profile = {
 							<p style="margin-bottom: 5px;">{{ story.description }}</p>
 							<small>Published {{ datePosted(story.date_added) }}</small>
 						</div>
+						<p class="title is-4" style="border-bottom: 1px solid #AAAAAA; padding-bottom: 10px;">Responses</p>
+						<response v-for="response in profileInfo.responses" :key="response.response_id" v-bind:response="response" v-bind:show-name="false" v-bind:show-reference="true">
+							<p style="margin-bottom: 20px;"><strong>{{ profileInfo.name }}</strong></p>
+						</response>
 					</div>
 				</div>
 			</section>

@@ -23,7 +23,7 @@ var MeStories = {
 		},
 		getUserProfileInfo: function(userInfo) {
 			var that = this;
-			page.getUserProfileInfo(userInfo.auth_address, true, (profileInfo) => {
+			page.getUserProfileInfo(userInfo.auth_address, true, false, (profileInfo) => { // TODO: responses?
 				that.stories = profileInfo.stories;
 			});
 		},

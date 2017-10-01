@@ -112,7 +112,7 @@ class ZeroApp extends ZeroFrame {
         });
     }
 
-    getUserProfileInfo(auth_address, getStoryList, f = null) {
+    getUserProfileInfo(auth_address, getStoryList, getResponsesList, f = null) {
         var userProfileInfo = {};
         userProfileInfo["auth_address"] = auth_address;
         // Get Keyvalue data
@@ -127,11 +127,28 @@ class ZeroApp extends ZeroFrame {
                 if (row.key == 'about') userProfileInfo["about"] = row.value;
             }
 
-            // Get blog posts
+            // Get stories
             if (getStoryList) {
                 userProfileInfo["stories"] = [];
-                page.cmd('dbQuery', ['SELECT title, slug, description, tags, date_updated, date_added, cert_user_id FROM stories LEFT JOIN json USING (json_id) WHERE directory="users/' + auth_address + '"'], (stories) => {
+                page.cmd('dbQuery', ['SELECT title, slug, description, tags, date_updated, date_added, cert_user_id FROM stories LEFT JOIN json USING (json_id) WHERE directory="users/' + auth_address + '" ORDER BY date_added DESC'], (stories) => {
                     userProfileInfo["stories"] = stories;
+
+                    if (getResponsesList) {
+                        userProfileInfo["responses"] = [];
+                        page.cmd('dbQuery', ['SELECT * FROM responses LEFT JOIN json USING (json_id) WHERE directory="users/' + auth_address + '" ORDER BY date_added DESC'], (responses) => {
+                            userProfileInfo["responses"] = responses;
+
+                            if (f != null && typeof f == 'function') f(userProfileInfo);
+                        });
+                    } else {
+                        if (f != null && typeof f == 'function') f(userProfileInfo);
+                    }
+                });
+            } else if (getResponsesList) {
+                userProfileInfo["responses"] = [];
+
+                page.cmd('dbQuery', ['SELECT * FROM responses LEFT JOIN json USING (json_id) WHERE directory="users/' + auth_address + '" ORDER BY date_added DESC'], (responses) => {
+                    userProfileInfo["responses"] = responses;
 
                     if (f != null && typeof f == 'function') f(userProfileInfo);
                 });
@@ -256,7 +273,19 @@ class ZeroApp extends ZeroFrame {
 
     getStory(auth_address, slug, f = null) {
         // TODO: If two stories have the same title, go with the oldest (ORDER BY ___)
-        page.cmd('dbQuery', ['SELECT * FROM stories LEFT JOIN json USING (json_id) WHERE directory="users/' + auth_address + '" AND slug="' + slug + '"'], (stories) => {
+        page.cmd('dbQuery', ['SELECT story_id, title, slug, description, body, tags, date_updated, date_added, value FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE directory="users/' + auth_address + '" AND slug="' + slug + '" AND key="name"'], (stories) => {
+            if (!stories || stories.length == 0) {
+                f(null);
+                return;
+            }
+            if (f != null && typeof f == 'function') f(stories[0]);
+        });
+    }
+
+    // Used to get story that a response is on (for showing the response on an author's profile)
+    // This will only get the stories id, title, and slug
+    getStoryMinimal(auth_address, story_id, f = null) {
+        page.cmd('dbQuery', ['SELECT story_id, title, slug, directory, value FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND story_id=' + story_id + ' AND directory="users/' + auth_address + '"'], (stories) => {
             if (!stories || stories.length == 0) {
                 f(null);
                 return;
@@ -266,7 +295,7 @@ class ZeroApp extends ZeroFrame {
     }
 
     getAllStories(includeTestFunction, f = null) {
-        page.cmd('dbQuery', ['SELECT * FROM stories LEFT JOIN json USING (json_id)'], (stories) => {
+        page.cmd('dbQuery', ['SELECT * FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" ORDER BY date_added DESC'], (stories) => {
             var storiesToInclude = [];
             for (var i = 0; i < stories.length; i++) {
                 if (includeTestFunction(stories[i])) {
@@ -329,7 +358,7 @@ class ZeroApp extends ZeroFrame {
     }
 
     getResponses(reference_auth_address, reference_id, reference_type, f) {
-        page.cmd('dbQuery', ['SELECT * FROM responses LEFT JOIN json USING (json_id) WHERE reference_auth_address="' + reference_auth_address + '" AND reference_id=' + reference_id + ' AND reference_type="' + reference_type + '" ORDER BY date_added DESC'], f);
+        page.cmd('dbQuery', ['SELECT * FROM responses LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE reference_auth_address="' + reference_auth_address + '" AND reference_id=' + reference_id + ' AND reference_type="' + reference_type + '" AND key="name" ORDER BY date_added DESC'], f);
     }
 
     unimplemented() {

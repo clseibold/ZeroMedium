@@ -53,25 +53,30 @@ var Search = {
 				for (var i = 0; i < searchInputWords.length; i++) {
 					var word = searchInputWords[i].trim().toLowerCase();
 					if (story.tags && story.tags.toLowerCase().includes(word)) {
-						story.order += 3;
+						story.order += 4;
 						matches++;
 						continue;
 					}
 					if (story.title.toLowerCase().includes(word)) {
-						story.order += 2;
+						story.order += 3;
 						matches++;
 						continue;
 					}
 					if (word[0] == "@") {
 						var wordId = word.substring(1, word.length);
 						if (story.cert_user_id.replace(/@.*\.bit/, '').toLowerCase().includes(wordId)) {
-							story.order += 1;
+							story.order += 2;
 							matches++;
 							continue;
 						}
 					}
 					if (story.cert_user_id.toLowerCase().includes(word)) {
-						story.order += 1;
+						story.order += 2;
+						matches++;
+						continue;
+					}
+					if (story.description.toLowerCase().includes(word)) {
+						story.order++;
 						matches++;
 						continue;
 					}
