@@ -37,7 +37,10 @@ var MeStories = {
 			return 'me/stories/' + story.slug + '/edit';
 		},
 		deleteStory: function(story) {
-			page.unimplemented();
+			var that = this;
+			page.deleteStory(story.story_id, () => {
+				that.getUserProfileInfo(that.userInfo);
+			});
 		}
 	},
 	template: `

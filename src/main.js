@@ -135,7 +135,7 @@ class ZeroApp extends ZeroFrame {
             // Get stories
             if (getStoryList) {
                 userProfileInfo["stories"] = [];
-                page.cmd('dbQuery', ['SELECT title, slug, description, tags, date_updated, date_added, cert_user_id FROM stories LEFT JOIN json USING (json_id) WHERE directory="users/' + auth_address + '" ORDER BY date_added DESC'], (stories) => {
+                page.cmd('dbQuery', ['SELECT story_id, title, slug, description, tags, date_updated, date_added, cert_user_id FROM stories LEFT JOIN json USING (json_id) WHERE directory="users/' + auth_address + '" ORDER BY date_added DESC'], (stories) => {
                     userProfileInfo["stories"] = stories;
 
                     if (getResponsesList) {
@@ -227,8 +227,8 @@ class ZeroApp extends ZeroFrame {
 
     editStory(story_id, title, description, body, tags, f = null) {
         if (!app.userInfo || !app.userInfo.cert_user_id) {
-            this.cmd("wrapperNotification", ["info", "Please login to publish."]);
-            page.selectUser(); // TODO: Check if user has data, if not, show the registration modal.
+            this.cmd("wrapperNotification", ["info", "Please login first."]);
+            //page.selectUser(); // TODO: Check if user has data, if not, show the registration modal.
             return;
         }
 
@@ -270,6 +270,56 @@ class ZeroApp extends ZeroFrame {
                     page.cmd('siteSign', {"inner_path": content_inner_path}, (res) => {
                         if (f != null && typeof f == 'function') f();
                         page.cmd('sitePublish', {"inner_path": content_inner_path, "sign": false});
+                    });
+                }
+            });
+        });
+    }
+
+    deleteStory(story_id, f = null) {
+        if (!app.userInfo || !app.userInfo.cert_user_id) {
+            this.cmd("wrapperNotification", ["info", "Please login first."]);
+            //page.selectUser(); // TODO: Check if user has data, if not, show the registration modal.
+            return;
+        }
+
+        var data_inner_path = "data/users/" + app.userInfo.auth_address + "/data.json";
+        var content_inner_path = "data/users/" + app.userInfo.auth_address + "/content.json";
+
+        page.cmd('fileGet', {"inner_path": data_inner_path, "required": false}, (data) => {
+            if (!data) {
+                // TODO: Error out
+                console.log("ERROR");
+                return;
+            } else {
+                data = JSON.parse(data);
+            }
+
+            if (!data["stories"]) {
+                // TODO: Error out
+                console.log("ERROR");
+                return;
+            }
+
+            for (var i = 0; i < data["stories"].length; i++) {
+                var story = data["stories"][i];
+                if (story.story_id == story_id) {
+                    data["stories"].splice(i, 1);
+                    break;
+                }
+            }
+
+            var json_raw = unescape(encodeURIComponent(JSON.stringify(data, undefined, '\t')));
+
+            page.cmd("wrapperConfirm", ["Are you sure you?", "Delete"], (confirmed) =>{
+                if (confirmed) {
+                    page.cmd('fileWrite', [data_inner_path, btoa(json_raw)], (res) => {
+                        if (res == "ok") {
+                            page.cmd('siteSign', {"inner_path": content_inner_path}, (res) => {
+                                if (f != null && typeof f == 'function') f();
+                                page.cmd('sitePublish', {"inner_path": content_inner_path, "sign": false});
+                            });
+                        }
                     });
                 }
             });
