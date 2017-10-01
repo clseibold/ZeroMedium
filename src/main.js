@@ -311,7 +311,7 @@ class ZeroApp extends ZeroFrame {
 
             var json_raw = unescape(encodeURIComponent(JSON.stringify(data, undefined, '\t')));
 
-            page.cmd("wrapperConfirm", ["Are you sure you?", "Delete"], (confirmed) =>{
+            page.cmd("wrapperConfirm", ["Are you sure?", "Delete"], (confirmed) =>{
                 if (confirmed) {
                     page.cmd('fileWrite', [data_inner_path, btoa(json_raw)], (res) => {
                         if (res == "ok") {
