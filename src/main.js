@@ -179,8 +179,8 @@ class ZeroApp extends ZeroFrame {
     // TODO: Check that slug doesn't already exist, if so, add date at end (or ask user to customize)
     postStory(title, description, body, tags, f = null) {
         if (!app.userInfo || !app.userInfo.cert_user_id) {
-            this.cmd("wrapperNotification", ["info", "Please login to publish."]);
-            page.selectUser(); // TODO: Check if user has data, if not, show the registration modal.
+            this.cmd("wrapperNotification", ["info", "Please login first."]);
+            //page.selectUser(); // TODO: Check if user has data, if not, show the registration modal.
             return;
         }
 
@@ -317,8 +317,8 @@ class ZeroApp extends ZeroFrame {
     //  r - response
     postResponse(reference_auth_address, reference_id, reference_type, body, f = null) {
         if (!app.userInfo || !app.userInfo.cert_user_id) {
-            this.cmd("wrapperNotification", ["info", "Please login to publish."]);
-            page.selectUser(); // TODO: Check if user has data, if not, show the registration modal.
+            this.cmd("wrapperNotification", ["info", "Please login first."]);
+            //page.selectUser(); // TODO: Check if user has data, if not, show the registration modal.
             return;
         }
 
@@ -371,8 +371,8 @@ class ZeroApp extends ZeroFrame {
     //  r - response
     postClap(reference_auth_address, reference_id, reference_type, f = null) {
         if (!app.userInfo || !app.userInfo.cert_user_id) {
-            this.cmd("wrapperNotification", ["info", "Please login to publish."]);
-            page.selectUser(); // TODO: Check if user has data, if not, show the registration modal.
+            this.cmd("wrapperNotification", ["info", "Please login first."]);
+            //page.selectUser(); // TODO: Check if user has data, if not, show the registration modal.
             return;
         }
 
