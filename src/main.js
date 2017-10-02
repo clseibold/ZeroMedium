@@ -497,7 +497,36 @@ class ZeroApp extends ZeroFrame {
     }
 
     getUserClaps(auth_address, f) {
-        page.cmd('dbQuery', ['SELECT claps.number, stories.story_id, stories.description, stories.slug, stories.title, stories.date_updated, stories.date_added, claps.reference_auth_address, claps.reference_id, claps.reference_type, stories_json.directory, keyvalue.value FROM claps LEFT JOIN json claps_json USING (json_id) LEFT JOIN stories ON stories.story_id=claps.reference_id LEFT JOIN json stories_json ON stories_json.json_id=stories.json_id LEFT JOIN keyvalue ON stories.json_id=keyvalue.json_id WHERE claps_json.directory="users/' + auth_address + '" AND number=1 AND key="name"'], f);
+        page.cmd('dbQuery', ['SELECT number, reference_auth_address, reference_id, reference_type FROM claps LEFT JOIN json USING (json_id) WHERE directory="users/' + auth_address + '" AND number=1'], (claps) => {
+            var newClaps = [];
+
+            for (var i = 0; i < claps.length; i++) {
+                let clap = claps[i];
+                if (clap.reference_type == "s") {
+                    if (i == claps.length - 1) {
+
+                        page.cmd('dbQuery', ['SELECT story_id, description, slug, title, date_updated, date_added, directory, value FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND story_id=' + clap.reference_id + ' AND directory="users/' + clap.reference_auth_address + '"'], (story) => {
+                            console.log("Story: " + story[0].description);
+                            clap["story"] = story[0];
+
+                            newClaps.push(clap);
+
+                            console.log("Last clap");
+                            if (typeof f == 'function') {
+                                f(newClaps);
+                            }
+                        });
+                    } else {
+                        page.cmd('dbQuery', ['SELECT story_id, description, slug, title, date_updated, date_added, directory, value FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND story_id=' + clap.reference_id + ' AND directory="users/' + clap.reference_auth_address + '"'], (story) => {
+                            console.log("Story: " + story[0].description);
+                            clap["story"] = story[0];
+
+                            newClaps.push(clap);
+                        });
+                    }
+                }
+            }
+        });
     }
 
     getUsers(f) {

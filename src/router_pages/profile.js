@@ -17,6 +17,7 @@ var Profile = {
 			that.profileInfo = profileInfo;
 			page.getUserClaps(Router.currentParams["userauthaddress"], (claps) => {
 				that.claps = claps;
+				console.log(claps);
 			});
 		});
 	},
@@ -34,12 +35,13 @@ var Profile = {
 			return this.getClapStoryAuthAddress(story) + '/' + story.slug;
 		},
 		getClapStoryAuthAddress(story) {
+			console.log(story);
 			return story.directory.replace(/users\//, '').replace(/\//g, '');
 		},
 	},
 	template: `
 		<div>
-			<profile-hero :name="profileInfo.name" :about="profileInfo.about" :cert-user-id="profileInfo.cert_user_id"></profile-hero>
+			<profile-hero :name="profileInfo.name" :about="profileInfo.about" :cert-user-id="profileInfo.cert_user_id" :auth-address="profileInfo.auth_address"></profile-hero>
 			<profile-navbar></profile-navbar>
 			<section class="section">
 				<div class="columns is-centered" v-if="profileInfo">
@@ -55,11 +57,11 @@ var Profile = {
 							<p style="margin-bottom: 20px;"><strong>{{ profileInfo.name }}</strong></p>
 						</response>
 						<p class="title is-4" style="border-bottom: 1px solid #AAAAAA; padding-bottom: 10px;">Claps</p>
-						<div class="box" v-for="story in claps" :key="story.story_id">
-							<p class="title is-5" style="margin-bottom: 0;"><a :href="'./?/' + getClapStoryUrl(story)" v-on:click.prevent="goto(getClapStoryUrl(story))">{{ story.title }}</a></p>
-							<small style="margin-bottom: 10px;">By <a :href="'./?/' + getClapStoryAuthAddress(story)" v-on:click.prevent="goto(getClapStoryAuthAddress(story))">{{ story.value }}</a></small>
-							<p style="margin-bottom: 5px;">{{ story.description }}</p>
-							<small>Published {{ datePosted(story.date_added) }}</small>
+						<div class="box" v-for="clap in claps" :key="clap.story.story_id" v-if="claps">
+							<p class="title is-5" style="margin-bottom: 0;"><a :href="'./?/' + getClapStoryUrl(clap.story)" v-on:click.prevent="goto(getClapStoryUrl(clap.story))">{{ clap.story.title }}</a></p>
+							<small style="margin-bottom: 10px;">By <a :href="'./?/' + getClapStoryAuthAddress(clap.story)" v-on:click.prevent="goto(getClapStoryAuthAddress(clap.story))">{{ clap.story.value }}</a></small>
+							<p style="margin-bottom: 5px;">{{ clap.story.description }}</p>
+							<small>Published {{ datePosted(clap.story.date_added) }}</small>
 						</div>
 					</div>
 				</div>
@@ -69,7 +71,7 @@ var Profile = {
 }
 
 Vue.component('profile-hero', {
-	props: ['name', 'about', 'certUserId'],
+	props: ['name', 'about', 'certUserId', 'authAddress'],
     methods: {
     },
     template: `
@@ -78,6 +80,7 @@ Vue.component('profile-hero', {
                 <div class="hero-body">
                     <span class="title">{{ name }}</span><br>
                     <span class="subtitle">{{ certUserId }}</span><br>
+                    <p v-if="authAddress" style="margin-top: 5px;">Donate: {{ authAddress }}</p>
                     <p style="margin-top: 5px; margin-bottom: 15px;">{{ about }}</p>
                     <a class="button is-success is-small is-outlined">Follow</a>
                 </div>
