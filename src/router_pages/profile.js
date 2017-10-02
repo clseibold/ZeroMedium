@@ -34,7 +34,6 @@ var Profile = {
 			return this.getClapStoryAuthAddress(story) + '/' + story.slug;
 		},
 		getClapStoryAuthAddress(story) {
-			console.log(story);
 			return story.directory.replace(/users\//, '').replace(/\//g, '');
 		},
 	},
