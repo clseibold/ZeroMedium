@@ -108,7 +108,7 @@ var Profile = {
 
 					<div class="column is-three-quarters-tablet is-three-quarters-desktop" v-if="currentTab==3 && claps">
 						<p class="title is-4" style="border-bottom: 1px solid #AAAAAA; padding-bottom: 10px;">Claps</p>
-						<div class="box" v-for="clap in claps" :key="clap.story.story_id" v-if="clap.story">
+						<div class="box" v-for="clap in claps" v-if="clap.story" :key="clap.story.story_id">
 							<p class="title is-5" style="margin-bottom: 0;"><a :href="'./?/' + getClapStoryUrl(clap.story)" v-on:click.prevent="goto(getClapStoryUrl(clap.story))">{{ clap.story.title }}</a></p>
 							<small style="margin-bottom: 10px;">By <a :href="'./?/' + getClapStoryAuthAddress(clap.story)" v-on:click.prevent="goto(getClapStoryAuthAddress(clap.story))">{{ clap.story.value }}</a></small>
 							<p style="margin-bottom: 5px;">{{ clap.story.description }}</p>
