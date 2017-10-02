@@ -158,7 +158,6 @@ Vue.component('response', {
 		},
 		getResponseStory: function() {
 			var that = this;
-			console.log(this.response.reference_auth_address + ", " + this.response.reference_id);
 			page.getStoryMinimal(this.response.reference_auth_address, this.response.reference_id, (story) => {
 				that.story = story;
 			});
