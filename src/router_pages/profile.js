@@ -6,7 +6,8 @@ var moment = require("moment");
 var Profile = {
 	data: function() {
 		return {
-			profileInfo: {}
+			profileInfo: {},
+			claps: []
 		}
 	},
 	beforeMount: function() {
@@ -14,6 +15,9 @@ var Profile = {
 		var that = this;
 		page.getUserProfileInfo(Router.currentParams["userauthaddress"], true, true, (profileInfo) => {
 			that.profileInfo = profileInfo;
+			page.getUserClaps(Router.currentParams["userauthaddress"], (claps) => {
+				that.claps = claps;
+			});
 		});
 	},
 	methods: {
@@ -25,7 +29,14 @@ var Profile = {
 		},
 		getStoryUrl(story) {
 			return this.profileInfo.auth_address + '/' + story.slug;
-		}
+		},
+		getClapStoryUrl(story) {
+			return this.getClapStoryAuthAddress(story) + '/' + story.slug;
+		},
+		getClapStoryAuthAddress(story) {
+			console.log(story);
+			return story.directory.replace(/users\//, '').replace(/\//g, '');
+		},
 	},
 	template: `
 		<div>
@@ -44,6 +55,13 @@ var Profile = {
 						<response v-for="response in profileInfo.responses" :key="response.response_id" v-bind:response="response" v-bind:show-name="false" v-bind:show-reference="true">
 							<p style="margin-bottom: 20px;"><strong>{{ profileInfo.name }}</strong></p>
 						</response>
+						<p class="title is-4" style="border-bottom: 1px solid #AAAAAA; padding-bottom: 10px;">Claps</p>
+						<div class="box" v-for="story in claps" :key="story.story_id">
+							<p class="title is-5" style="margin-bottom: 0;"><a :href="'./?/' + getClapStoryUrl(story)" v-on:click.prevent="goto(getClapStoryUrl(story))">{{ story.title }}</a></p>
+							<small style="margin-bottom: 10px;">By <a :href="'./?/' + getClapStoryAuthAddress(story)" v-on:click.prevent="goto(getClapStoryAuthAddress(story))">{{ story.value }}</a></small>
+							<p style="margin-bottom: 5px;">{{ story.description }}</p>
+							<small>Published {{ datePosted(story.date_added) }}</small>
+						</div>
 					</div>
 				</div>
 			</section>

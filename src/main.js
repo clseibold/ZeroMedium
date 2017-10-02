@@ -496,6 +496,10 @@ class ZeroApp extends ZeroFrame {
         page.cmd('dbQuery', ['SELECT * FROM claps LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE reference_auth_address="' + reference_auth_address + '" AND reference_id=' + reference_id + ' AND reference_type="' + reference_type + '" AND key="name" ORDER BY date_added DESC'], f);
     }
 
+    getUserClaps(auth_address, f) {
+        page.cmd('dbQuery', ['SELECT claps.number, stories.story_id, stories.description, stories.slug, stories.title, stories.date_updated, stories.date_added, claps.reference_auth_address, claps.reference_id, claps.reference_type, stories_json.directory, keyvalue.value FROM claps LEFT JOIN json claps_json USING (json_id) LEFT JOIN stories ON stories.story_id=claps.reference_id LEFT JOIN json stories_json ON stories_json.json_id=stories.json_id LEFT JOIN keyvalue ON stories.json_id=keyvalue.json_id WHERE claps_json.directory="users/' + auth_address + '" AND number=1 AND key="name"'], f);
+    }
+
     getUsers(f) {
         page.cmd('dbQuery', ['SELECT * FROM keyvalue LEFT JOIN json USING (json_id) WHERE key="name"'], f);
     }

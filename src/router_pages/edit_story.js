@@ -45,7 +45,22 @@ var EditStory = {
 				placeholder: {
 					text: "Tell your story...",
 					hideOnClick: true
-				}
+				},
+				toolbar: {
+					buttons: ['bold', 'italic', 'underline', 'anchor', 'h2', 'h3', 'unorderedlist'] // Got rid of 'quote'
+				},
+				buttonLabels: "fontawesome",
+				anchor: {
+			        /* These are the default options for anchor form,
+			           if nothing is passed this is what it used */
+			        customClassOption: null,
+			        customClassOptionText: 'Button',
+			        linkValidation: false,
+			        placeholderText: 'Paste or type a link',
+			        targetCheckbox: false,
+			        targetCheckboxText: 'Open in new window'
+			    },
+			    autoLink: true
 			});
 			this.editor.setContent(this.story.body);
 		},
