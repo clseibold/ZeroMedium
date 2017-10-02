@@ -501,24 +501,17 @@ class ZeroApp extends ZeroFrame {
             var newClaps = [];
 
             for (var i = 0; i < claps.length; i++) {
-                let clap = claps[i];
+                let clap = claps[i]; // Don't use var, otherwise the lambda's will use the same value for this (because var is function scope, not block scope and because javascript is dumb).
                 if (clap.reference_type == "s") {
-                    if (i == claps.length - 1) {
-
-                        page.cmd('dbQuery', ['SELECT story_id, description, slug, title, date_updated, date_added, directory, value FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND story_id=' + clap.reference_id + ' AND directory="users/' + clap.reference_auth_address + '"'], (story) => {
-                            console.log("Story: " + story[0].description);
+                    if (i == claps.length - 1) { // If last clap
+                        page.cmd('dbQuery', ['SELECT story_id, description, slug, title, date_updated, date_added, directory, value FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND story_id=' + clap.reference_id + ' AND directory="users/' + clap.reference_auth_address + '" ORDER BY date_added DESC'], (story) => {
                             clap["story"] = story[0];
-
                             newClaps.push(clap);
 
-                            console.log("Last clap");
-                            if (typeof f == 'function') {
-                                f(newClaps);
-                            }
+                            if (typeof f == 'function') f(newClaps);
                         });
                     } else {
-                        page.cmd('dbQuery', ['SELECT story_id, description, slug, title, date_updated, date_added, directory, value FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND story_id=' + clap.reference_id + ' AND directory="users/' + clap.reference_auth_address + '"'], (story) => {
-                            console.log("Story: " + story[0].description);
+                        page.cmd('dbQuery', ['SELECT story_id, description, slug, title, date_updated, date_added, directory, value FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND story_id=' + clap.reference_id + ' AND directory="users/' + clap.reference_auth_address + '" ORDER BY date_added DESC'], (story) => {
                             clap["story"] = story[0];
 
                             newClaps.push(clap);
