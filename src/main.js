@@ -452,6 +452,7 @@ class ZeroApp extends ZeroFrame {
             if (alreadyVoted) {
                 if (data.claps[voteIndex].number == 0) {
                     data.claps[voteIndex].number = 1;
+                    data.claps[voteIndex].date_added = Date.now();
                 } else {
                     data.claps[voteIndex].number = 0;
                 }
@@ -497,21 +498,21 @@ class ZeroApp extends ZeroFrame {
     }
 
     getUserClaps(auth_address, f) {
-        page.cmd('dbQuery', ['SELECT number, reference_auth_address, reference_id, reference_type FROM claps LEFT JOIN json USING (json_id) WHERE directory="users/' + auth_address + '" AND number=1'], (claps) => {
+        page.cmd('dbQuery', ['SELECT number, reference_auth_address, reference_id, reference_type FROM claps LEFT JOIN json USING (json_id) WHERE directory="users/' + auth_address + '" AND number=1 ORDER BY date_added DESC'], (claps) => {
             var newClaps = [];
 
             for (var i = 0; i < claps.length; i++) {
                 let clap = claps[i]; // Don't use var, otherwise the lambda's will use the same value for this (because var is function scope, not block scope and because javascript is dumb).
                 if (clap.reference_type == "s") {
                     if (i == claps.length - 1) { // If last clap
-                        page.cmd('dbQuery', ['SELECT story_id, description, slug, title, date_updated, date_added, directory, value FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND story_id=' + clap.reference_id + ' AND directory="users/' + clap.reference_auth_address + '" ORDER BY date_added DESC'], (story) => {
+                        page.cmd('dbQuery', ['SELECT story_id, description, slug, title, date_updated, date_added, directory, value FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND story_id=' + clap.reference_id + ' AND directory="users/' + clap.reference_auth_address + '"'], (story) => {
                             clap["story"] = story[0];
                             newClaps.push(clap);
 
                             if (typeof f == 'function') f(newClaps);
                         });
                     } else {
-                        page.cmd('dbQuery', ['SELECT story_id, description, slug, title, date_updated, date_added, directory, value FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND story_id=' + clap.reference_id + ' AND directory="users/' + clap.reference_auth_address + '" ORDER BY date_added DESC'], (story) => {
+                        page.cmd('dbQuery', ['SELECT story_id, description, slug, title, date_updated, date_added, directory, value FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND story_id=' + clap.reference_id + ' AND directory="users/' + clap.reference_auth_address + '"'], (story) => {
                             clap["story"] = story[0];
 
                             newClaps.push(clap);
