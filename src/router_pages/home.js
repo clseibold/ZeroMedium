@@ -108,7 +108,7 @@ var Home = {
                             <small>Published {{ datePosted(story.date_added) }}</small>
                         </div>
 
-                        <p class="title is-4" style="border-bottom: 1px solid #AAAAAA; padding-bottom: 10px;">Today's Recent Stories</p>
+                        <p class="title is-4" style="border-bottom: 1px solid #AAAAAA; padding-bottom: 10px;">Recent Stories</p>
                         <div class="box" v-for="story in recentStories" :key="story.story_id">
                             <p class="title is-5" style="margin-bottom: 0;"><a :href="'./?/' + getStoryUrl(story)" v-on:click.prevent="goto(getStoryUrl(story))">{{ story.title }}</a></p>
                             <small style="margin-bottom: 10px;">By <a :href="'./?/' + getStoryAuthAddress(story)" v-on:click.prevent="goto(getStoryAuthAddress(story))">{{ story.value }}</a></small>
