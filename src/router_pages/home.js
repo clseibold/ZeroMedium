@@ -15,7 +15,8 @@ var Home = {
     methods: {
         getStories: function() {
             var that = this;
-            that.stories = [];
+            that.recentStories = [];
+            that.topStories = [];
             var now = Date.now();
             page.getAllStories(true, (story) => {
                 return (now - story.date_added) < 8.64e+7;
