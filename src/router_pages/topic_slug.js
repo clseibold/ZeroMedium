@@ -35,7 +35,7 @@ var TopicSlug = {
 			var that = this;
 			if (this.topicTags == "") return;
 			var amount = 0;
-			page.getAllStories(function(story) {
+			page.getAllStories(false, function(story) { // TODO
 				var amount = 0;
 				var storyTags = story.tags.split(',').map(function(tag) {
 					return tag.toLowerCase().trim();

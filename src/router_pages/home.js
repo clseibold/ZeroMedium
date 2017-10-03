@@ -16,14 +16,24 @@ var Home = {
         getStories: function() {
             var that = this;
             that.stories = [];
-            page.getAllStories(function(story) {
-                var now = Date.now();
+            var now = Date.now();
+            page.getAllStories(true, (story) => {
                 return (now - story.date_added) < 8.64e+7;
             }, (stories) => {
-                // Limit to 5 stories - NOTE/TODO: Performance can be improved by putting the limit into the dbquery instead!
+                // Limit to 5 stories for putting into recent stories
                 for (i = 0; i < 5 && i < stories.length; i++) {
-                    that.stories.push(stories[i]);
+                    that.recentStories.push(stories[i]);
                 }
+
+                // Sort stories by how many responses and claps they have
+                stories.sort((a, b) => {
+                    return (b.responses.length + b.claps.length) - (a.responses.length + a.claps.length);
+                });
+
+                for (i = 0; that.topStories.length < 5 && i < stories.length; i++) {
+                    that.topStories.push(stories[i]);
+                }
+
             });
         },
         showSigninModal: function() {
@@ -48,7 +58,8 @@ var Home = {
     },
     data: function() {
         return {
-            stories: [],
+            topStories: [],
+            recentStories: [],
             topics: []
         }
     },
@@ -74,8 +85,16 @@ var Home = {
             <section class="section">
                 <div class="columns is-centered">
                     <div class="column is-three-quarters-tablet is-three-quarters-desktop">
-                        <p class="title is-4" style="border-bottom: 1px solid #AAAAAA; padding-bottom: 10px;">Today's Stories</p>
-                        <div class="box" v-for="story in stories" :key="story.story_id">
+                        <p class="title is-4" style="border-bottom: 1px solid #AAAAAA; padding-bottom: 10px;">Today's Top Stories</p>
+                        <div class="box" v-for="story in topStories" :key="story.story_id">
+                            <p class="title is-5" style="margin-bottom: 0;"><a :href="'./?/' + getStoryUrl(story)" v-on:click.prevent="goto(getStoryUrl(story))">{{ story.title }}</a></p>
+                            <small style="margin-bottom: 10px;">By <a :href="'./?/' + getStoryAuthAddress(story)" v-on:click.prevent="goto(getStoryAuthAddress(story))">{{ story.value }}</a></small>
+                            <p style="margin-bottom: 5px;">{{ story.description }}</p>
+                            <small>Published {{ datePosted(story.date_added) }}</small>
+                        </div>
+
+                        <p class="title is-4" style="border-bottom: 1px solid #AAAAAA; padding-bottom: 10px;">Today's Recent Stories</p>
+                        <div class="box" v-for="story in recentStories" :key="story.story_id">
                             <p class="title is-5" style="margin-bottom: 0;"><a :href="'./?/' + getStoryUrl(story)" v-on:click.prevent="goto(getStoryUrl(story))">{{ story.title }}</a></p>
                             <small style="margin-bottom: 10px;">By <a :href="'./?/' + getStoryAuthAddress(story)" v-on:click.prevent="goto(getStoryAuthAddress(story))">{{ story.value }}</a></small>
                             <p style="margin-bottom: 5px;">{{ story.description }}</p>

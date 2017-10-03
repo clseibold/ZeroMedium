@@ -349,16 +349,51 @@ class ZeroApp extends ZeroFrame {
         });
     }
 
-    getAllStories(includeTestFunction, f = null) {
+    // Make getExtra true to get claps and responses on the story (TODO: does not include the responses on the responses)
+    getAllStories(getExtra, includeTestFunction, f = null) {
         page.cmd('dbQuery', ['SELECT * FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" ORDER BY date_added DESC'], (stories) => {
             var storiesToInclude = [];
             for (var i = 0; i < stories.length; i++) {
-                if (includeTestFunction(stories[i])) {
-                    storiesToInclude.push(stories[i]);
+                let story = stories[i];
+                let story_auth_address = story.directory.replace(/users\//, '').replace(/\//g, '');
+
+                if (getExtra) {
+                    if (i == stories.length - 1) {
+                        page.getResponses(story_auth_address, story.story_id, "s", (responses) => {
+                            story["responses"] = responses;
+
+                            page.getClaps(story_auth_address, story.story_id, "s", (claps) => {
+                                story["claps"] = claps;
+
+                                if (includeTestFunction(story)) {
+                                    storiesToInclude.push(story);
+                                }
+                                
+                                if (f && typeof f == 'function') f(storiesToInclude);
+                            });
+                        });
+                    } else {
+                        page.getResponses(story_auth_address, story.story_id, "s", (responses) => {
+                            story["responses"] = responses;
+
+                            page.getClaps(story_auth_address, story.story_id, "s", (claps) => {
+                                story["claps"] = claps;
+
+                                if (includeTestFunction(story)) {
+                                    storiesToInclude.push(story);
+                                }
+                            });
+                        });
+                    }
+                } else {
+                    if (includeTestFunction(story)) {
+                        storiesToInclude.push(story);
+                    }
+                    if (i == stories.length - 1) {
+                        if (f && typeof f == 'function') f(storiesToInclude);
+                    }
                 }
             }
-
-            if (f && typeof f == 'function') f(storiesToInclude);
         });
     }
 

@@ -22,7 +22,7 @@ var Search = {
 	methods: {
 		getStories: function() {
 			var that = this;
-			page.getAllStories(function(story) {
+			page.getAllStories(false, (story) => { // TODO
 			    return true;
 			}, (stories) => {
 			    that.allStories = stories;
