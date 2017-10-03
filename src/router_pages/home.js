@@ -36,7 +36,7 @@ var Home = {
                 return true;
             }, (stories) => {
                 // Limit to 5 stories for putting into recent stories
-                for (i = 0; that.recentStories.length < 10 && i < stories.length; i++) {
+                for (i = 0; that.recentStories.length < 5 && i < stories.length; i++) {
                     that.recentStories.push(stories[i]);
                 }
 
