@@ -22,11 +22,11 @@ var Home = {
                 var responses = story.responses;
                 var claps = story.claps;
 
-                responses.filter((response) => {
+                responses = responses.filter((response) => {
                     return (now - response.date_added) < 8.645e+7;
                 });
-                claps.filter((clap) => {
-                    return (now - clap.date_added) < 8.645e+7 && clap.number == 1;
+                claps = claps.filter((clap) => {
+                    return ((now - clap.date_added) < 8.645e+7) && clap.number == 1;
                 });
 
                 story["responses"] = responses;
@@ -36,7 +36,7 @@ var Home = {
                 return true;
             }, (stories) => {
                 // Limit to 5 stories for putting into recent stories
-                for (i = 0; that.recentStories.length < 5 && i < stories.length; i++) {
+                for (i = 0; that.recentStories.length < 10 && i < stories.length; i++) {
                     that.recentStories.push(stories[i]);
                 }
 
