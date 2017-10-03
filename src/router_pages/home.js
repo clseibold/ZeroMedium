@@ -19,10 +19,24 @@ var Home = {
             that.topStories = [];
             var now = Date.now();
             page.getAllStories(true, (story) => {
-                return (now - story.date_added) < 8.64e+7;
+                var responses = story.responses;
+                var claps = story.claps;
+
+                responses.filter((response) => {
+                    return (now - response.date_added) < 8.645e+7;
+                });
+                claps.filter((clap) => {
+                    return (now - clap.date_added) < 8.645e+7 && clap.number == 1;
+                });
+
+                story["responses"] = responses;
+                story["claps"] = claps;
+
+                //return (now - story.date_added) < 8.64e+7;
+                return true;
             }, (stories) => {
                 // Limit to 5 stories for putting into recent stories
-                for (i = 0; i < 5 && i < stories.length; i++) {
+                for (i = 0; that.recentStories.length < 5 && i < stories.length; i++) {
                     that.recentStories.push(stories[i]);
                 }
 
