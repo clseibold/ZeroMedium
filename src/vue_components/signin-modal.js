@@ -101,6 +101,7 @@ Vue.component('signin-modal', {
                     return;
                 }
                 for (var i = 0; i < this.existingUsers.length; i++) {
+                    if (!this.existingUsers[i].value || typeof this.existingUsers[i].value != "string") continue;
                     var existingName = this.existingUsers[i].value.toLowerCase().trim();
                     if (existingName == name) {
                         page.cmd("wrapperNotification", ["error", "Username already taken!"]);
