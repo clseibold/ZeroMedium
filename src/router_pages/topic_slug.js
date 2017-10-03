@@ -41,7 +41,7 @@ var TopicSlug = {
 					return tag.toLowerCase().trim();
 				});
 				for (var i = 0; i < that.topicTags.length; i++) {
-					if (story.tags.includes(that.topicTags[i])) {
+					if (storyTags.includes(that.topicTags[i])) {
 						amount++;
 					}
 				}
