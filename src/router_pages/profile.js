@@ -129,7 +129,7 @@ Vue.component('profile-hero', {
                 <div class="hero-body">
                     <span class="title">{{ name }}</span><br>
                     <span class="subtitle">{{ certUserId }}</span><br>
-                    <p v-if="authAddress" style="margin-top: 5px;">Donate: {{ authAddress }}</p>
+                    <p v-if="authAddress" style="margin-top: 5px;">Donate: <a :href="'bitcoin:' + authAddress + '?message=Donation to ' + name">{{ authAddress }}</a></p>
                     <p style="margin-top: 5px; margin-bottom: 15px;">{{ about }}</p>
                     <a class="button is-success is-small is-outlined">Follow</a>
                 </div>
