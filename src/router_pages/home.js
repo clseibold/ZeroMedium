@@ -137,7 +137,7 @@ Vue.component('home-hero', {
                         <p>Blogs on many different topics, from many different people.</p>
                         <br>
                         <a class="button is-dark is-small" v-on:click.prevent="showSigninModal()">Get Started</a>
-                        <a class="button is-small">Learn More</a>
+                        <a class="button is-small" href="bitcoin:1CVmbCKWtbskK2GAZLM6gnMuiL6Je25Yds?message=Donation to ZeroMedium">Donate via Bitcoin</a>
                     </div>
                 </div>
             </div>
