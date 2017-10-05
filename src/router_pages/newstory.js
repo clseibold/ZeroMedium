@@ -124,11 +124,12 @@ Vue.component('editor-nav', {
 	            </div>
 	        </div>
 	        <div class="columns is-centered is-hidden-desktop">
-				<div class="column is-three-quarters-tablet is-half-desktop" style="margin-top: 10px;">
+				<div class="column is-three-quarters-tablet is-half-desktop" style="margin-top: 20px;">
+	        		<a class="button is-outlined is-info is-small" v-on:click.prevent="save">Save Draft</a>
 					<div class="dropdown is-hoverable">
 						<div class="dropdown-trigger">
-							<button class="button is-primary is-outlined" aria-haspopup="true" aria-controls="dropdown-menu4">
-								Publish
+							<button class="button is-primary is-outlined is-small" aria-haspopup="true" aria-controls="dropdown-menu-publish-mobile">
+								Publish 
 								<span class="icon is-small">
 									<i class="fa fa-angle-down" aria-hidden="true"></i>
 							  	</span>
