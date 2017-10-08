@@ -66,28 +66,7 @@ var MeStories = {
 			<section class="section" v-if="stories">
 				<div class="columns is-centered">
 					<div class="column is-three-quarters-tablet is-three-quarters-desktop">
-						<div class="box" v-for="story in stories" :key="story.story_id">
-							<p class="title is-5" style="margin-bottom: 5px;"><a :href="'./?/' + getStoryUrl(story)" v-on:click.prevent="goto(getStoryUrl(story))">{{ story.title }}</p>
-							<p style="margin-bottom: 5px;">{{ story.description }}</p>
-							<small>
-								Published {{ datePosted(story.date_added) }}
-								<div class="dropdown is-hoverable">
-									<div class="dropdown-trigger">
-										<a style="margin-left: 5px;">
-											<span class="icon is-small">
-									        	<i class="fa fa-angle-down" aria-hidden="true"></i>
-									      	</span>
-										</a>
-									</div>
-									<div class="dropdown-menu" id="dropdown-menu" role="menu">
-									    <div class="dropdown-content">
-									    	<a class="dropdown-item" :href="getStoryEditUrl(story)" v-on:click.prevent="goto(getStoryEditUrl(story))">Edit Story</a>
-									    	<a class="dropdown-item" v-on:click.prevent="deleteStory(story)">Delete Story</a>
-									    </div>
-									</div>
-								</div>
-							</small>
-						</div>
+						<story v-for="story in stories" :key="story.story_id" :story="story" :show-name="false" :show-options="true" :editUrl="getStoryEditUrl(story)" v-on:delete="deleteStory(story)"></story>
 					</div>
 				</div>
 			</section>

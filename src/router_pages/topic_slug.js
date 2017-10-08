@@ -80,12 +80,7 @@ var TopicSlug = {
 							<a class="tag" v-for="tag in topicTags" :key="tag" :href="'./?/tag/' + getTagSlug(tag)" v-on:click.prevent="goto('tag/' + getTagSlug(tag))">{{ tag }}</span>
 						</div>-->
 						<hr>
-						<div class="box" v-for="story in stories" :key="story.story_id">
-							<p class="title is-5" style="margin-bottom: 0;"><a :href="'./?/' + getStoryUrl(story)" v-on:click.prevent="goto(getStoryUrl(story))">{{ story.title }}</a></p>
-							<small style="margin-bottom: 10px;">By <a :href="'./?/' + getStoryAuthAddress(story)" v-on:click.prevent="goto(getStoryAuthAddress(story))">{{ story.value }}</a></small>
-							<p style="margin-bottom: 5px;">{{ story.description }}</p>
-							<small>Published {{ datePosted(story.date_added) }}</small>
-						</div>
+						<story v-for="story in stories" :key="story.story_id" v-bind:story="story" v-bind:show-name="true"></story>
 					</div>
 				</div>
 			</section>

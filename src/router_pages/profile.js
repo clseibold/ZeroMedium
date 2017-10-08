@@ -70,50 +70,32 @@ var Profile = {
 				<div class="columns is-centered" v-if="profileInfo">
 					<div class="column is-three-quarters-tablet is-three-quarters-desktop" v-if="currentTab==0">
 						<p class="title is-4" style="border-bottom: 1px solid #AAAAAA; padding-bottom: 10px;">Latest</p>
-						<div class="box" v-for="story in limitStories(3)" :key="story.story_id">
-							<p class="title is-5" style="margin-bottom: 5px;"><a :href="'./?/' + getStoryUrl(story)" v-on:click.prevent="goto(getStoryUrl(story))">{{ story.title }}</a></p>
-							<p style="margin-bottom: 5px;">{{ story.description }}</p>
-							<small>Published {{ datePosted(story.date_added) }}</small>
-						</div>
+						<story v-for="story in limitStories(3)" :key="story.story_id" :story="story" :show-name="false"></story>
 
 						<p class="title is-4" style="border-bottom: 1px solid #AAAAAA; padding-bottom: 10px;">Responses</p>
-						<response v-for="response in limitResponses(4)" :key="response.response_id" v-bind:response="response" v-bind:show-name="false" v-bind:show-reference="true">
+						<response v-for="response in limitResponses(4)" :key="response.response_id" v-bind:response="response" v-bind:show-name="false" v-bind:show-reference="true" v-bind:shorten="true">
 							<p style="margin-bottom: 20px;"><strong>{{ profileInfo.name }}</strong></p>
 						</response>
 
 						<p class="title is-4" style="border-bottom: 1px solid #AAAAAA; padding-bottom: 10px;">Claps</p>
-						<div class="box" v-for="clap in limitClaps(5)" v-if="claps && clap.story" :key="clap.story.story_id">
-							<p class="title is-5" style="margin-bottom: 0;"><a :href="'./?/' + getClapStoryUrl(clap.story)" v-on:click.prevent="goto(getClapStoryUrl(clap.story))">{{ clap.story.title }}</a></p>
-							<small style="margin-bottom: 10px;">By <a :href="'./?/' + getClapStoryAuthAddress(clap.story)" v-on:click.prevent="goto(getClapStoryAuthAddress(clap.story))">{{ clap.story.value }}</a></small>
-							<p style="margin-bottom: 5px;">{{ clap.story.description }}</p>
-							<small>Published {{ datePosted(clap.story.date_added) }}</small>
-						</div>
+						<story v-for="clap in limitClaps(5)" v-if="claps && clap.story" :key="clap.story.story_id" :story="clap.story" :show-name="true"></story>
 					</div>
 
 					<div class="column is-three-quarters-tablet is-three-quarters-desktop" v-if="currentTab==1 && profileInfo.stories">
 						<p class="title is-4" style="border-bottom: 1px solid #AAAAAA; padding-bottom: 10px;">Latest</p>
-						<div class="box" v-for="story in profileInfo.stories" :key="story.story_id">
-							<p class="title is-5" style="margin-bottom: 5px;"><a :href="'./?/' + getStoryUrl(story)" v-on:click.prevent="goto(getStoryUrl(story))">{{ story.title }}</a></p>
-							<p style="margin-bottom: 5px;">{{ story.description }}</p>
-							<small>Published {{ datePosted(story.date_added) }}</small>
-						</div>
+						<story v-for="story in profileInfo.stories" :key="story.story_id" :story="story" :show-name="false"></story>
 					</div>
 
 					<div class="column is-three-quarters-tablet is-three-quarters-desktop" v-if="currentTab==2 && profileInfo.responses">
 						<p class="title is-4" style="border-bottom: 1px solid #AAAAAA; padding-bottom: 10px;">Responses</p>
-						<response v-for="response in profileInfo.responses" :key="response.response_id" v-bind:response="response" v-bind:show-name="false" v-bind:show-reference="true">
+						<response v-for="response in profileInfo.responses" :key="response.response_id" v-bind:response="response" v-bind:show-name="false" v-bind:show-reference="true" v-bind:shorten="true">
 							<p style="margin-bottom: 20px;"><strong>{{ profileInfo.name }}</strong></p>
 						</response>
 					</div>
 
 					<div class="column is-three-quarters-tablet is-three-quarters-desktop" v-if="currentTab==3 && claps">
 						<p class="title is-4" style="border-bottom: 1px solid #AAAAAA; padding-bottom: 10px;">Claps</p>
-						<div class="box" v-for="clap in claps" v-if="clap.story" :key="clap.story.story_id">
-							<p class="title is-5" style="margin-bottom: 0;"><a :href="'./?/' + getClapStoryUrl(clap.story)" v-on:click.prevent="goto(getClapStoryUrl(clap.story))">{{ clap.story.title }}</a></p>
-							<small style="margin-bottom: 10px;">By <a :href="'./?/' + getClapStoryAuthAddress(clap.story)" v-on:click.prevent="goto(getClapStoryAuthAddress(clap.story))">{{ clap.story.value }}</a></small>
-							<p style="margin-bottom: 5px;">{{ clap.story.description }}</p>
-							<small>Published {{ datePosted(clap.story.date_added) }}</small>
-						</div>
+						<story v-for="clap in claps" v-if="clap.story" :key="clap.story.story_id" :story="clap.story" :show-name="true"></story>
 					</div>
 				</div>
 			</section>

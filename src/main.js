@@ -11,9 +11,11 @@ var VueZeroFrameRouter = require("./vue-zeroframe-router.js");
 // Vue Components
 require("./vue_components/navbar.js");
 require("./vue_components/signin-modal.js");
+require("./vue_components/story.js");
+require("./vue_components/response.js");
 
 var sanitizeHtml = require('sanitize-html');
-var { sanitizeStringForUrl, sanitizeStringForUrl_SQL } = require('./util.js');
+var { sanitizeStringForUrl, sanitizeStringForUrl_SQL, html_substr } = require('./util.js');
 
 Vue.use(VueZeroFrameRouter.VueZeroFrameRouter);
 
@@ -135,7 +137,7 @@ class ZeroApp extends ZeroFrame {
             // Get stories
             if (getStoryList) {
                 userProfileInfo["stories"] = [];
-                page.cmd('dbQuery', ['SELECT story_id, title, slug, description, tags, date_updated, date_added, cert_user_id FROM stories LEFT JOIN json USING (json_id) WHERE directory="users/' + auth_address + '" ORDER BY date_added DESC'], (stories) => {
+                page.cmd('dbQuery', ['SELECT story_id, title, slug, description, tags, date_updated, date_added, cert_user_id, directory FROM stories LEFT JOIN json USING (json_id) WHERE directory="users/' + auth_address + '" ORDER BY date_added DESC'], (stories) => {
                     userProfileInfo["stories"] = stories;
 
                     if (getResponsesList) {
