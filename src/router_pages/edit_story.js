@@ -47,7 +47,7 @@ var EditStory = {
 					hideOnClick: true
 				},
 				toolbar: {
-					buttons: ['bold', 'italic', 'underline', 'anchor', 'h2', 'h3', 'unorderedlist'] // Got rid of 'quote'
+					buttons: ['bold', 'italic', 'underline', 'anchor', 'h2', 'h3', 'unorderedlist', 'quote'] // Got rid of 'quote'
 				},
 				buttonLabels: "fontawesome",
 				anchor: {
@@ -84,7 +84,7 @@ var EditStory = {
 					<div class="column is-three-quarters-tablet is-half-desktop">
 						<input class="input title" type="text" placeholder="Title" style="border: none; border-left: 1px solid #CCCCCC; background: inherit; box-shadow: none;" v-model="title">
 						<!--<textarea class="textarea" style="border: none; background: inherit; box-shadow: none;" placeholder="Tell your story..."></textarea>-->
-						<div class="editable" placeholder="Tell your story..."></div>
+						<div class="editable content" placeholder="Tell your story..."></div>
 					</div>
 				</div>
 			</section>

@@ -117,7 +117,7 @@ var ProfileStory = {
 						<div v-if="profileInfo && story">
 							<p class="title is-3">{{ story.title }}</p>
 							<p class="subtitle is-5">By <a :href="'./?/' + profileInfo.auth_address" v-on:click.prevent="goto(profileInfo.auth_address)">{{ storyAuthor }}</a> - {{ datePosted(story.date_added) }}</p>
-							<div v-html="sanitizedBody"></div>
+							<div class="content" v-html="sanitizedBody"></div>
 							<div class="tags" style="margin-top: 10px;" v-if="story.tags != ''">
 								<a class='tag' v-for="tag in getTags" :href="'./?/tag/' + getTagSlug(tag)" v-on:click.prevent="goto('tag/' + getTagSlug(tag))">{{ tag }}</a>
 							</div>

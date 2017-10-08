@@ -573,19 +573,25 @@ page = new ZeroApp();
 
 // Router Pages
 var Home = require("./router_pages/home.js");
+
 var Search = require("./router_pages/search.js");
+
 var TopicSlug = require("./router_pages/topic_slug.js");
 var TagSlug = require("./router_pages/tag_slug.js");
+
 var Newstory = require("./router_pages/newstory.js");
+var EditStory = require("./router_pages/edit_story.js");
+var ResponseFullscreen = require('./router_pages/response_fullscreen.js');
+
+var MeStories = require("./router_pages/me_stories.js");
 var Profile = require("./router_pages/profile.js");
 var ProfileStory = require("./router_pages/profile_story.js");
-var MeStories = require("./router_pages/me_stories.js");
-var EditStory = require("./router_pages/edit_story.js");
 
 VueZeroFrameRouter.VueZeroFrameRouter_Init(Router, app, [
     { route: 'search', component: Search },
     { route: 'topic/:slug', component: TopicSlug },
     { route: 'tag/:slug', component: TagSlug },
+    { route: 'me/response', component: ResponseFullscreen },
     { route: 'me/newstory', component: Newstory },
     { route: 'me/stories/:slug/edit', component: EditStory },
     { route: 'me/stories', component: MeStories },
