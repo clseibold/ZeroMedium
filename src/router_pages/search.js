@@ -32,15 +32,6 @@ var Search = {
 		goto: function(to) {
 			Router.navigate(to);
 		},
-		datePosted: function(date) {
-            return moment(date).fromNow();
-        },
-        getStoryUrl(story) {
-            return this.getStoryAuthAddress(story) + '/' + story.slug;
-        },
-        getStoryAuthAddress(story) {
-            return story.directory.replace(/users\//, '').replace(/\//g, '');
-        },
         toggleStrictness: function() {
 			this.isSearchStrict = !this.isSearchStrict;
 		}
@@ -131,12 +122,7 @@ var Search = {
 						</div>
 						<a class="button is-link" v-on:click.prevent="toggleStrictness()">Use {{ getStrictText }}</a>\
 						<hr>
-						<div class="box" v-for="story in getSearchedStories" :key="story.story_id">
-                            <p class="title is-5" style="margin-bottom: 0;"><a :href="'./?/' + getStoryUrl(story)" v-on:click.prevent="goto(getStoryUrl(story))">{{ story.title }}</a></p>
-                        	<small style="margin-bottom: 10px;">By <a :href="'./?/' + getStoryAuthAddress(story)" v-on:click.prevent="goto(getStoryAuthAddress(story))">{{ story.value }}</a></small>
-                            <p style="margin-bottom: 5px;">{{ story.description }}</p>
-                            <small>Published {{ datePosted(story.date_added) }}</small>
-                        </div>
+						<story v-for="story in getSearchedStories" :key="story.story_id" :story="story" :show-name="true"></story>
 					</div>
 				</div>
 			</section>

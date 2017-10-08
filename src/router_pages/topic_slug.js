@@ -60,12 +60,6 @@ var TopicSlug = {
 		goto: function(to) {
 			Router.navigate(to);
 		},
-		getStoryUrl(story) {
-			return this.getStoryAuthAddress(story) + '/' + story.slug;
-		},
-		getStoryAuthAddress(story) {
-			return story.directory.replace(/users\//, '').replace(/\//g, '');
-		},
 		getTagSlug(tag) {
 			return tag.replace(/ /, '-');
 		}

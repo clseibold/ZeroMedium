@@ -58,17 +58,8 @@ var Home = {
         topicClick: function(slug) {
             Router.navigate('topic/' + slug);
         },
-        datePosted: function(date) {
-            return moment(date).fromNow();
-        },
         goto: function(to) {
             Router.navigate(to);
-        },
-        getStoryUrl(story) {
-            return this.getStoryAuthAddress(story) + '/' + story.slug;
-        },
-        getStoryAuthAddress(story) {
-            return story.directory.replace(/users\//, '').replace(/\//g, '');
         }
     },
     data: function() {

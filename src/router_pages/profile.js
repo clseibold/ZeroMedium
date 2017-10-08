@@ -22,20 +22,8 @@ var Profile = {
 		});
 	},
 	methods: {
-		datePosted: function(date) {
-			return moment(date).fromNow();
-		},
 		goto: function(to) {
 			Router.navigate(to);
-		},
-		getStoryUrl(story) {
-			return this.profileInfo.auth_address + '/' + story.slug;
-		},
-		getClapStoryUrl(story) {
-			return this.getClapStoryAuthAddress(story) + '/' + story.slug;
-		},
-		getClapStoryAuthAddress(story) {
-			return story.directory.replace(/users\//, '').replace(/\//g, '');
 		},
 		limitStories(limit) { // Returns list of stories limited to 'limit'
 			var stories = [];

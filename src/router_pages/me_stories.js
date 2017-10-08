@@ -27,12 +27,6 @@ var MeStories = {
 				that.stories = profileInfo.stories;
 			});
 		},
-		datePosted: function(date) {
-			return moment(date).fromNow();
-		},
-		getStoryUrl: function(story) {
-			return this.userInfo.auth_address + '/' + story.slug;
-		},
 		getStoryEditUrl: function(story) {
 			return 'me/stories/' + story.slug + '/edit';
 		},
