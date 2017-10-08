@@ -26,3 +26,135 @@ h4
 	padding-left: calc(.625em - 1px)
 .editableResponse
 	outline: none
+
+
+.custom-content 
+  &:not(:last-child) 
+    margin-bottom: 1.5rem
+
+  li + li 
+    margin-top: 0.25em
+
+  //p:not(:last-child) 
+  //  margin-bottom: 1em
+
+  dl:not(:last-child) 
+    margin-bottom: 1em
+
+  ol:not(:last-child) 
+    margin-bottom: 1em
+
+  ul:not(:last-child) 
+    margin-bottom: 1em
+
+  blockquote:not(:last-child) 
+    margin-bottom: 1em
+
+  pre:not(:last-child) 
+    margin-bottom: 1em
+
+  table:not(:last-child) 
+    margin-bottom: 1em
+
+  blockquote 
+    background-color: whitesmoke
+    border-left: 5px solid #dbdbdb
+    padding: 1.25em 1.5em
+
+  ol 
+    list-style: decimal outside
+    margin-left: 2em
+    margin-top: 1em
+
+  ul 
+    list-style: disc outside
+    margin-left: 2em
+    margin-top: 1em
+    ul 
+      list-style-type: circle
+      margin-top: 0.5em
+      ul 
+        list-style-type: square
+
+
+
+  dd 
+    margin-left: 2em
+
+  figure 
+    text-align: center
+    img 
+      display: inline-block
+
+    figcaption 
+      font-style: italic
+
+
+  pre 
+    overflow-x: auto
+    padding: 1.25em 1.5em
+    white-space: pre
+    word-wrap: normal
+
+  sup 
+    font-size: 70%
+
+  sub 
+    font-size: 70%
+
+  table 
+    width: 100%
+    td 
+      border: 1px solid #dbdbdb
+      border-width: 0 0 1px
+      padding: 0.5em 0.75em
+      vertical-align: top
+
+    th 
+      border: 1px solid #dbdbdb
+      border-width: 0 0 1px
+      padding: 0.5em 0.75em
+      vertical-align: top
+      color: #363636
+      text-align: left
+
+    thead 
+      td 
+        border-width: 0 0 2px
+        color: #363636
+
+      th 
+        border-width: 0 0 2px
+        color: #363636
+
+
+    tfoot 
+      td 
+        border-width: 2px 0 0
+        color: #363636
+
+      th 
+        border-width: 2px 0 0
+        color: #363636
+
+
+    tr:hover 
+      background-color: whitesmoke
+
+    tbody tr:last-child 
+      td 
+        border-bottom-width: 0
+
+      th 
+        border-bottom-width: 0
+
+
+
+  &.is-small 
+    font-size: 0.75rem
+
+  &.is-medium 
+    font-size: 1.25rem
+
+  &.is-large 
+    font-size: 1.5rem

@@ -203,7 +203,7 @@ var ResponseFullscreenEditor = {
 						</div>
 						<!--<input class="input title" type="text" placeholder="Title" style="border: none; border-left: 1px solid #CCCCCC; background: inherit; box-shadow: none;" v-model="title">-->
 						<!--<textarea class="textarea" style="border: none; background: inherit; box-shadow: none;"></textarea>-->
-						<div class="editable content"></div>
+						<div class="editable custom-content"></div>
 					</div>
 				</div>
 			</section>
