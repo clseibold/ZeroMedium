@@ -5,9 +5,12 @@ var MediumEditor = require("medium-editor/dist/js/medium-editor");
 var Router = require("../router.js");
 
 var ResponseFullscreenEditor = {
-	props: ["userInfo"],
+	props: ["userInfo", 'responseContent'],
 	data: function() {
 		return {
+			story: null,
+			storyAuthor: "",
+			storyProfileInfo: null,
 			editor: null,
 			title: '',
 			status: 'Unsaved changes',
@@ -17,11 +20,20 @@ var ResponseFullscreenEditor = {
 	},
 	beforeMount: function() {
 		this.$emit('navbar-shadow-off');
+		var that = this;
+		page.getUserProfileInfo(Router.currentParams["userauthaddress"], false, false, (profileInfo) => {
+			that.storyProfileInfo = profileInfo;
+			page.getStory(Router.currentParams["userauthaddress"], Router.currentParams["slug"], (story) => {
+				that.story = story;
+				that.storyAuthor = story.value;
+				//that.sanitizedBody = page.sanitizeHtml(story.body);
+			});
+		});
 	},
 	mounted: function() {
 		this.editor = new MediumEditor('.editable', {
 			placeholder: {
-				text: "Tell your story...",
+				text: "Write a response...",
 				hideOnClick: false
 			},
 			toolbar: {
@@ -157,12 +169,20 @@ var ResponseFullscreenEditor = {
 		    	table: new MediumEditorTable()
 		    }*/
 		});
+
+		if (this.responseContent && this.responseContent != "") {
+			this.editor.setContent(this.responseContent);	
+		}
 	},
 	methods: {
+		goto: function(to) {
+			Router.navigate(to);
+		},
 		publish: function(tags, description) {
 			var that = this;
-			page.postStory(this.title, description, this.editor.getContent(), tags, function() {
-				Router.navigate(that.userInfo.auth_address + '/' + sanitizeStringForUrl(that.title));
+			page.postResponse(this.storyProfileInfo.auth_address, this.story.story_id, 's', this.editor.getContent(), function() {
+				that.editor.resetContent();
+				Router.navigate(that.storyProfileInfo.auth_address + '/' + that.story.slug);
 			});
 		},
 		save: function(tags, description) {
@@ -177,6 +197,10 @@ var ResponseFullscreenEditor = {
 			<section class="section">
 				<div class="columns is-centered">
 					<div class="column is-three-quarters-tablet is-half-desktop">
+						<div style="margin-left: 20px; margin-bottom: 20px;" v-if="story">
+							Responding to <a :href="'./?/' + storyProfileInfo.auth_address + '/' + story.slug" v-on:click.prevent="goto(storyProfileInfo.auth_address  + '/' + story.slug)">{{ story.title }}</a><br>
+							<small>{{ storyAuthor }}</small>
+						</div>
 						<!--<input class="input title" type="text" placeholder="Title" style="border: none; border-left: 1px solid #CCCCCC; background: inherit; box-shadow: none;" v-model="title">-->
 						<!--<textarea class="textarea" style="border: none; background: inherit; box-shadow: none;"></textarea>-->
 						<div class="editable content"></div>

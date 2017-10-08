@@ -24,7 +24,7 @@ var app = new Vue({
     template: `
         <div>
             <custom-nav v-on:show-signin-modal="showSigninModal()" v-on:get-user-info="getUserInfo()" v-bind:user-info="userInfo" v-bind:shadow="navbarShadow"></custom-nav>
-            <component ref="view" v-bind:is="currentView" v-on:show-signin-modal="showSigninModal()" v-on:navbar-shadow-on="navbarShadowOn()" v-on:navbar-shadow-off="navbarShadowOff()" v-on:get-user-info="getUserInfo()" v-bind:user-info="userInfo"></component>
+            <component ref="view" v-bind:is="currentView" v-on:show-signin-modal="showSigninModal()" v-on:navbar-shadow-on="navbarShadowOn()" v-on:navbar-shadow-off="navbarShadowOff()" v-on:get-user-info="getUserInfo()" v-bind:user-info="userInfo" v-bind:response-content="responseContent" v-on:set-response-content="setResponseContent"></component>
             <signin-modal v-model="signin_modal_active" v-on:get-user-info="getUserInfo()" v-if="signin_modal_active" v-bind:user-info="userInfo"></signin-modal>
         </div>
         `,
@@ -34,7 +34,8 @@ var app = new Vue({
         siteInfo: null,
         userInfo: null,
         navbarShadow: false,
-        signin_modal_active: false
+        signin_modal_active: false,
+        responseContent: '' // Used to transfer content from small response box to fullscreen route
     },
     methods: {
         navbarShadowOn: function() {
@@ -72,6 +73,9 @@ var app = new Vue({
 
                 this.$emit('setUserInfo', that.userInfo);
             });
+        },
+        setResponseContent: function(content) {
+            this.responseContent = content;
         }
     }
 });
@@ -607,10 +611,10 @@ VueZeroFrameRouter.VueZeroFrameRouter_Init(Router, app, [
     { route: 'search', component: Search },
     { route: 'topic/:slug', component: TopicSlug },
     { route: 'tag/:slug', component: TagSlug },
-    { route: 'me/response', component: ResponseFullscreenEditor },
     { route: 'me/newstory', component: Newstory },
     { route: 'me/stories/:slug/edit', component: EditStory },
     { route: 'me/stories', component: MeStories },
+    { route: ':userauthaddress/:slug/response', component: ResponseFullscreenEditor },
     { route: ':userauthaddress/:slug', component: ProfileStory },
     { route: ':userauthaddress', component: Profile }, // TODO: Have tabs use '&tab='
     { route: '', component: Home }

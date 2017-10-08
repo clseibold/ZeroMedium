@@ -19,6 +19,7 @@ var ProfileStory = {
 	},
 	beforeMount: function() {
 		this.$emit('navbar-shadow-on');
+		this.$emit('set-response-content', "");
 		var that = this;
 		page.getUserProfileInfo(Router.currentParams["userauthaddress"], false, false, (profileInfo) => {
 			that.profileInfo = profileInfo;
@@ -206,6 +207,10 @@ var ProfileStory = {
 			page.postClap(this.profileInfo.auth_address, this.story.story_id, "s", () => {
 				that.getClaps();
 			});
+		},
+		responseFullscreen: function() {
+			this.$emit('set-response-content', this.responseEditor.getContent());
+			this.goto(this.profileInfo.auth_address + '/' + this.story.slug + '/response');
 		}
 	},
 	computed: {
@@ -265,6 +270,7 @@ var ProfileStory = {
 								<p><strong>{{ userInfo ? userInfo.keyvalue.name : "" }}</strong></p>
 								<div class="editableResponse content" style="outline: none; margin-top: 10px; margin-bottom: 10px;"></div>
 								<a v-on:click.prevent="postResponse()" class="button is-primary is-small is-outlined">Publish</a>
+								<a v-on:click.prevent="responseFullscreen()" class="button is-info is-small is-outlined">Fullscreen</a>
 							</div>
 							<response v-for="response in responses" :key="responses.response_id" v-bind:response="response" v-bind:show-name="true" v-bind:show-reference="false"></response>
 						</div>
