@@ -48,7 +48,7 @@ Vue.component('response', {
 				Responded to <a :href="'./?/' + getStoryAuthAddress(story) + '/' + story.slug" v-on:click.prevent="goto(getStoryAuthAddress(story)  + '/' + story.slug)">{{ story.title }}</a><br>
 				<small>{{ story.value }}</small>
 			</div>
-			<p style="margin-bottom: 5px;" v-html="!this.shorten ? page.sanitizeHtml(this.response.body) : page.sanitizeHtml(getShortened(this.response.body))"></p>
+			<div class="content" style="margin-bottom: 5px;" v-html="!this.shorten ? page.sanitizeHtml(this.response.body) : page.sanitizeHtml(getShortened(this.response.body))"></div>
 			<small>Published {{ datePosted(response.date_added) }}</small>
 		</div>
 		`

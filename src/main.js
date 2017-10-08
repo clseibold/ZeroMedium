@@ -167,10 +167,26 @@ class ZeroApp extends ZeroFrame {
 
     sanitizeHtml(text) {
         return sanitizeHtml(text, {
-            allowedTags: ['b', 'i', 'em', 'strong', 'u', 'a', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'br', 'div', 'blockquote', 'code', 'strike', 'ul', 'li', 'ol', 'nl', 'hr', 'table', 'thead', 'caption', 'tbody', 'tr', 'th', 'td', 'pre'],
+            allowedTags: ['b', 'i', 'em', 'strong', 'u', 'a', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'br', 'div', 'blockquote', 'code', 'strike', 'ul', 'li', 'ol', 'nl', 'hr', 'table', 'thead', 'caption', 'tbody', 'tr', 'th', 'td', 'pre', 'span'],
             allowedAttributes: {
-                'a': [ 'href', 'name', 'target' ],
-                'img': ['src']
+                'a': [ 'href', 'name', 'target', 'align' ],
+                'img': [ 'src', 'align'],
+                'div': [ 'align' ],
+                'p': [ 'align' ],
+                'h1': [ 'align' ],
+                'h2': [ 'align' ],
+                'h3': [ 'align' ],
+                'h4': [ 'align' ],
+                'h5': [ 'align' ],
+                'h6': [ 'align' ],
+                'strong': [ 'align' ],
+                'u': [ 'align' ],
+                'b': [ 'align' ],
+                'i': [ 'align' ],
+                'em': [ 'align' ],
+                'pre': [ 'align' ],
+                'code': [ 'align' ],
+                'table': [ 'align' ]
             },
             allowedSchemesByTag: {
               img: [ 'data' ]
@@ -581,7 +597,7 @@ var TagSlug = require("./router_pages/tag_slug.js");
 
 var Newstory = require("./router_pages/newstory.js");
 var EditStory = require("./router_pages/edit_story.js");
-var ResponseFullscreen = require('./router_pages/response_fullscreen.js');
+var ResponseFullscreenEditor = require('./router_pages/response_fullscreen_editor.js');
 
 var MeStories = require("./router_pages/me_stories.js");
 var Profile = require("./router_pages/profile.js");
@@ -591,7 +607,7 @@ VueZeroFrameRouter.VueZeroFrameRouter_Init(Router, app, [
     { route: 'search', component: Search },
     { route: 'topic/:slug', component: TopicSlug },
     { route: 'tag/:slug', component: TagSlug },
-    { route: 'me/response', component: ResponseFullscreen },
+    { route: 'me/response', component: ResponseFullscreenEditor },
     { route: 'me/newstory', component: Newstory },
     { route: 'me/stories/:slug/edit', component: EditStory },
     { route: 'me/stories', component: MeStories },

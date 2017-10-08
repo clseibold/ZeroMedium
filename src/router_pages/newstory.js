@@ -1,5 +1,7 @@
 var Vue = require("vue/dist/vue.min.js");
 var MediumEditor = require("medium-editor/dist/js/medium-editor");
+// Medium Editor Tables has problems with requirejs
+// var MediumEditorTable = require("medium-editor-tables/dist/js/medium-editor-tables");
 var Router = require("../router.js");
 var { sanitizeStringForUrl } = require("../util.js");
 
@@ -24,7 +26,7 @@ var Newstory = {
 				hideOnClick: false
 			},
 			toolbar: {
-				buttons: ['bold', 'italic', 'underline', 'anchor', 'h2', 'h3', 'unorderedlist', 'quote'] // Got rid of 'quote'
+				buttons: ['bold', 'italic', 'underline', 'anchor', 'h2', 'h3', 'unorderedlist', 'orderedlist', 'quote'] // Got rid of 'quote'
 			},
 			buttonLabels: "fontawesome",
 			anchor: {
@@ -37,7 +39,126 @@ var Newstory = {
 		        targetCheckbox: false,
 		        targetCheckboxText: 'Open in new window'
 		    },
-		    autoLink: true
+		    autoLink: true,
+		    keyboardCommands: {
+			    commands: [
+	                {
+	                    command: 'bold',
+	                    key: 'B',
+	                    meta: true,
+	                    shift: false,
+	                    alt: false
+	                },
+	                {
+	                    command: 'italic',
+	                    key: 'I',
+	                    meta: true,
+	                    shift: false,
+	                    alt: false
+	                },
+	                {
+	                    command: 'underline',
+	                    key: 'U',
+	                    meta: true,
+	                    shift: false,
+	                    alt: false
+	                },
+	                {
+	                	command: 'append-h2',
+	                	key: '2',
+	                	meta: true,
+	                	shift: false,
+	                	alt: false
+	                },
+	                {
+	                	command: 'append-h3',
+	                	key: '3',
+	                	meta: true,
+	                	shift: false,
+	                	alt: false
+	                },
+	                {
+	                	command: 'append-blockquote',
+	                	key: 'Q',
+	                	meta: true,
+	                	shift: false,
+	                	alt: false
+	                },
+	                {
+	                	command: 'strikeThrough', // TODO: change this to something else?
+	                	key: 'S',
+	                	meta: true,
+	                	shift: false,
+	                	alt: false
+	                },
+	                {
+	                	command: 'superscript',
+	                	key: '6',
+	                	meta: true,
+	                	shift: true,
+	                	alt: false
+	                },
+	                {
+	                	command: 'subscript',
+	                	key: '6',
+	                	meta: true,
+	                	shift: false,
+	                	alt: false
+	                },
+	                {
+	                	command: 'insertUnorderedList',
+	                	key: '8',
+	                	meta: true,
+	                	shift: true,
+	                	alt: false
+	                },
+	                {
+	                	command: 'insertOrderedList',
+	                	key: '8',
+	                	meta: true,
+	                	shift: false,
+	                	alt: false
+	                },
+	                {
+	                	command: 'insertHorizontalRule',
+	                	key: 'H',
+	                	meta: true,
+	                	shift: false,
+	                	alt: false
+	                },
+	                {
+	                	command: 'justifyCenter',
+	                	key: 'E',
+	                	meta: true,
+	                	shift: false,
+	                	alt: false
+	                },
+	                {
+	                	command: 'justifyRight',
+	                	key: 'R',
+	                	meta: true,
+	                	shift: false,
+	                	alt: false
+	                },
+	                {
+	                	command: 'justifyLeft',
+	                	key: 'L',
+	                	meta: true,
+	                	shift: false,
+	                	alt: false
+	                },
+	                {
+	                	command: 'justifyFull',
+	                	key: 'J',
+	                	meta: true,
+	                	shift: false,
+	                	alt: false
+	                }
+	            ]
+	        }
+		    /*extensions: {
+		    	table: new MediumEditorTable()
+		    }*/
 		});
 	},
 	methods: {

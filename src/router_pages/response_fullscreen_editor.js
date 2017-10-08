@@ -1,42 +1,27 @@
 var Vue = require("vue/dist/vue.min.js");
 var MediumEditor = require("medium-editor/dist/js/medium-editor");
+// Medium Editor Tables has problems with requirejs
+//var MediumEditorTable = require("medium-editor-tables/dist/js/medium-editor-tables");
 var Router = require("../router.js");
-var moment = require('moment');
-var { sanitizeStringForUrl, sanitizeStringForUrl_SQL, html_substr } = require('../util.js');
 
-var ProfileStory = {
-	props: ['userInfo'],
+var ResponseFullscreenEditor = {
+	props: ["userInfo"],
 	data: function() {
 		return {
-			responseEditor: null,
-			profileInfo: null,
-			story: null,
-			storyAuthor: "",
-			sanitizedBody: "", // NOTE: Use this instead of story.body for security reasons - it's sanitized
-			responses: [],
-			claps: []
+			editor: null,
+			title: '',
+			status: 'Unsaved changes',
+			mobileTags: '',
+			mobileDescription: ''
 		}
 	},
 	beforeMount: function() {
-		this.$emit('navbar-shadow-on');
-		var that = this;
-		page.getUserProfileInfo(Router.currentParams["userauthaddress"], false, false, (profileInfo) => {
-			that.profileInfo = profileInfo;
-			page.getStory(Router.currentParams["userauthaddress"], Router.currentParams["slug"], (story) => {
-				that.story = story;
-				that.storyAuthor = story.value;
-				that.sanitizedBody = page.sanitizeHtml(story.body);
-				page.getResponses(that.profileInfo.auth_address, that.story.story_id, "s", (responses) => {
-					that.responses = responses;
-					that.getClaps();
-				});
-			});
-		});
+		this.$emit('navbar-shadow-off');
 	},
 	mounted: function() {
-		this.responseEditor = new MediumEditor('.editableResponse', {
+		this.editor = new MediumEditor('.editable', {
 			placeholder: {
-				text: "Write a response...",
+				text: "Tell your story...",
 				hideOnClick: false
 			},
 			toolbar: {
@@ -44,8 +29,6 @@ var ProfileStory = {
 			},
 			buttonLabels: "fontawesome",
 			anchor: {
-		        /* These are the default options for anchor form,
-		           if nothing is passed this is what it used */
 		        customClassOption: null,
 		        customClassOptionText: 'Button',
 		        linkValidation: false,
@@ -176,98 +159,27 @@ var ProfileStory = {
 		});
 	},
 	methods: {
-		getClaps: function() {
+		publish: function(tags, description) {
 			var that = this;
-			page.getClaps(that.profileInfo.auth_address, that.story.story_id, "s", (claps) => {
-				that.claps = claps;
+			page.postStory(this.title, description, this.editor.getContent(), tags, function() {
+				Router.navigate(that.userInfo.auth_address + '/' + sanitizeStringForUrl(that.title));
 			});
 		},
-		getTagSlug(tag) {
-			return tag.replace(/ /, '-');
-		},
-		goto: function(to) {
-			Router.navigate(to);
-		},
-		postResponse: function() {
-			var that = this;
-			page.postResponse(this.profileInfo.auth_address, this.story.story_id, 's', this.responseEditor.getContent(), function() {
-				// Get the responses again.
-				page.getResponses(that.profileInfo.auth_address, that.story.story_id, "s", (responses) => {
-					that.responses = responses;
-					that.responseEditor.resetContent();
-				});
-			});
-		},
-		datePosted: function(date) {
-			return moment(date).fromNow();
-		},
-		clap: function() {
-			var that = this;
-			page.postClap(this.profileInfo.auth_address, this.story.story_id, "s", () => {
-				that.getClaps();
-			});
-		}
-	},
-	computed: {
-		getTags: function() {
-			return this.story.tags.split(',').map(function(tag) {
-				return tag.toLowerCase().trim();
-			});
-		},
-		getClapAmount: function() {
-			var amount = 0;
-			for (var i = 0; i < this.claps.length; i++) {
-				var clap = this.claps[i];
-				amount += clap.number;
-			}
-
-			if (amount > 0) {
-				return amount.toString();
-			} else {
-				return "";
-			}
-		},
-		isClapped: function() {
-			if (!this.userInfo) return false;
-			for (var i = 0; i < this.claps.length; i++) {
-				var clap = this.claps[i];
-				var clap_auth_address = clap.directory.replace(/users\//, '').replace(/\//g, '');
-				if (clap_auth_address == this.userInfo.auth_address) {
-					if (clap.number > 0) {
-						return true;
-					} else {
-						return false;
-					}
-				}
-			}
-			return false;
+		save: function(tags, description) {
+			page.unimplemented();
 		}
 	},
 	template: `
 		<div>
+			<response-editor-nav v-on:publish="publish" v-on:save="save">
+				<span slot="status">{{status}}</span>
+			</response-editor-nav>
 			<section class="section">
 				<div class="columns is-centered">
 					<div class="column is-three-quarters-tablet is-half-desktop">
-						<div v-if="profileInfo && story">
-							<p class="title is-3">{{ story.title }}</p>
-							<p class="subtitle is-5">By <a :href="'./?/' + profileInfo.auth_address" v-on:click.prevent="goto(profileInfo.auth_address)">{{ storyAuthor }}</a> - {{ datePosted(story.date_added) }}</p>
-							<div class="content" v-html="sanitizedBody"></div>
-							<div class="tags" style="margin-top: 10px;" v-if="story.tags != ''">
-								<a class='tag' v-for="tag in getTags" :href="'./?/tag/' + getTagSlug(tag)" v-on:click.prevent="goto('tag/' + getTagSlug(tag))">{{ tag }}</a>
-							</div>
-							<div style="margin-top: 20px;" v-if="story.tags == ''"></div>
-							<a v-on:click="clap()" class="button is-small is-info" :class="{ 'is-outlined': !isClapped }">Clap</a><span style="margin-left: 10px;">{{ getClapAmount }}</span>
-						</div>
-						<div v-show="profileInfo && story">
-							<hr>
-							<h2>Responses</h2>
-							<div class="box" style="margin-top: 10px; margin-bottom: 25px;" v-show="userInfo">
-								<p><strong>{{ userInfo ? userInfo.keyvalue.name : "" }}</strong></p>
-								<div class="editableResponse content" style="outline: none; margin-top: 10px; margin-bottom: 10px;"></div>
-								<a v-on:click.prevent="postResponse()" class="button is-primary is-small is-outlined">Publish</a>
-							</div>
-							<response v-for="response in responses" :key="responses.response_id" v-bind:response="response" v-bind:show-name="true" v-bind:show-reference="false"></response>
-						</div>
+						<!--<input class="input title" type="text" placeholder="Title" style="border: none; border-left: 1px solid #CCCCCC; background: inherit; box-shadow: none;" v-model="title">-->
+						<!--<textarea class="textarea" style="border: none; background: inherit; box-shadow: none;"></textarea>-->
+						<div class="editable content"></div>
 					</div>
 				</div>
 			</section>
@@ -275,4 +187,41 @@ var ProfileStory = {
 		`
 };
 
-module.exports = ProfileStory;
+Vue.component('response-editor-nav', {
+	props: ['value'],
+	methods: {
+		publish: function() {
+			this.$emit('publish');
+		},
+		save: function() {
+			this.$emit('save');
+		}
+	},
+	template: `
+		<div>
+			<div class="navbar is-transparent has-shadow" style="border-top: 1px solid rgba(0,0,0,.05);">
+	            <div class="container">
+	            	<div class="navbar-brand">
+	                	<div class="navbar-item"><slot>Draft</slot></div>
+	                	<div class="navbar-item" style="padding-left: 5px; padding-right: 5px; color: #9A9A9A;"><small><slot name="status">Unsaved changes</slot><small></div>
+	                </div>
+	                <div class="navbar-menu">
+	                	<div class="navbar-start">
+	                	</div>
+	                	<div class="navbar-end">
+	                		<a class="navbar-item" v-on:click.prevent="save">Save Draft</a>
+	                		<a class="navbar-item" v-on:click.prevent="publish">Publish</a>
+	                	</div>
+	                </div>
+	            </div>
+	        </div>
+	        <div class="columns is-centered is-hidden-desktop">
+				<div class="column is-three-quarters-tablet is-half-desktop" style="margin-top: 20px;">
+	        		<a class="button is-outlined is-info is-small" v-on:click.prevent="save">Save Draft</a>
+					<a class="button is-primary is-outlined is-small" v-on:click.prevent="publish">Publish</a>
+				</div>
+	        </div>
+        </div>`
+});
+
+module.exports = ResponseFullscreenEditor;
