@@ -3,53 +3,42 @@ var MediumEditor = require("medium-editor/dist/js/medium-editor");
 // Medium Editor Tables has problems with requirejs
 //var MediumEditorTable = require("medium-editor-tables/dist/js/medium-editor-tables");
 var Router = require("../router.js");
+var moment = require('moment');
+var { sanitizeStringForUrl, sanitizeStringForUrl_SQL, html_substr } = require('../util.js');
 
-var ResponseFullscreenEditor = {
+var ResponseFullscreen = {
 	props: ["userInfo", 'responseContent'],
 	data: function() {
 		return {
-			story: null, // Change to reference?
 			response: null,
-			referenceAuthor: "",
-			referenceProfileInfo: null,
-			editor: null,
-			title: '',
-			status: 'Unsaved changes',
-			mobileTags: '',
-			mobileDescription: ''
+			referenceResponse: null,
+			subResponses: null,
+			responseEditor: null
 		}
 	},
 	beforeMount: function() {
-		this.$emit('navbar-shadow-off');
+		this.$emit('navbar-shadow-on');
 		var that = this;
-		if (Router.currentParams["slug"]) {
-			// Respond to story
-			page.getUserProfileInfo(Router.currentParams["userauthaddress"], false, false, (profileInfo) => {
-				that.referenceProfileInfo = profileInfo;
-				page.getStory(Router.currentParams["userauthaddress"], Router.currentParams["slug"], (story) => {
-					that.story = story;
-					that.referenceAuthor = story.value;
+		page.getResponse(Router.currentParams["userauthaddress"], Router.currentParams["id"], (response) => {
+			that.response = response;
+			if (response.reference_type == "r") {
+				page.getResponse(response.reference_auth_address, response.reference_id, (response) => {
+					that.referenceResponse = response;
 				});
+			}
+			page.getResponses(Router.currentParams["userauthaddress"], response.response_id, "r", (responses) => {
+				that.subResponses = responses;
 			});
-		} else if (Router.currentParams["id"]) {
-			// Respond to response
-			page.getUserProfileInfo(Router.currentParams["userauthaddress"], false, false, (profileInfo) => {
-				that.referenceProfileInfo = profileInfo;
-				page.getResponse(Router.currentParams["userauthaddress"], Router.currentParams["id"], (response) => {
-					that.response = response;
-					that.referenceAuthor = response.value;
-				});
-			});
-		}
+		});
 	},
 	mounted: function() {
-		this.editor = new MediumEditor('.editable', {
+		this.responseEditor = new MediumEditor('.editableResponse', {
 			placeholder: {
 				text: "Write a response...",
 				hideOnClick: false
 			},
 			toolbar: {
-				buttons: ['bold', 'italic', 'underline', 'anchor', 'h2', 'h3', 'unorderedlist', 'orderedlist', 'quote'] // Got rid of 'quote'
+				buttons: ['bold', 'italic', 'underline', 'anchor', 'h2', 'h3', 'unorderedlist', 'orderedlist', 'quote']
 			},
 			buttonLabels: "fontawesome",
 			anchor: {
@@ -181,51 +170,68 @@ var ResponseFullscreenEditor = {
 		    	table: new MediumEditorTable()
 		    }*/
 		});
-
-		if (this.responseContent && this.responseContent != "") {
-			this.editor.setContent(this.responseContent);	
-		}
 	},
 	methods: {
 		goto: function(to) {
 			Router.navigate(to);
 		},
-		publish: function(tags, description) {
+		postResponse: function() {
 			var that = this;
-			if (this.story) {
-				page.postResponse(this.referenceProfileInfo.auth_address, this.story.story_id, 's', this.editor.getContent(), function() {
-					that.editor.resetContent();
-					Router.navigate(that.referenceProfileInfo.auth_address + '/' + that.story.slug);
+			page.postResponse(this.getAuthAddress, this.response.response_id, 'r', this.responseEditor.getContent(), function() {
+				that.responseEditor.resetContent();
+				//Router.navigate(that.getAuthAddress + '/response/' + that.response.response_id);
+				page.getResponses(Router.currentParams["userauthaddress"], that.response.response_id, "r", (responses) => {
+					that.subResponses = responses;
 				});
-			} else if (this.response) {
-				page.postResponse(this.referenceProfileInfo.auth_address, this.response.response_id, 'r', this.editor.getContent(), function() {
-					that.editor.resetContent();
-					Router.navigate(that.referenceProfileInfo.auth_address + '/response/' + that.response.response_id);
-				});
-			}
+			});
 		},
-		save: function(tags, description) {
-			page.unimplemented();
+		responseFullscreen: function() {
+			Router.navigate(this.getAuthAddress + '/response/' + this.response.response_id + '/response');
+		}
+	},
+	computed: {
+		getStoryAuthAddress: function() {
+			return this.response.story.directory.replace(/users\//, '').replace(/\//g, '');
+		},
+		getAuthAddress: function() {
+			return this.response.directory.replace(/users\//, '').replace(/\//g, '');
+		},
+		datePosted: function() {
+			return moment(this.response.date_added).fromNow();
+		},
+		getReferenceResponseAuthAddress: function() {
+			return this.referenceResponse.directory.replace(/users\//, '').replace(/\//g, '');
 		}
 	},
 	template: `
 		<div>
-			<response-editor-nav v-on:publish="publish" v-on:save="save">
-				<span slot="status">{{status}}</span>
-			</response-editor-nav>
 			<section class="section">
 				<div class="columns is-centered">
 					<div class="column is-three-quarters-tablet is-half-desktop">
-						<div style="margin-left: 20px; margin-bottom: 20px;" v-if="story">
-							Responding to <a :href="'./?/' + referenceProfileInfo.auth_address + '/' + story.slug" v-on:click.prevent="goto(referenceProfileInfo.auth_address  + '/' + story.slug)">{{ story.title }}</a><br>
-							<small>{{ referenceAuthor }}</small>
+						<div v-if="response">
+							<p style="margin-bottom: 5px;"><strong><a :href="'./?/' + getAuthAddress" v-on:click.prevent="goto(getAuthAddress)">{{ response.value }}</a></strong></p>
+							<div style="margin-left: 20px; margin-bottom: 20px;" v-if="response.story">
+								Responded to <a :href="'./?/' + getStoryAuthAddress + '/' + response.story.slug" v-on:click.prevent="goto(getStoryAuthAddress  + '/' + response.story.slug)">{{ response.story.title }}</a><br>
+								<small>{{ response.story.value }}</small>
+							</div>
+							<div style="margin-left: 20px; margin-bottom: 20px;" v-if="referenceResponse">
+								Responded to <a :href="'./?/' + getReferenceResponseAuthAddress + '/response/' + referenceResponse.response_id" v-on:click.prevent="goto(getReferenceResponseAuthAddress  + '/response/' + referenceResponse.response_id)">Response by {{ referenceResponse.value }}</a>
+							</div>
+
+							<div class="custom-content" style="margin-bottom: 5px;" v-html="page.sanitizeHtml(response.body)"></div>
+							<small>Published {{ datePosted }}</small>
 						</div>
-						<div style="margin-left: 20px; margin-bottom: 20px;" v-if="response">
-							Responding to <a :href="'./?/' + referenceProfileInfo.auth_address + '/response/' + response.response_id" v-on:click.prevent="goto(referenceProfileInfo.auth_address  + '/response/' + response.response_id)">Response by {{ referenceAuthor }}</a>
+						<div>
+							<hr>
+							<h2>Responses</h2>
+							<div class="box" style="margin-top: 10px; margin-bottom: 25px;" v-show="userInfo && response">
+								<p><strong>{{ userInfo ? userInfo.keyvalue.name : "" }}</strong></p>
+								<div class="editableResponse custom-content" style="outline: none; margin-top: 10px; margin-bottom: 10px;"></div>
+								<a v-on:click.prevent="postResponse()" class="button is-primary is-small is-outlined">Publish</a>
+								<a v-on:click.prevent="responseFullscreen()" class="button is-info is-small is-outlined">Fullscreen</a>
+							</div>
+							<response v-for="response in subResponses" :key="response.response_id" v-bind:response="response" v-bind:show-name="true" v-bind:show-reference="false"></response>
 						</div>
-						<!--<input class="input title" type="text" placeholder="Title" style="border: none; border-left: 1px solid #CCCCCC; background: inherit; box-shadow: none;" v-model="title">-->
-						<!--<textarea class="textarea" style="border: none; background: inherit; box-shadow: none;"></textarea>-->
-						<div class="editable custom-content"></div>
 					</div>
 				</div>
 			</section>
@@ -233,41 +239,4 @@ var ResponseFullscreenEditor = {
 		`
 };
 
-Vue.component('response-editor-nav', {
-	props: ['value'],
-	methods: {
-		publish: function() {
-			this.$emit('publish');
-		},
-		save: function() {
-			this.$emit('save');
-		}
-	},
-	template: `
-		<div>
-			<div class="navbar is-transparent has-shadow" style="border-top: 1px solid rgba(0,0,0,.05);">
-	            <div class="container">
-	            	<div class="navbar-brand">
-	                	<div class="navbar-item"><slot>Draft</slot></div>
-	                	<div class="navbar-item" style="padding-left: 5px; padding-right: 5px; color: #9A9A9A;"><small><slot name="status">Unsaved changes</slot><small></div>
-	                </div>
-	                <div class="navbar-menu">
-	                	<div class="navbar-start">
-	                	</div>
-	                	<div class="navbar-end">
-	                		<a class="navbar-item" v-on:click.prevent="save">Save Draft</a>
-	                		<a class="navbar-item" v-on:click.prevent="publish">Publish</a>
-	                	</div>
-	                </div>
-	            </div>
-	        </div>
-	        <div class="columns is-centered is-hidden-desktop">
-				<div class="column is-three-quarters-tablet is-half-desktop" style="margin-top: 20px;">
-	        		<a class="button is-outlined is-info is-small" v-on:click.prevent="save">Save Draft</a>
-					<a class="button is-primary is-outlined is-small" v-on:click.prevent="publish">Publish</a>
-				</div>
-	        </div>
-        </div>`
-});
-
-module.exports = ResponseFullscreenEditor;
+module.exports = ResponseFullscreen;

@@ -452,7 +452,6 @@ class ZeroApp extends ZeroFrame {
             });
 
             if (!app.userInfo.keyvalue["next_response_id"] || app.userInfo.keyvalue["next_response_id"] == null) app.userInfo.keyvalue["next_response_id"] = 1;
-            //console.log(app.userInfo.keyvalue);
             app.userInfo.keyvalue["next_response_id"]++;
             data["next_response_id"] = app.userInfo.keyvalue["next_response_id"];
 
@@ -471,6 +470,16 @@ class ZeroApp extends ZeroFrame {
 
     getResponses(reference_auth_address, reference_id, reference_type, f) {
         page.cmd('dbQuery', ['SELECT * FROM responses LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE reference_auth_address="' + reference_auth_address + '" AND reference_id=' + reference_id + ' AND reference_type="' + reference_type + '" AND key="name" ORDER BY date_added DESC'], f);
+    }
+
+    getResponse(auth_address, response_id, f) {
+        page.cmd('dbQuery', ['SELECT * FROM responses LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND directory="users/' + auth_address + '" AND response_id=' + response_id + " LIMIT 1"], (responses) => {
+            var response = responses[0];
+            page.cmd('dbQuery', ['SELECT * FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND directory="users/' + response.reference_auth_address + '" AND story_id=' + response.reference_id + " LIMIT 1"], (stories) => {
+                response["story"] = stories[0];
+                if (f != null && typeof f == 'function') f(response);
+            });
+        });
     }
 
     // Reference Types:
@@ -605,6 +614,7 @@ var ResponseFullscreenEditor = require('./router_pages/response_fullscreen_edito
 
 var MeStories = require("./router_pages/me_stories.js");
 var Profile = require("./router_pages/profile.js");
+var ResponseFullscreen = require('./router_pages/response_fullscreen.js');
 var ProfileStory = require("./router_pages/profile_story.js");
 
 VueZeroFrameRouter.VueZeroFrameRouter_Init(Router, app, [
@@ -614,7 +624,9 @@ VueZeroFrameRouter.VueZeroFrameRouter_Init(Router, app, [
     { route: 'me/newstory', component: Newstory },
     { route: 'me/stories/:slug/edit', component: EditStory },
     { route: 'me/stories', component: MeStories },
+    { route: ':userauthaddress/response/:id/response', component: ResponseFullscreenEditor },
     { route: ':userauthaddress/:slug/response', component: ResponseFullscreenEditor },
+    { route: ':userauthaddress/response/:id', component: ResponseFullscreen },
     { route: ':userauthaddress/:slug', component: ProfileStory },
     { route: ':userauthaddress', component: Profile }, // TODO: Have tabs use '&tab='
     { route: '', component: Home }

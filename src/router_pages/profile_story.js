@@ -272,7 +272,7 @@ var ProfileStory = {
 								<a v-on:click.prevent="postResponse()" class="button is-primary is-small is-outlined">Publish</a>
 								<a v-on:click.prevent="responseFullscreen()" class="button is-info is-small is-outlined">Fullscreen</a>
 							</div>
-							<response v-for="response in responses" :key="responses.response_id" v-bind:response="response" v-bind:show-name="true" v-bind:show-reference="false"></response>
+							<response v-for="response in responses" :key="response.response_id" v-bind:response="response" v-bind:show-name="true" v-bind:show-reference="false"></response>
 						</div>
 					</div>
 				</div>
