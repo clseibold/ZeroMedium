@@ -70,7 +70,7 @@ Vue.component('custom-nav', {
                                     <hr class="navbar-divider">
                                     
                                     <a class="navbar-item" :href="'./?/' + (userInfo ? userInfo.auth_address : '')" v-on:click.prevent="goto(userInfo ? userInfo.auth_address : '')">Profile</a>
-                                    <a class="navbar-item">Settings</a>
+                                    <a class="navbar-item" :href="'./?/me/settings'" v-on:click.prevent="goto('me/settings')">Settings</a>
                                     <a class="navbar-item">Help</a>
                                     <a class="navbar-item">Change user</a>
                                 </div>

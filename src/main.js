@@ -612,6 +612,7 @@ var Newstory = require("./router_pages/newstory.js");
 var EditStory = require("./router_pages/edit_story.js");
 var ResponseFullscreenEditor = require('./router_pages/response_fullscreen_editor.js');
 
+var MeSettings = require("./router_pages/me_settings.js");
 var MeStories = require("./router_pages/me_stories.js");
 var Profile = require("./router_pages/profile.js");
 var ResponseFullscreen = require('./router_pages/response_fullscreen.js');
@@ -621,6 +622,7 @@ VueZeroFrameRouter.VueZeroFrameRouter_Init(Router, app, [
     { route: 'search', component: Search },
     { route: 'topic/:slug', component: TopicSlug },
     { route: 'tag/:slug', component: TagSlug },
+    { route: 'me/settings', component: MeSettings },
     { route: 'me/newstory', component: Newstory },
     { route: 'me/stories/:slug/edit', component: EditStory },
     { route: 'me/stories', component: MeStories },

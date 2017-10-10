@@ -62,7 +62,6 @@ var Profile = {
 			});
 		},
 		follow() {
-			console.log("Test");
 			var that = this;
 			page.cmd("feedListFollow", [], (followList) => {
 				var query = "SELECT stories.story_id AS event_uri, 'article' AS type, stories.date_added AS date_added, '" + that.profileInfo.name + ": ' || stories.title AS title, " + stripHTML_SQL('stories.body') + " AS body, '?/" + that.profileInfo.auth_address + "/' || stories.slug AS url FROM stories LEFT JOIN json USING (json_id) WHERE json.directory='users/" + that.profileInfo.auth_address + "'";
