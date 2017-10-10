@@ -1,6 +1,6 @@
 var Vue = require("vue/dist/vue.min.js");
 var Router = require("../router.js");
-var { sanitizeStringForUrl } = require("../util.js");
+var { sanitizeStringForUrl, sanitizeStringForUrl_SQL, html_substr, stripHTML_SQL } = require("../util.js");
 var moment = require("moment");
 
 var Profile = {
@@ -8,7 +8,8 @@ var Profile = {
 		return {
 			profileInfo: {},
 			claps: [],
-			currentTab: 0
+			currentTab: 0,
+			followText: 'Follow'
 		}
 	},
 	beforeMount: function() {
@@ -16,6 +17,7 @@ var Profile = {
 		var that = this;
 		page.getUserProfileInfo(Router.currentParams["userauthaddress"], true, true, (profileInfo) => {
 			that.profileInfo = profileInfo;
+			that.isFollowing();
 			page.getUserClaps(Router.currentParams["userauthaddress"], (claps) => {
 				that.claps = claps;
 			});
@@ -48,11 +50,42 @@ var Profile = {
 				claps.push(this.claps[i]);
 			}
 			return claps;
+		},
+		isFollowing: function() {
+			var that = this;
+			page.cmd("feedListFollow", [], (followList) => {
+				if (followList[that.profileInfo.auth_address + "_stories"]) {
+					that.followText = "Following";
+				} else {
+					that.followText = "Follow";
+				}
+			});
+		},
+		follow() {
+			console.log("Test");
+			var that = this;
+			page.cmd("feedListFollow", [], (followList) => {
+				var query = "SELECT stories.story_id AS event_uri, 'article' AS type, stories.date_added AS date_added, '" + that.profileInfo.name + ": ' || stories.title AS title, " + stripHTML_SQL('stories.body') + " AS body, '?/" + this.profileInfo.auth_address + "/' || stories.slug AS url FROM stories LEFT JOIN json USING (json_id)";
+				var queryResponses = "SELECT responses.response_id AS event_uri, 'article' AS type, responses.date_added AS date_added, '" + that.profileInfo.name + ": Response' AS title, " + stripHTML_SQL('responses.body') + " AS body, '?/" + this.profileInfo.auth_address + "/response/' || responses.response_id AS url FROM responses LEFT JOIN json USING (json_id)";
+				var params = "";
+				var paramsResponses = "";
+				var newList = followList;
+				if (followList[that.profileInfo.auth_address + "_stories"] || followList[that.profileInfo.auth_address + "_responses"]) {
+					delete newList[that.profileInfo.auth_address + "_stories"];
+					delete newList[that.profileInfo.auth_address + "_responses"];
+					that.followText = "Follow";
+				} else {
+					newList[that.profileInfo.auth_address + "_stories"] = [query, params];
+					newList[that.profileInfo.auth_address + "_responses"] = [queryResponses, paramsResponses];
+					that.followText = "Following";
+				}
+				page.cmd("feedFollow", [newList]);
+			});
 		}
 	},
 	template: `
 		<div>
-			<profile-hero :name="profileInfo.name" :about="profileInfo.about" :cert-user-id="profileInfo.cert_user_id" :auth-address="profileInfo.auth_address"></profile-hero>
+			<profile-hero :name="profileInfo.name" :about="profileInfo.about" :cert-user-id="profileInfo.cert_user_id" :auth-address="profileInfo.auth_address" :follow-text="followText" v-on:follow="follow"></profile-hero>
 			<profile-navbar v-model="currentTab"></profile-navbar>
 			<section class="section">
 				<div class="columns is-centered" v-if="profileInfo">
@@ -92,7 +125,12 @@ var Profile = {
 }
 
 Vue.component('profile-hero', {
-	props: ['name', 'about', 'certUserId', 'authAddress'],
+	props: ['name', 'about', 'certUserId', 'authAddress', 'followText'],
+	methods: {
+		follow: function() {
+			this.$emit('follow');
+		}
+	},
     template: `
         <div class="hero" style="border-top: 1px solid rgba(0,0,0,.05);">
             <div class="container">
@@ -101,7 +139,7 @@ Vue.component('profile-hero', {
                     <span class="subtitle">{{ certUserId }}</span><br>
                     <p v-if="authAddress" style="margin-top: 5px;">Donate: <a :href="'bitcoin:' + authAddress + '?message=Donation to ' + name">{{ authAddress }}</a></p>
                     <p style="margin-top: 5px; margin-bottom: 15px;">{{ about }}</p>
-                    <a class="button is-success is-small is-outlined">Follow</a>
+                    <a class="button is-success is-small" :class="{ 'is-outlined': followText == 'Follow' }" v-on:click.prevent="follow()">{{ followText }}</a>
                 </div>
             </div>
         </div>

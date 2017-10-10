@@ -52,8 +52,65 @@ function html_substr( str, count ) {
     return div.innerHTML;
 }
 
+function SQLReplace(inner, from, to = '', end = ', ') {
+    return "REPLACE(" + inner + ", '" + from + "', '" + to + "')" + end;
+}
+
+function SQLReplace_multi(innermost, arrayObjects) {
+    var string = innermost;
+    for (var i = 0; i < arrayObjects.length; i++) {
+        let object = arrayObjects[i];
+        if (i == arrayObjects.length - 1) {
+            string = SQLReplace(string, object.from, object.to, '');
+            break;
+        }
+        string = SQLReplace(string, object.from, object.to, '');
+    }
+
+    return string;
+}
+
+function stripHTML_SQL(column) {
+    string = SQLReplace_multi(column, [
+            { from: '<p>', to: '' },
+            { from: '</p>', to: ' ' },
+            { from: '<br>', to: ' ' },
+            { from: '<br/>', to: ' ' },
+            { from: '<br />', to: ' ' },
+            { from: '<hr>', to: ' ' },
+            { from: '<hr/>', to: ' ' },
+            { from: '<hr />', to: ' ' },
+            { from: '<div align="center">', to: '' },
+            { from: '<div align="right">', to: '' },
+            { from: '<div>', to: '' },
+            { from: '</div>', to: ' ' },
+            { from: '<ul>', to: '' },
+            { from: '</ul>', to: ' ' },
+            { from: '<ol>', to: '' },
+            { from: '</ol>', to: ' ' },
+            { from: '<li>', to: '' },
+            { from: '</li>', to: ' ' },
+            { from: '<i>', to: '' },
+            { from: '</i>', to: '' },
+            { from: '<em>', to: '' },
+            { from: '</em>', to: '' },
+            { from: '<b>', to: '' },
+            { from: '</b>', to: '' },
+            { from: '<strong>', to: '' },
+            { from: '</strong>', to: '' },
+            { from: '<strike>', to: '' },
+            { from: '</strike>', to: '' },
+            { from: '<u>', to: '' },
+            { from: '</u>', to: '' }
+        ]);
+    console.log(string);
+    return string;
+    //return SQLReplace("REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(" + column + ", '<b>', ''), '<i>', ''), '<em>', ''), '<p>', ''), '<div>', ''), '<u>', ''), '<br>', ''), '<br />', ''), '<span>', ''), '<hr>', ''), '<nl>', ''), '<strike>', '')", '</p>');
+}
+
 module.exports = {
 	sanitizeStringForUrl: sanitizeStringForUrl,
 	sanitizeStringForUrl_SQL: sanitizeStringForUrl_SQL,
-	html_substr: html_substr
+	html_substr: html_substr,
+    stripHTML_SQL: stripHTML_SQL
 }
