@@ -1,5 +1,6 @@
 var Vue = require("vue/dist/vue.min.js");
 var MediumEditor = require("medium-editor/dist/js/medium-editor");
+var MediumEditorAutolist = require("medium-editor-autolist/dist/autolist");
 // Medium Editor Tables has problems with requirejs
 // var MediumEditorTable = require("medium-editor-tables/dist/js/medium-editor-tables");
 var Router = require("../router.js");
@@ -20,6 +21,7 @@ var Newstory = {
 		this.$emit('navbar-shadow-off');
 	},
 	mounted: function() {
+		var autolist = new MediumEditorAutolist();
 		this.editor = new MediumEditor('.editable', {
 			placeholder: {
 				text: "Tell your story...",
@@ -40,6 +42,9 @@ var Newstory = {
 		        targetCheckboxText: 'Open in new window'
 		    },
 		    autoLink: true,
+		    extensions: {
+		        'autolist': autolist
+		    },
 		    keyboardCommands: {
 			    commands: [
 	                {

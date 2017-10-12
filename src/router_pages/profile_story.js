@@ -1,5 +1,6 @@
 var Vue = require("vue/dist/vue.min.js");
 var MediumEditor = require("medium-editor/dist/js/medium-editor");
+var MediumEditorAutolist = require("medium-editor-autolist/dist/autolist");
 var Router = require("../router.js");
 var moment = require('moment');
 var { sanitizeStringForUrl, sanitizeStringForUrl_SQL, html_substr } = require('../util.js');
@@ -35,6 +36,7 @@ var ProfileStory = {
 		});
 	},
 	mounted: function() {
+		var autolist = new MediumEditorAutolist();
 		this.responseEditor = new MediumEditor('.editableResponse', {
 			placeholder: {
 				text: "Write a response...",
@@ -55,6 +57,9 @@ var ProfileStory = {
 		        targetCheckboxText: 'Open in new window'
 		    },
 		    autoLink: true,
+		    extensions: {
+		        'autolist': autolist
+		    },
     	    keyboardCommands: {
     		    commands: [
                     {
