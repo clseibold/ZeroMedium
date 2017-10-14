@@ -50,6 +50,37 @@
         this.base.execAction('delete');
         this.base.execAction('insertHorizontalRule');
       }
+
+      var doEdit = (match, command, surroundLength) => {
+        let last_index_exclusive = match.index + match[0].length;
+        for (var i = 0; i < match[0].length; i++) {
+          this.base.execAction('delete');
+        }
+        this.base.execAction(command);
+        this.base.execAction('insertText', {
+          value: match[0].slice(surroundLength, -surroundLength - 1) + " "
+        });
+        this.base.execAction(command);
+      };
+
+      var i_match = /\*.+\*\s/.exec(list_start);
+      var i_match_2 = /_.+_\s/.exec(list_start);
+      var b_match = /\*\*.+\*\*\s/.exec(list_start);
+      var b_match_2 = /__.+__\s/.exec(list_start);
+      var s_match = /~.+~\s/.exec(list_start);
+      var s_match_2 = /~~.+~~\s/.exec(list_start);
+      if (b_match)
+        doEdit(b_match, 'bold', 2);
+      else if (b_match_2)
+        doEdit(b_match_2, 'bold', 2);
+      else if (i_match)
+        doEdit(i_match, 'italic', 1);
+      else if (i_match_2)
+        doEdit(i_match_2, 'italic', 1);
+      else if (s_match_2)
+        doEdit(s_match_2, 'strikeThrough', 2);
+      else if (s_match)
+        doEdit(s_match, 'strikeThrough', 1);
     }
   });
 
