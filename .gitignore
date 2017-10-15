@@ -1,7 +1,7 @@
 node_modules/
 js/
 css/
-index.html
+/index.html
 
 data/
 content.json

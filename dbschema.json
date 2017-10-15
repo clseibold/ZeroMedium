@@ -45,12 +45,13 @@
                 ["description", "TEXT"],
                 ["body", "TEXT"],
                 ["tags", "TEXT"],
+                ["0sh_link", "TEXT"],
                 ["date_updated", "INTEGER"],
                 ["date_added", "INTEGER"],
                 ["json_id", "INTEGER REFERENCES json (json_id)"]
             ],
             "indexes": ["CREATE UNIQUE INDEX story_key ON stories (json_id, story_id)"],
-            "schema_changed": 13
+            "schema_changed": 14
         },
         "responses": {
             "cols": [
