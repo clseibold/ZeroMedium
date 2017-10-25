@@ -46,6 +46,7 @@ var EditStory = {
 		createEditor: function() {
 			var autolist = new MediumEditorAutolist();
 			this.editor = new MediumEditor('.editable', {
+				imageDragging: true,
 				placeholder: {
 					text: "Tell your story...",
 					hideOnClick: true

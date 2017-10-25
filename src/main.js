@@ -71,7 +71,7 @@ var app = new Vue({
                     keyvalue: keyvalue
                 };
 
-                this.$emit('setUserInfo', that.userInfo);
+                that.$emit('setUserInfo', that.userInfo);
             });
         },
         setResponseContent: function(content) {
@@ -171,10 +171,10 @@ class ZeroApp extends ZeroFrame {
 
     sanitizeHtml(text) {
         return sanitizeHtml(text, {
-            allowedTags: ['b', 'i', 'em', 'strong', 'u', 'a', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'br', 'div', 'blockquote', 'code', 'strike', 'ul', 'li', 'ol', 'nl', 'hr', 'table', 'thead', 'caption', 'tbody', 'tr', 'th', 'td', 'pre', 'span'],
+            allowedTags: ['b', 'i', 'em', 'strong', 'u', 'a', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'br', 'div', 'blockquote', 'code', 'strike', 'ul', 'li', 'ol', 'nl', 'hr', 'table', 'thead', 'caption', 'tbody', 'tr', 'th', 'td', 'pre', 'span', 'img'],
             allowedAttributes: {
                 'a': [ 'href', 'name', 'target', 'align' ],
-                'img': [ 'src', 'align'],
+                'img': [ 'src', 'align', 'width', 'height'],
                 'div': [ 'align' ],
                 'p': [ 'align' ],
                 'h1': [ 'align' ],
@@ -595,6 +595,52 @@ class ZeroApp extends ZeroFrame {
 
     unimplemented() {
         page.cmd("wrapperNotification", ["info", "Unimplemented!"]);
+    }
+
+    checkOptional(doSignPublish, f) {
+        if (!app.userInfo || !app.userInfo.cert_user_id) {
+            this.cmd("wrapperNotification", ["info", "Please login first."]);
+            //page.selectUser(); // TODO: Check if user has data, if not, show the registration modal.
+            return;
+        }
+
+        var data_inner_path = "data/users/" + page.site_info.auth_address + "/data.json";
+        var content_inner_path = "data/users/" + page.site_info.auth_address + "/content.json";
+
+        // Verify that user has correct "optional" and "ignore" values
+        page.cmd("fileGet", {"inner_path": content_inner_path, "required": false}, (data) => {
+            if (!data) return;
+            data = JSON.parse(data);
+
+            var curoptional = ".+\\.(png|jpg|jpeg|gif|mp3|ogg|mp4)";
+            var changed = false;
+            if (!data.hasOwnProperty("optional") || data.optional !== curoptional){
+                data.optional = curoptional
+                changed = true;
+            }
+
+            var json_raw = unescape(encodeURIComponent(JSON.stringify(data, undefined, '\t')));
+
+            if (changed) {
+                // Write (and Sign and Publish is doSignPublish=true)
+                page.cmd("fileWrite", [content_inner_path, btoa(json_raw)], (res) => {
+                    if (res == "ok") {
+                        if (f != null && typeof f == "function") f();
+                        if (doSignPublish) {
+                            page.cmd('siteSign', {"inner_path": content_inner_path}, (res) => {
+                                page.cmd('sitePublish', {"inner_path": content_inner_path, "sign": false});
+                            });
+                        }
+                    } else {
+                        page.cmd("wrapperNotification", [
+                            "error", "File write error: " + JSON.stringify(res)
+                        ]);
+                    }
+                });
+            } else {
+                if (f != null && typeof f == "function") f();
+            }
+        });
     }
 }
 
