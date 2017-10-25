@@ -1,0 +1,20 @@
+diff --git a/node_modules/medium-editor/src/sass/components/_placeholder.scss b/node_modules/medium-editor/src/sass/components/_placeholder.scss
+index 3e1c267..3907d4d 100644
+--- a/node_modules/medium-editor/src/sass/components/_placeholder.scss
++++ b/node_modules/medium-editor/src/sass/components/_placeholder.scss
+@@ -3,6 +3,7 @@
+ 
+     &:after {
+         content: attr(data-placeholder) !important;
++        cursor: text;
+         font-style: italic;
+         position: absolute;
+         left: 0;
+@@ -18,6 +19,7 @@
+ 
+     &:after {
+         content: attr(data-placeholder) !important;
++        cursor: text;
+         font-style: italic;
+         position: relative;
+         white-space: pre;
