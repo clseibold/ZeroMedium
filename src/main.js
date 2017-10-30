@@ -4,6 +4,9 @@ var ZeroFrame = require("./ZeroFrame.js");
 // Router
 var Router = require("./router.js");
 
+// Cache
+var { cache_add, cache_replace, cache_remove, cache_get, cache_getOrAdd, cache_exists } = require("./cache.js");
+
 // Vue
 var Vue = require("vue/dist/vue.min.js");
 var VueZeroFrameRouter = require("./vue-zeroframe-router.js");
@@ -100,7 +103,7 @@ class ZeroApp extends ZeroFrame {
         if (message.params.event[0] == "file_done") {
             //getTags(true);
             if (Router.currentRoute == "" || Router.currentRoute == "search" || Router.currentRouter == "topic/:slug") {
-                app.$refs.view.getStories();
+                app.$refs.view.getStories(true);
             }
         }
         /*for (var i = 0; i < app.userInfo.keyvalue.length; i++) {
