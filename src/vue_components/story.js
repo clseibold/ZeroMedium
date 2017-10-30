@@ -38,7 +38,7 @@ Vue.component('story', {
 					</div>
 					<div class="dropdown-menu" id="dropdown-menu" role="menu">
 					    <div class="dropdown-content">
-					    	<a class="dropdown-item" :href="editUrl" v-on:click.prevent="goto(editUrl)">Edit Story</a>
+					    	<a class="dropdown-item" v-if="editUrl" :href="editUrl" v-on:click.prevent="goto(editUrl)">Edit Story</a>
 					    	<a class="dropdown-item" v-on:click.prevent="deleteStory()">Delete Story</a>
 					    </div>
 					</div>

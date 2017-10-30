@@ -109,7 +109,7 @@ class ZeroApp extends ZeroFrame {
     }
     
     selectUser(f = null) {
-        this.cmd("certSelect", {accepted_domains: ["zeroid.bit", "kaffie.bit", "cryptoid.bit"]}, () => {
+        this.cmd("certSelect", {accepted_domains: ["zeroid.bit", "kaffie.bit", "cryptoid.bit", "peak.id"]}, () => {
             // TODO: Will this work always?
             //app.getUserInfo();
             if (f != null && typeof f == 'function') f();

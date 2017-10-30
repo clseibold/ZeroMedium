@@ -38,6 +38,7 @@ var Search = {
 	},
 	computed: {
         getSearchedStories() { // TODO: Add ability to search name also
+        	if (!this.allStories || this.allStories.length == 0) return [];
         	var list = this.allStories;
 			if (this.searchInput == "" || !this.searchInput) return list;
 			var searchInputWords = this.searchInput.trim().split(' '); // TODO
@@ -47,7 +48,7 @@ var Search = {
 				var matches = 0;
 				for (var i = 0; i < searchInputWords.length; i++) {
 					var word = searchInputWords[i].trim().toLowerCase();
-					if (story.tags && story.tags.toLowerCase().includes(word)) {
+					if (story.tags && story.tags != "" && story.tags.toLowerCase().includes(word)) {
 						story.order += 4;
 						matches++;
 						continue;
@@ -76,8 +77,8 @@ var Search = {
 						continue;
 					}
 					if (story.body.toLowerCase().includes(word)) {
-						continue;
 						matches++;
+						continue;
 					}
 					if (that.isSearchStrict) {
 						return false;
