@@ -4,7 +4,10 @@ var Router = require("../router.js");
 Vue.component('signin-modal', {
     props: ['value', 'userInfo'],
     beforeMount: function() {
-        if (page.site_info.cert_user_id != null) {
+        /*if (page.site_info.cert_user_id != null) {
+            this.close();
+        }*/
+        if (this.userInfo && page.site_info.cert_user_id != null) {
             this.close();
         }
         this.currentSlide = 0;
@@ -32,6 +35,11 @@ Vue.component('signin-modal', {
             topics: [],
             interests: [],
             existingUsers: []
+        }
+    },
+    computed: {
+        shouldShowClose: function() {
+            return this.currentSlide == 0;
         }
     },
     methods: {
@@ -170,7 +178,7 @@ Vue.component('signin-modal', {
             <div class="modal-card">
                 <header class="modal-card-head">
                     <p class="modal-card-title">Signin / Signup{{ slideTitle }}</p>
-                    <button class="delete" v-on:click.prevent="close()"></button>
+                    <button class="delete" v-on:click.prevent="close()" v-if="shouldShowClose"></button>
                 </header>
                 <section class="modal-card-body" v-if="currentSlide == 0">
                     <a class="button is-info" style="width: 100%; padding-top: 25px; padding-bottom: 25px; margin-top: 5px;" v-on:click.prevent="signin()">Sign in</a>
