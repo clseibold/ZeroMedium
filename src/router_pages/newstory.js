@@ -5,6 +5,7 @@ var MediumEditorAutolist = require("../medium-editor-plugins/inline-markdown");
 // var MediumEditorTable = require("medium-editor-tables/dist/js/medium-editor-tables");
 var Router = require("../router.js");
 var { sanitizeStringForUrl } = require("../util.js");
+var { cache_add, cache_replace, cache_remove, cache_get, cache_getOrAdd, cache_exists, cache_clear } = require("../cache.js");
 
 var Newstory = {
 	props: ["userInfo"],
@@ -171,6 +172,7 @@ var Newstory = {
 		publish: function(tags, description) {
 			var that = this;
 			page.postStory(this.title, description, this.editor.getContent(), tags, function() {
+				cache_clear();
 				Router.navigate(that.userInfo.auth_address + '/' + sanitizeStringForUrl(that.title));
 			});
 		},

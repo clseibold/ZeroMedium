@@ -1,7 +1,7 @@
 var Vue = require("vue/dist/vue.min.js");
 var Router = require("../router.js");
 var moment = require('moment');
-var { cache_add, cache_replace, cache_remove, cache_get, cache_getOrAdd, cache_exists } = require("../cache.js");
+var { cache_add, cache_replace, cache_remove, cache_get, cache_getOrAdd, cache_exists, cache_clear } = require("../cache.js");
 
 var Home = {
     beforeMount: function() {
@@ -19,49 +19,50 @@ var Home = {
         // TODO: Do a sort based on number of likes/claps and maybe responses (only responses made during that day).
     },
     methods: {
-        getStories: function(refresh = false) {
+        getStories: function() {
             var that = this;
             that.recentStories = [];
             that.topStories = [];
             var now = Date.now();
-            if (cache_exists("home_recentStories") && cache_exists("home_topStories") && !refresh) {
+            console.log(cache_get("home_recentStories"));
+            if (cache_exists("home_recentStories") && cache_exists("home_topStories")) {
+                console.log("Using Cache!");
                 that.recentStories = cache_get("home_recentStories");
                 that.topStories = cache_get("home_topStories");
-            } else {
-                page.getAllStories(true, (story) => {
-                    var responses = story.responses;
-                    var claps = story.claps;
-
-                    responses = responses.filter((response) => {
-                        return (now - response.date_added) < 8.645e+7;
-                    });
-                    claps = claps.filter((clap) => {
-                        return ((now - clap.date_added) < 8.645e+7) && clap.number == 1;
-                    });
-
-                    story["responses"] = responses;
-                    story["claps"] = claps;
-
-                    //return (now - story.date_added) < 8.64e+7;
-                    return true;
-                }, (stories) => {
-                    // Limit to 5 stories for putting into recent stories
-                    for (i = 0; that.recentStories.length < 5 && i < stories.length; i++) {
-                        that.recentStories.push(stories[i]);
-                    }
-                    cache_add("home_recentStories", that.recentStories);
-
-                    // Sort stories by how many responses and claps they have
-                    stories.sort((a, b) => {
-                        return (b.responses.length + b.claps.length) - (a.responses.length + a.claps.length);
-                    });
-
-                    for (i = 0; that.topStories.length < 5 && i < stories.length; i++) {
-                        that.topStories.push(stories[i]);
-                    }
-                    cache_add("home_topStories", that.topStories);
-                });
             }
+            page.getAllStories(true, (story) => {
+                var responses = story.responses;
+                var claps = story.claps;
+
+                responses = responses.filter((response) => {
+                    return (now - response.date_added) < 8.645e+7;
+                });
+                claps = claps.filter((clap) => {
+                    return ((now - clap.date_added) < 8.645e+7) && clap.number == 1;
+                });
+
+                story["responses"] = responses;
+                story["claps"] = claps;
+
+                //return (now - story.date_added) < 8.64e+7;
+                return true;
+            }, (stories) => {
+                // Limit to 5 stories for putting into recent stories
+                for (i = 0; that.recentStories.length < 5 && i < stories.length; i++) {
+                    that.recentStories.push(stories[i]);
+                }
+                cache_add("home_recentStories", that.recentStories);
+
+                // Sort stories by how many responses and claps they have
+                stories.sort((a, b) => {
+                    return (b.responses.length + b.claps.length) - (a.responses.length + a.claps.length);
+                });
+
+                for (i = 0; that.topStories.length < 5 && i < stories.length; i++) {
+                    that.topStories.push(stories[i]);
+                }
+                cache_add("home_topStories", that.topStories);
+            });
         },
         showSigninModal: function() {
             //this.signin_modal_visible = !this.signin_modal_visible;
@@ -104,10 +105,12 @@ var Home = {
                 <div class="columns is-centered">
                     <div class="column is-three-quarters-tablet is-three-quarters-desktop">
                         <p class="title is-4" style="border-bottom: 1px solid #AAAAAA; padding-bottom: 10px;">Today's Top Stories</p>
-                        <story v-for="story in topStories" :key="story.story_id" :story="story" :show-name="true"></story>
+                        <div v-if="topStories.length > 0 && recentStories.length > 0">
+                            <story v-for="story in topStories" :key="story.story_id" :story="story" :show-name="true"></story>
 
-                        <p class="title is-4" style="border-bottom: 1px solid #AAAAAA; padding-bottom: 10px;">Recent Stories</p>
-                        <story v-for="story in recentStories" :key="story.story_id" :story="story" :show-name="true"></story>
+                            <p class="title is-4" style="border-bottom: 1px solid #AAAAAA; padding-bottom: 10px;">Recent Stories</p>
+                            <story v-for="story in recentStories" :key="story.story_id" :story="story" :show-name="true"></story>
+                        </div>
                     </div>
                 </div>
             </section>

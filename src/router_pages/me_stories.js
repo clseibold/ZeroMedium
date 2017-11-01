@@ -1,5 +1,6 @@
 var Router = require('../router.js');
 var moment = require('moment');
+var { cache_add, cache_replace, cache_remove, cache_get, cache_getOrAdd, cache_exists, cache_clear } = require("../cache.js");
 
 var MeStories = {
 	props: ["userInfo"],
@@ -33,6 +34,7 @@ var MeStories = {
 		deleteStory: function(story) {
 			var that = this;
 			page.deleteStory(story.story_id, () => {
+				cache_clear();
 				that.getUserProfileInfo(that.userInfo);
 			});
 		}

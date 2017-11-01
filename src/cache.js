@@ -29,7 +29,15 @@ function cache_getOrAdd(key, value, f = null) {
 }
 
 function cache_exists(key) {
-	return cache[key] != undefined;
+	if (cache[key]) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
-module.exports = { cache_add, cache_replace, cache_remove, cache_get, cache_getOrAdd, cache_exists };
+function cache_clear() {
+	cache = {};
+}
+
+module.exports = { cache_add, cache_replace, cache_remove, cache_get, cache_getOrAdd, cache_exists, cache_clear };

@@ -5,7 +5,7 @@ var ZeroFrame = require("./ZeroFrame.js");
 var Router = require("./router.js");
 
 // Cache
-var { cache_add, cache_replace, cache_remove, cache_get, cache_getOrAdd, cache_exists } = require("./cache.js");
+var { cache_add, cache_replace, cache_remove, cache_get, cache_getOrAdd, cache_exists, cache_clear } = require("./cache.js");
 
 // Vue
 var Vue = require("vue/dist/vue.min.js");
@@ -102,10 +102,13 @@ class ZeroApp extends ZeroFrame {
         Router.listenForBack(cmd, message);
         if (message.params.event[0] == "file_done") {
             //getTags(true);
+            console.log("Clearing Cache and refreshing data!");
+            cache_clear();
             if (Router.currentRoute == "" || Router.currentRoute == "search" || Router.currentRouter == "topic/:slug") {
-                app.$refs.view.getStories(true);
+                app.$refs.view.getStories();
             }
         }
+        console.log(cmd + "; " + message);
         /*for (var i = 0; i < app.userInfo.keyvalue.length; i++) {
             console.log(app.userInfo.keyvalue[i]);
         }*/
@@ -679,6 +682,6 @@ VueZeroFrameRouter.VueZeroFrameRouter_Init(Router, app, [
     { route: ':userauthaddress/:slug/response', component: ResponseFullscreenEditor },
     { route: ':userauthaddress/response/:id', component: ResponseFullscreen },
     { route: ':userauthaddress/:slug', component: ProfileStory },
-    { route: ':userauthaddress', component: Profile }, // TODO: Have tabs use '&tab='
+    { route: ':userauthaddress', component: Profile }, // TODO: Have tabs use '&tab=' ?
     { route: '', component: Home }
 ]);

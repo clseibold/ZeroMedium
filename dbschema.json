@@ -88,7 +88,7 @@
                 ["json_id", "INTEGER REFERENCES json (json_id)"]
             ],
             "indexes": ["CREATE UNIQUE INDEX image_key ON images (json_id, image_id)"],
-            "schema_changed": 0
+            "schema_changed": 1
         }
     }
 }
