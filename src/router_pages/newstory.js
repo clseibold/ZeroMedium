@@ -171,9 +171,9 @@ var Newstory = {
 	methods: {
 		publish: function(tags, description) {
 			var that = this;
-			page.postStory(this.title, description, this.editor.getContent(), tags, function() {
+			page.postStory(this.title, description, this.editor.getContent(), tags, function(slug) {
 				//cache_clear();
-				Router.navigate(that.userInfo.auth_address + '/' + sanitizeStringForUrl(that.title));
+				Router.navigate(that.userInfo.auth_address + '/' + slug);
 			});
 		},
 		save: function(tags, description) {
@@ -278,8 +278,18 @@ var Newstory = {
 			<section class="section">
 				<div class="columns is-centered">
 					<div class="column is-three-quarters-tablet is-half-desktop">
-						<input type="file" accept="image/*" id="imageUpload">
-						<button class="button is-info" v-on:click.prevent="uploadImage()">Upload Image</button>
+						<small>Note: Make sure the editor is in focus <em>before</em> selecting a photo to upload.</small>
+						<div class="file is-info" style="margin-bottom: 30px;">
+							<label class="file-label">
+								<input class="file-input" type="file" accept="image/*" id="imageUpload" v-on:change="uploadImage()">
+								<span class="file-cta">
+									<span class="file-icon">
+										<i class="fa fa-upload"></i>
+									</span>
+									<span class="file-label">Upload an Image...</span>
+								</span>
+							</label>
+						</div>
 						<input class="input title" type="text" placeholder="Title" style="border: none; border-left: 1px solid #CCCCCC; background: inherit; box-shadow: none;" v-model="title">
 						<!--<textarea class="textarea" style="border: none; background: inherit; box-shadow: none;"></textarea>-->
 						<div class="editable custom-content"></div>

@@ -32,6 +32,11 @@ Vue.component('custom-nav', {
         goto: function(to) {
             this.menuShown = false;
             Router.navigate(to);
+        },
+        signout: function() {
+            page.signout(function() {
+                Router.navigate('');
+            });
         }
     },
     template: `
@@ -72,7 +77,7 @@ Vue.component('custom-nav', {
                                     <a class="navbar-item" :href="'./?/' + (userInfo ? userInfo.auth_address : '')" v-on:click.prevent="goto(userInfo ? userInfo.auth_address : '')">Profile</a>
                                     <a class="navbar-item" :href="'./?/me/settings'" v-on:click.prevent="goto('me/settings')">Settings</a>
                                     <a class="navbar-item" :href="'./?/help'" v-on:click.prevent="goto('help')">Help</a>
-                                    <a class="navbar-item">Change user</a>
+                                    <a class="navbar-item" v-on:click.prevent="signout()">Signout</a>
                                 </div>
                             </div>
                             <a class="navbar-item" v-on:click.prevent="showSigninModal()" v-else>Sign in / Sign up</a>

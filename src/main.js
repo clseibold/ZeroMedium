@@ -55,6 +55,7 @@ var app = new Vue({
             this.signin_modal_active = false;
         },
         getUserInfo: function() {
+            console.log("Getting User Info");
             if (this.siteInfo == null || this.siteInfo.cert_user_id == null) {
                 this.userInfo = null;
                 return;
@@ -113,11 +114,15 @@ class ZeroApp extends ZeroFrame {
     
     selectUser(f = null) {
         this.cmd("certSelect", {accepted_domains: ["zeroid.bit", "kaffie.bit", "cryptoid.bit", "peak.id"]}, () => {
-            // TODO: Will this work always?
-            //app.getUserInfo();
             if (f != null && typeof f == 'function') f();
         });
         return false;
+    }
+
+    signout(f = null) {
+        this.cmd("certSelect", {accepted_domains: [""]}, () => {
+            if (f != null && typeof f == 'function') f();
+        });
     }
 
     getTopics(f = null) {
@@ -224,7 +229,7 @@ class ZeroApp extends ZeroFrame {
             var storyDate = Date.now();
             var storySlug = sanitizeStringForUrl(title);
 
-            for (story of data["stories"]) {
+            for (var story of data["stories"]) {
                 if (story.slug == storySlug) {
                     storySlug += "-" + storyDate;
                     break;
@@ -251,7 +256,7 @@ class ZeroApp extends ZeroFrame {
             page.cmd('fileWrite', [data_inner_path, btoa(json_raw)], (res) => {
                 if (res == "ok") {
                     page.cmd('siteSign', {"inner_path": content_inner_path}, (res) => {
-                        if (f != null && typeof f == 'function') f();
+                        if (f != null && typeof f == 'function') f(storySlug);
                         page.cmd('sitePublish', {"inner_path": content_inner_path, "sign": false});
                     });
                 }
