@@ -102,13 +102,10 @@ class ZeroApp extends ZeroFrame {
         Router.listenForBack(cmd, message);
         if (message.params.event[0] == "file_done") {
             //getTags(true);
-            console.log("Clearing Cache and refreshing data!");
-            cache_clear();
             if (Router.currentRoute == "" || Router.currentRoute == "search" || Router.currentRouter == "topic/:slug") {
                 app.$refs.view.getStories();
             }
         }
-        console.log(cmd + "; " + message);
         /*for (var i = 0; i < app.userInfo.keyvalue.length; i++) {
             console.log(app.userInfo.keyvalue[i]);
         }*/
@@ -204,7 +201,6 @@ class ZeroApp extends ZeroFrame {
         });
     }
 
-    // TODO: Check that slug doesn't already exist, if so, add date at end (or ask user to customize)
     postStory(title, description, body, tags, f = null) {
         if (!app.userInfo || !app.userInfo.cert_user_id) {
             this.cmd("wrapperNotification", ["info", "Please login first."]);
@@ -225,14 +221,24 @@ class ZeroApp extends ZeroFrame {
 
             if (!data["stories"]) data["stories"] = [];
 
+            var storyDate = Date.now();
+            var storySlug = sanitizeStringForUrl(title);
+
+            for (story of data["stories"]) {
+                if (story.slug == storySlug) {
+                    storySlug += "-" + storyDate;
+                    break;
+                }
+            }
+
             data["stories"].push({
                 "story_id": app.userInfo.keyvalue["next_story_id"] || 1,
                 "title": title,
-                "slug": sanitizeStringForUrl(title),
+                "slug": storySlug,
                 "description": description,
                 "body": page.sanitizeHtml(body),
                 "tags": tags,
-                "date_added": Date.now()
+                "date_added": storyDate
             });
 
             if (!app.userInfo.keyvalue["next_story_id"] || app.userInfo.keyvalue["next_story_id"] == null) app.userInfo.keyvalue["next_story_id"] = 1;
@@ -655,6 +661,7 @@ page = new ZeroApp();
 // Router Pages
 var Home = require("./router_pages/home.js");
 
+var Help = require("./router_pages/help.js");
 var Search = require("./router_pages/search.js");
 
 var TopicSlug = require("./router_pages/topic_slug.js");
@@ -671,6 +678,7 @@ var ResponseFullscreen = require('./router_pages/response_fullscreen.js');
 var ProfileStory = require("./router_pages/profile_story.js");
 
 VueZeroFrameRouter.VueZeroFrameRouter_Init(Router, app, [
+    { route: 'help', component: Help },
     { route: 'search', component: Search },
     { route: 'topic/:slug', component: TopicSlug },
     { route: 'tag/:slug', component: TagSlug },

@@ -90,15 +90,10 @@ var Home = {
                 <div class="container">
                     <div class="navbar-brand" style="overflow-x: hidden;">
                         <!-- Categories -->
-                        <a class="navbar-item is-active">Home</a>
-                        <a class="navbar-item">Popular</a>
+                        <!--<a class="navbar-item is-active">Home</a>-->
+                        <!--<a class="navbar-item">Popular</a>-->
                         <!--<a class="navbar-item">Staff Picks</a>-->
                         <a class="navbar-item" v-for="topic in topics" :key="topic.topic_id" :href="'./?/topic/' + topic.slug" v-on:click.prevent="topicClick(topic.slug)">{{topic.name}}</a>
-                        <!--<a class="navbar-item">Technology</a>
-                        <a class="navbar-item">Politics</a>
-                        <a class="navbar-item">Creativity</a>
-                        <a class="navbar-item">Programming</a>
-                        <a class="navbar-item">Culture</a>-->
                     </div>
                 </div>
             </div>
