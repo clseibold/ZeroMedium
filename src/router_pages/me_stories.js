@@ -34,7 +34,7 @@ var MeStories = {
 		deleteStory: function(story) {
 			var that = this;
 			page.deleteStory(story.story_id, () => {
-				cache_clear();
+				//cache_clear();
 				that.getUserProfileInfo(that.userInfo);
 			});
 		}

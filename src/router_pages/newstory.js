@@ -172,7 +172,7 @@ var Newstory = {
 		publish: function(tags, description) {
 			var that = this;
 			page.postStory(this.title, description, this.editor.getContent(), tags, function() {
-				cache_clear();
+				//cache_clear();
 				Router.navigate(that.userInfo.auth_address + '/' + sanitizeStringForUrl(that.title));
 			});
 		},

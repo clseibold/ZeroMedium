@@ -24,9 +24,7 @@ var Home = {
             that.recentStories = [];
             that.topStories = [];
             var now = Date.now();
-            console.log(cache_get("home_recentStories"));
             if (cache_exists("home_recentStories") && cache_exists("home_topStories")) {
-                console.log("Using Cache!");
                 that.recentStories = cache_get("home_recentStories");
                 that.topStories = cache_get("home_topStories");
             }
@@ -48,9 +46,11 @@ var Home = {
                 return true;
             }, (stories) => {
                 // Limit to 5 stories for putting into recent stories
-                for (i = 0; that.recentStories.length < 5 && i < stories.length; i++) {
-                    that.recentStories.push(stories[i]);
+                var newRecentStories = [];
+                for (i = 0; newRecentStories.length < 5 && i < stories.length; i++) {
+                    newRecentStories.push(stories[i]);
                 }
+                that.recentStories = newRecentStories;
                 cache_add("home_recentStories", that.recentStories);
 
                 // Sort stories by how many responses and claps they have
@@ -58,9 +58,11 @@ var Home = {
                     return (b.responses.length + b.claps.length) - (a.responses.length + a.claps.length);
                 });
 
-                for (i = 0; that.topStories.length < 5 && i < stories.length; i++) {
-                    that.topStories.push(stories[i]);
+                var newTopStories = [];
+                for (i = 0; newTopStories.length < 5 && i < stories.length; i++) {
+                    newTopStories.push(stories[i]);
                 }
+                that.topStories = newTopStories;
                 cache_add("home_topStories", that.topStories);
             });
         },
