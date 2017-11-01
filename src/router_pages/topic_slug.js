@@ -40,9 +40,11 @@ var TopicSlug = {
 				var storyTags = story.tags.split(',').map(function(tag) {
 					return tag.toLowerCase().trim();
 				});
-				for (var i = 0; i < that.topicTags.length; i++) {
-					if (storyTags.includes(that.topicTags[i])) {
-						amount++;
+				if (story.tags && storyTags) {
+					for (var i = 0; i < that.topicTags.length; i++) {
+						if (storyTags.includes(that.topicTags[i])) {
+							amount++;
+						}
 					}
 				}
 				story["amount"] = amount;
