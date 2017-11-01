@@ -4,6 +4,7 @@ var moment = require('moment');
 var { cache_add, cache_replace, cache_remove, cache_get, cache_getOrAdd, cache_exists, cache_clear } = require("../cache.js");
 
 var Home = {
+    props: ['userInfo'],
     beforeMount: function() {
         this.$emit("navbar-shadow-off");
         var that = this;
@@ -16,7 +17,12 @@ var Home = {
             });
         }
         this.getStories();
-        // TODO: Do a sort based on number of likes/claps and maybe responses (only responses made during that day).
+    },
+    computed: {
+        isLoggedIn: function() {
+            if (!this.userInfo || this.userInfo == null) return false;
+            return this.userInfo.cert_user_id != null;
+        }
     },
     methods: {
         getStories: function() {
@@ -97,10 +103,11 @@ var Home = {
                     </div>
                 </div>
             </div>
-            <home-hero v-on:show-signin-modal="showSigninModal()"></home-hero>
+            <home-hero v-on:show-signin-modal="showSigninModal()" v-if="!isLoggedIn"></home-hero>
             <section class="section">
                 <div class="columns is-centered">
                     <div class="column is-three-quarters-tablet is-three-quarters-desktop">
+                        <home-user-interests v-if="userInfo && isLoggedIn && userInfo.keyvalue.interests" :user-info="userInfo"></home-user-interests>
                         <p class="title is-4" style="border-bottom: 1px solid #AAAAAA; padding-bottom: 10px;">Today's Top Stories</p>
                         <div v-if="topStories.length > 0 && recentStories.length > 0">
                             <story v-for="story in topStories" :key="story.story_id" :story="story" :show-name="true"></story>
@@ -133,6 +140,31 @@ Vue.component('home-hero', {
                         <a class="button is-small" href="bitcoin:1CVmbCKWtbskK2GAZLM6gnMuiL6Je25Yds?message=Donation to ZeroMedium">Donate via Bitcoin</a>
                     </div>
                 </div>
+            </div>
+        </div>
+        `
+});
+
+Vue.component('home-user-interests', {
+    props: ['userInfo'],
+    computed: {
+        getInterests: function() {
+            return this.userInfo.keyvalue.interests.split(",");
+        }
+    },
+    methods: {
+        goto: function(to) {
+            Router.navigate(to);
+        },
+        getInterestSlug: function(name) {
+            return name.toLowerCase().replace(/ /, '-');
+        }
+    },
+    template: `
+        <div style="margin-bottom: .2rem;">
+            <p class="title is-4" style="border-bottom: 1px solid #AAAAAA; padding-bottom: 10px;">Your Interests</p>
+            <div class="box" v-for="interest in getInterests" style="display: inline-block; margin-right: 1.3rem; margin-bottom: 1.3rem; padding-top: 1.1rem; padding-bottom: 1.1rem; cursor: pointer;" v-on:click.prevent="goto('topic/' + getInterestSlug(interest))">
+                <em>{{ interest }}</em>
             </div>
         </div>
         `

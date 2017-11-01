@@ -137,6 +137,11 @@ var Help = {
 						<br>
 						<div>
 							<p class="title is-4" style="border-bottom: 1px solid #AAAAAA; padding-bottom: 10px;">Managing Settings</p>
+							<p>
+								You can get to the settings page by clicking on the settings item in the dropdown. The only settings that are provided at this moment
+								is the ability to change your profile's About Me section, and the ability to see any responses to your posts in the ZeroHello News Feed.
+								It should be noted that the News Feed settings are client-specific; you must enable it on every client. It also default to disabled.
+							</p>
 						</div>
 					</div>
 				</div>
