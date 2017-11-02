@@ -112,7 +112,7 @@ class ZeroApp extends ZeroFrame {
     }
     
     selectUser(f = null) {
-        this.cmd("certSelect", {accepted_domains: ["zeroid.bit", "kaffie.bit", "cryptoid.bit", "peak.id"]}, () => {
+        this.cmd("certSelect", {accepted_domains: ["zeroid.bit", "kaffie.bit", "cryptoid.bit"]}, () => {
             cache_remove('user_profileInfo');
             cache_remove('user_claps');
             if (f != null && typeof f == 'function') f();
