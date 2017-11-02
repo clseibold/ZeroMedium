@@ -55,7 +55,6 @@ var app = new Vue({
             this.signin_modal_active = false;
         },
         getUserInfo: function() {
-            console.log("Getting User Info");
             if (this.siteInfo == null || this.siteInfo.cert_user_id == null) {
                 this.userInfo = null;
                 return;
@@ -123,6 +122,18 @@ class ZeroApp extends ZeroFrame {
         this.cmd("certSelect", {accepted_domains: [""]}, () => {
             if (f != null && typeof f == 'function') f();
         });
+    }
+
+    showImage(elem, imgLocation, width, height) {
+        if (height == 0 && width == 0) {
+            elem.parentElement.innerHTML = "<img src='" + imgLocation + "'>";
+        } else if (height == 0) {
+            elem.parentElement.innerHTML = "<img src='" + imgLocation + "' width='" + width + "'>";    
+        } else if (width == 0) {
+            elem.parentElement.innerHTML = "<img src='" + imgLocation + "' height='" + height + "'>";
+        } else {
+            elem.parentElement.innerHTML = "<img src='" + imgLocation + "' width='" + width + "' height='" + height + "'>";
+        }
     }
 
     getTopics(f = null) {

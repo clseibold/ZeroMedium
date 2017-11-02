@@ -27,7 +27,9 @@ var ProfileStory = {
 			page.getStory(Router.currentParams["userauthaddress"], Router.currentParams["slug"], (story) => {
 				that.story = story;
 				that.storyAuthor = story.value;
+				
 				that.sanitizedBody = page.sanitizeHtml(story.body);
+
 				page.getResponses(that.profileInfo.auth_address, that.story.story_id, "s", (responses) => {
 					that.responses = responses;
 					that.getClaps();
@@ -181,6 +183,24 @@ var ProfileStory = {
 		    }*/
 		});
 	},
+	beforeUpdate: function() {
+		var imageTags = document.querySelectorAll('#storyBody img');
+		for (var imgTag of imageTags) {
+			var parent = imgTag.parentElement;
+			var imgSrc = imgTag.src;
+			var imgWidth = imgTag.width;
+			var imgHeight = imgTag.height;
+			if (imgWidth == 0 && imgHeight == 0) {
+				parent.innerHTML = `<div onclick="page.showImage(this, '${imgSrc}', ${imgWidth}, ${imgHeight}); return false;" style="text-align: center; width: 100%; height: 30px; background-color: #555555; color: white; cursor: pointer;">Show Image</div>`;
+			} else if (imgHeight == 0) {
+				parent.innerHTML = `<div onclick="page.showImage(this, '${imgSrc}', ${imgWidth}, ${imgHeight}); return false;" style="text-align: center; width: ${imgWidth}px; height: 30px; background-color: #555555; color: white; cursor: pointer;">Show Image</div>`;
+			} else if (imgWidth == 0) {
+				parent.innerHTML = `<div onclick="page.showImage(this, '${imgSrc}', ${imgWidth}, ${imgHeight}); return false;" style="text-align: center; width: 100%; height: ${imgHeight}px; background-color: #555555; color: white; cursor: pointer;">Show Image</div>`;
+			} else {
+				parent.innerHTML = `<div onclick="page.showImage(this, '${imgSrc}', ${imgWidth}, ${imgHeight}); return false;" style="text-align: center; width: ${imgWidth}px; height: ${imgHeight}px; background-color: #555555; color: white; cursor: pointer;">Show Image</div>`;
+			}
+		}
+	},
 	methods: {
 		getClaps: function() {
 			var that = this;
@@ -261,7 +281,7 @@ var ProfileStory = {
 						<div v-if="profileInfo && story">
 							<p class="title is-3">{{ story.title }}</p>
 							<p class="subtitle is-5">By <a :href="'./?/' + profileInfo.auth_address" v-on:click.prevent="goto(profileInfo.auth_address)">{{ storyAuthor }}</a> - {{ datePosted(story.date_added) }}</p>
-							<div class="custom-content" v-html="sanitizedBody"></div>
+							<div id="storyBody" class="custom-content" v-html="sanitizedBody"></div>
 							<div class="tags" style="margin-top: 10px;" v-if="story.tags != ''">
 								<a class='tag' v-for="tag in getTags" :href="'./?/tag/' + getTagSlug(tag)" v-on:click.prevent="goto('tag/' + getTagSlug(tag))">{{ tag }}</a>
 							</div>

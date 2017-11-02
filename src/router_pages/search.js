@@ -38,13 +38,15 @@ var Search = {
 	},
 	computed: {
         getSearchedStories() { // TODO: Add ability to search name also
-        	if (!this.allStories || this.allStories.length == 0) return [];
+        	if (!this.allStories || this.allStories.length == 0) return null;
         	var list = this.allStories;
 			if (this.searchInput == "" || !this.searchInput) return list;
 			var searchInputWords = this.searchInput.trim().split(' '); // TODO
 			var that = this;
 			list = list.filter(function(story) {
-				story.order = 0;
+				console.log(story.title);
+				//story.order = 0;
+				story["order"] = 0;
 				var matches = 0;
 				for (var i = 0; i < searchInputWords.length; i++) {
 					var word = searchInputWords[i].trim().toLowerCase();
@@ -58,7 +60,7 @@ var Search = {
 						matches++;
 						continue;
 					}
-					if (word[0] == "@") {
+					if (story.cert_user_id && word[0] == "@" && word.length > 1) {
 						var wordId = word.substring(1, word.length);
 						if (story.cert_user_id.replace(/@.*\.bit/, '').toLowerCase().includes(wordId)) {
 							story.order += 2;
@@ -66,12 +68,12 @@ var Search = {
 							continue;
 						}
 					}
-					if (story.cert_user_id.toLowerCase().includes(word)) {
+					if (story.cert_user_id && story.cert_user_id.toLowerCase().includes(word)) {
 						story.order += 2;
 						matches++;
 						continue;
 					}
-					if (story.description.toLowerCase().includes(word)) {
+					if (story.description && story.description.toLowerCase().includes(word)) {
 						story.order++;
 						matches++;
 						continue;
@@ -94,9 +96,11 @@ var Search = {
 					return true;
 				}
 			});
-			list.sort(function(a, b) {
-				return b.order - a.order;
-			});
+			if (list.length > 0) {
+				list.sort(function(a, b) {
+					return b.order - a.order;
+				});
+			}
 			return list;
         },
         getStrictText: function() {

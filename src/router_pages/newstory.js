@@ -192,7 +192,7 @@ var Newstory = {
 
 			for (let fX in files) {
 				let fY = files[fX];
-				console.log(fX, fY);
+				//console.log(fX, fY);
 
 				if (!fY || typeof fY !== 'object' || !fY.type.match('(image)\/(png|jpg|jpeg|gif)|(audio)\/(mp3|ogg)|(video)\/(ogg|mp4)')) // |audio|video      || !fY.name.match(/\.IMAGETYPE$/gm)
 					continue;
@@ -242,8 +242,8 @@ var Newstory = {
 											if (res == "ok") {
 												var output_url = "/" + page.site_info.address + "/" + f_path;
 												// Add to Medium-editor
-												that.editor.execAction('insertImage', {
-													value: output_url
+												that.editor.execAction('insertHtml', {
+													value: '<div class="img"><img src="' + output_url + '"></div>'
 												});
 
 												// NOTE: Disabled signing and publishing because publishing the story will do this.

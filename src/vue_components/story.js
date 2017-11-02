@@ -5,29 +5,31 @@ var moment = require('moment');
 Vue.component('story', {
 	props: ['story', 'showName', 'showOptions', 'editUrl'],
 	methods: {
-		datePosted: function(date) {
-			return moment(date).fromNow();
-		},
 		goto: function(to) {
 			Router.navigate(to);
-		},
-		getStoryUrl: function(story) {
-			return this.getStoryAuthAddress(story) + '/' + story.slug;
-		},
-		getStoryAuthAddress: function(story) {
-			return story.directory.replace(/users\//, '').replace(/\//g, '');
 		},
 		deleteStory: function() {
 			this.$emit('delete');
 		}
 	},
+	computed: {
+		datePosted: function() {
+			return moment(this.story.date_added).fromNow();
+		},
+		getStoryUrl: function() {
+			return this.getStoryAuthAddress + '/' + this.story.slug;
+		},
+		getStoryAuthAddress: function() {
+			return this.story.directory.replace(/users\//, '').replace(/\//g, '');
+		}
+	},
 	template: `
 		<div class="box">
-			<p class="title is-5" style="margin-bottom: 0;"><a :href="'./?/' + getStoryUrl(story)" v-on:click.prevent="goto(getStoryUrl(story))">{{ story.title }}</a></p>
-			<small style="margin-bottom: 10px;" v-if="showName">By <a :href="'./?/' + getStoryAuthAddress(story)" v-on:click.prevent="goto(getStoryAuthAddress(story))">{{ story.value }}</a></small>
+			<p class="title is-5" style="margin-bottom: 0;"><a :href="'./?/' + getStoryUrl" v-on:click.prevent="goto(getStoryUrl)">{{ story.title }}</a></p>
+			<small style="margin-bottom: 10px;" v-if="showName">By <a :href="'./?/' + getStoryAuthAddress" v-on:click.prevent="goto(getStoryAuthAddress)">{{ story.value }}</a></small>
 			<p style="margin-bottom: 5px;">{{ story.description }}</p>
 			<small>
-				Published {{ datePosted(story.date_added) }}
+				Published {{ datePosted }}
 				<div class="dropdown is-hoverable" v-if="showOptions">
 					<div class="dropdown-trigger">
 						<a style="margin-left: 5px;">

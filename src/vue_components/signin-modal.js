@@ -181,10 +181,17 @@ Vue.component('signin-modal', {
                     <button class="delete" v-on:click.prevent="close()" v-if="shouldShowClose"></button>
                 </header>
                 <section class="modal-card-body" v-if="currentSlide == 0">
-                    <a class="button is-info" style="width: 100%; padding-top: 25px; padding-bottom: 25px; margin-top: 5px;" v-on:click.prevent="signin()">Sign in</a>
-                    <a class="button" style="width: 100%; padding-top: 25px; padding-bottom: 25px; margin-top: 5px;" v-on:click.prevent="createId('zeroid')">Register with ZeroId</a>
-                    <a class="button" style="width: 100%; padding-top: 25px; padding-bottom: 25px; margin-top: 5px;" v-on:click.prevent="createId('kaffieid')">Register with KaffieId</a>
-                    <a class="button" style="width: 100%; padding-top: 25px; padding-bottom: 25px; margin-top: 5px;" v-on:click.prevent="createId('cryptoid')">Register with CryptoId</a>
+                    <p>
+                        If you have an Id from a supported Id provider, <em>even if it's your first time logging in</em>, click this sign in button:
+                    </p>
+                    <a class="button is-info" style="width: 100%; padding-top: 25px; padding-bottom: 25px; margin-top: 5px;" v-on:click.prevent="signin()">Sign in/Register with Id</a>
+                    <br>
+                    <p>
+                        If you don't already have an Id from one of the Id Providers below, click on the button to register, then come back here and click signin to use that newly created id provider.
+                    </p>
+                    <a class="button" style="width: 100%; padding-top: 25px; padding-bottom: 25px; margin-top: 5px;" v-on:click.prevent="createId('zeroid')">Create an Id from ZeroId</a>
+                    <a class="button" style="width: 100%; padding-top: 25px; padding-bottom: 25px; margin-top: 5px;" v-on:click.prevent="createId('kaffieid')">Create an Id from KaffieId</a>
+                    <a class="button" style="width: 100%; padding-top: 25px; padding-bottom: 25px; margin-top: 5px;" v-on:click.prevent="createId('cryptoid')">Create an Id from CryptoId</a>
                 </section>
                 <section class="modal-card-body" v-if="currentSlide == 1">
                     <p><a v-on:click.prevent="signin()">{{ userInfo ? userInfo.cert_user_id : "" }}</a></p>
