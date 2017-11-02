@@ -1,9 +1,11 @@
 var Vue = require("vue/dist/vue.min.js");
 var Router = require("../router.js");
 var { sanitizeStringForUrl, sanitizeStringForUrl_SQL, html_substr, stripHTML_SQL } = require("../util.js");
+var { cache_add, cache_replace, cache_remove, cache_get, cache_getOrAdd, cache_exists, cache_clear } = require("../cache.js");
 var moment = require("moment");
 
 var Profile = {
+	props: ['userInfo'],
 	data: function() {
 		return {
 			profileInfo: {},
@@ -15,11 +17,28 @@ var Profile = {
 	beforeMount: function() {
 		this.$emit('navbar-shadow-off');
 		var that = this;
+		if (this.userInfo && this.userInfo.auth_address == Router.currentParams["userauthaddress"]) {
+			// Use the cache!
+			var userProfileInfo = cache_get('user_profileInfo');
+			if (userProfileInfo) {
+				that.profileInfo = userProfileInfo;
+			}
+			var userClaps = cache_get('user_claps');
+			if (userClaps) {
+				that.claps = userClaps;
+			}
+		}
 		page.getUserProfileInfo(Router.currentParams["userauthaddress"], true, true, (profileInfo) => {
 			that.profileInfo = profileInfo;
+			if (that.userInfo && that.userInfo.auth_address == Router.currentParams["userauthaddress"]) {
+				cache_add('user_profileInfo', profileInfo);
+			}
 			that.isFollowing();
 			page.getUserClaps(Router.currentParams["userauthaddress"], (claps) => {
 				that.claps = claps;
+				if (that.userInfo && that.userInfo.auth_address == Router.currentParams["userauthaddress"]) {
+					cache_add('user_claps', claps);
+				}
 			});
 		});
 	},
