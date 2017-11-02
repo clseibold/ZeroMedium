@@ -279,7 +279,7 @@ var Newstory = {
 				<div class="columns is-centered">
 					<div class="column is-three-quarters-tablet is-half-desktop">
 						<small>Note: Make sure the editor is in focus <em>before</em> selecting a photo to upload.</small>
-						<div class="file is-info" style="margin-bottom: 30px;">
+						<div class="file is-info" style="margin-bottom: 30px; margin-top: 5px;">
 							<label class="file-label">
 								<input class="file-input" type="file" accept="image/*" id="imageUpload" v-on:change="uploadImage()">
 								<span class="file-cta">
