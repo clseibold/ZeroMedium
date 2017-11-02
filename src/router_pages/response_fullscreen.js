@@ -1,5 +1,6 @@
 var Vue = require("vue/dist/vue.min.js");
 var MediumEditor = require("medium-editor/dist/js/medium-editor");
+var MediumEditorAutolist = require("../medium-editor-plugins/inline-markdown");
 // Medium Editor Tables has problems with requirejs
 //var MediumEditorTable = require("medium-editor-tables/dist/js/medium-editor-tables");
 var Router = require("../router.js");
@@ -32,6 +33,7 @@ var ResponseFullscreen = {
 		});
 	},
 	mounted: function() {
+        var autolist = new MediumEditorAutolist();
 		this.responseEditor = new MediumEditor('.editableResponse', {
 			placeholder: {
 				text: "Write a response...",
@@ -50,6 +52,9 @@ var ResponseFullscreen = {
 		        targetCheckboxText: 'Open in new window'
 		    },
 		    autoLink: true,
+            extensions: {
+                'autolist': autolist
+            },
     	    keyboardCommands: {
     		    commands: [
                     {
