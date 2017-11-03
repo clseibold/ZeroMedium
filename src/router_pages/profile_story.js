@@ -38,41 +38,51 @@ var ProfileStory = {
 					m = re.exec(newBody);
 					if (m) {
 						// Get image's src, width, and height
-						var re_src = /src=('|")(.*?)('|")/ig;
-						var re_width = /width=('|")(.*?)('|")/ig;
-						var re_height = /height=('|")(.*?)('|")/ig;
+						let re_src = /src=('|")(.*?)('|")/ig;
+						let re_width = /width=('|")(.*?)('|")/ig;
+						let re_height = /height=('|")(.*?)('|")/ig;
 						
-						var imgSrc = re_src.exec(m[0])[2];
-						var imgWidth = re_width.exec(m[0]);
+						let imgSrc = re_src.exec(m[0])[2];
+						let imgWidth = re_width.exec(m[0]);
 						if (imgWidth) {
 							imgWidth = imgWidth[2];
 						}
-						var imgHeight = re_height.exec(m[0]);
+						let imgHeight = re_height.exec(m[0]);
 						if (imgHeight) {
 							imgHeight = imgHeight[2];
 						}
 
-						var imgWidth_int = 0;
+						let imgWidth_int = 0;
 						if (imgWidth) {
 							imgWidth_int = parseInt(imgWidth);
 						}
-						var imgHeight_int = 0;
+						let imgHeight_int = 0;
 						if (imgHeight) {
 							imgHeight_int = parseInt(imgHeight);
 						}
 
 						// Create the string for the placeholder box html
-						var placeholderHtml = "";
+						let placeholderHtml = "";
 
 						if (imgWidth_int == 0 && imgHeight_int == 0) {
-							placeholderHtml = `<div onclick="page.showImage(this, '${imgSrc}', ${imgWidth_int}, ${imgHeight_int}); return false;" style="text-align: center; width: 100%; height: 30px; background-color: #555555; color: white; cursor: pointer;">Show Image</div>`;
+							placeholderHtml = `<div id="${imgSrc}" onclick="page.showImage(this, '${imgSrc}', ${imgWidth_int}, ${imgHeight_int}); return false;" style="text-align: center; width: 100%; height: 30px; background-color: #555555; color: white; cursor: pointer;">Show Image</div>`;
 						} else if (imgHeight_int == 0) {
-							placeholderHtml = `<div onclick="page.showImage(this, '${imgSrc}', ${imgWidth_int}, ${imgHeight_int}); return false;" style="text-align: center; width: ${imgWidth_int}px; height: 30px; background-color: #555555; color: white; cursor: pointer;">Show Image</div>`;
+							placeholderHtml = `<div id="${imgSrc}" onclick="page.showImage(this, '${imgSrc}', ${imgWidth_int}, ${imgHeight_int}); return false;" style="text-align: center; width: ${imgWidth_int}px; height: 30px; background-color: #555555; color: white; cursor: pointer;">Show Image</div>`;
 						} else if (imgWidth_int == 0) {
-							placeholderHtml = `<div onclick="page.showImage(this, '${imgSrc}', ${imgWidth_int}, ${imgHeight_int}); return false;" style="text-align: center; width: 100%; height: ${imgHeight_int}px; background-color: #555555; color: white; cursor: pointer;">Show Image</div>`;
+							placeholderHtml = `<div id="${imgSrc}" onclick="page.showImage(this, '${imgSrc}', ${imgWidth_int}, ${imgHeight_int}); return false;" style="text-align: center; width: 100%; height: ${imgHeight_int}px; background-color: #555555; color: white; cursor: pointer;">Show Image</div>`;
 						} else {
-							placeholderHtml = `<div onclick="page.showImage(this, '${imgSrc}', ${imgWidth_int}, ${imgHeight_int}); return false;" style="text-align: center; width: ${imgWidth_int}px; height: ${imgHeight_int}px; background-color: #555555; color: white; cursor: pointer;">Show Image</div>`;
+							placeholderHtml = `<div id="${imgSrc}" onclick="page.showImage(this, '${imgSrc}', ${imgWidth_int}, ${imgHeight_int}); return false;" style="text-align: center; width: ${imgWidth_int}px; height: ${imgHeight_int}px; background-color: #555555; color: white; cursor: pointer;">Show Image</div>`;
 						}
+
+						let inner_path = imgSrc.replace(/(http:\/\/)?127.0.0.1:43110\//, '').replace(/(https:\/\/)?127.0.0.1:43110\//, '').replace(/18GAQeWN4B7Uum6rvJL2zh9oe4VfcnTM18\//, '').replace(/1CVmbCKWtbskK2GAZLM6gnMuiL6Je25Yds\//, '').replace(/ZeroMedium.bit\//, '');
+						page.cmd("optionalFileInfo", {"inner_path": inner_path.slice(1)}, (row) => {
+							let imgContainer = document.getElementById(imgSrc);
+							if (row.is_downloaded) {
+								imgContainer.click();
+							} else {
+								imgContainer.innerHTML = "Show Image (peers: " + row.peer + ", size: " + row.size / 1000 + "KB)";
+							}
+						});
 
 						// Replace the image tag with the placeholder html
 						newBody = newBody.slice(0, m.index) + placeholderHtml + newBody.slice(m.index).replace(m[0], '');
