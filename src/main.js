@@ -127,6 +127,8 @@ class ZeroApp extends ZeroFrame {
             if (f != null && typeof f == 'function') f();
         });
     }
+    // TESTING HOOKS
+    // ANOTHER TEST
 
     showImage(elem, imgLocation, width, height) {
         var inner_path = imgLocation.replace(/(http:\/\/)?127.0.0.1:43110\//, '').replace(/(https:\/\/)?127.0.0.1:43110\//, '').replace(/18GAQeWN4B7Uum6rvJL2zh9oe4VfcnTM18\//, '').replace(/1CVmbCKWtbskK2GAZLM6gnMuiL6Je25Yds\//, '').replace(/ZeroMedium.bit\//, '');
