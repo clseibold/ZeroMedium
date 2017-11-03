@@ -60,6 +60,7 @@ var ProfileStory = {
 						if (imgHeight) {
 							imgHeight_int = parseInt(imgHeight);
 						}
+						// Another Change!
 
 						// Create the string for the placeholder box html
 						let placeholderHtml = "";
