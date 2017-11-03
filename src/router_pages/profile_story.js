@@ -28,7 +28,58 @@ var ProfileStory = {
 				that.story = story;
 				that.storyAuthor = story.value;
 				
-				that.sanitizedBody = page.sanitizeHtml(story.body);
+				// TODO: Only replace the images that have not been downloaded already with placeholders
+				var newBody = page.sanitizeHtml(story.body);
+				var re = /<img .*? \/>/ig;
+				var m;
+
+				// Get all images in the story's body
+				do {
+					m = re.exec(newBody);
+					if (m) {
+						// Get image's src, width, and height
+						var re_src = /src=('|")(.*?)('|")/ig;
+						var re_width = /width=('|")(.*?)('|")/ig;
+						var re_height = /height=('|")(.*?)('|")/ig;
+						
+						var imgSrc = re_src.exec(m[0])[2];
+						var imgWidth = re_width.exec(m[0]);
+						if (imgWidth) {
+							imgWidth = imgWidth[2];
+						}
+						var imgHeight = re_height.exec(m[0]);
+						if (imgHeight) {
+							imgHeight = imgHeight[2];
+						}
+
+						var imgWidth_int = 0;
+						if (imgWidth) {
+							imgWidth_int = parseInt(imgWidth);
+						}
+						var imgHeight_int = 0;
+						if (imgHeight) {
+							imgHeight_int = parseInt(imgHeight);
+						}
+
+						// Create the string for the placeholder box html
+						var placeholderHtml = "";
+
+						if (imgWidth_int == 0 && imgHeight_int == 0) {
+							placeholderHtml = `<div onclick="page.showImage(this, '${imgSrc}', ${imgWidth_int}, ${imgHeight_int}); return false;" style="text-align: center; width: 100%; height: 30px; background-color: #555555; color: white; cursor: pointer;">Show Image</div>`;
+						} else if (imgHeight_int == 0) {
+							placeholderHtml = `<div onclick="page.showImage(this, '${imgSrc}', ${imgWidth_int}, ${imgHeight_int}); return false;" style="text-align: center; width: ${imgWidth_int}px; height: 30px; background-color: #555555; color: white; cursor: pointer;">Show Image</div>`;
+						} else if (imgWidth_int == 0) {
+							placeholderHtml = `<div onclick="page.showImage(this, '${imgSrc}', ${imgWidth_int}, ${imgHeight_int}); return false;" style="text-align: center; width: 100%; height: ${imgHeight_int}px; background-color: #555555; color: white; cursor: pointer;">Show Image</div>`;
+						} else {
+							placeholderHtml = `<div onclick="page.showImage(this, '${imgSrc}', ${imgWidth_int}, ${imgHeight_int}); return false;" style="text-align: center; width: ${imgWidth_int}px; height: ${imgHeight_int}px; background-color: #555555; color: white; cursor: pointer;">Show Image</div>`;
+						}
+
+						// Replace the image tag with the placeholder html
+						newBody = newBody.slice(0, m.index) + placeholderHtml + newBody.slice(m.index).replace(m[0], '');
+					}
+				} while (m);
+
+				that.sanitizedBody = newBody;
 
 				page.getResponses(that.profileInfo.auth_address, that.story.story_id, "s", (responses) => {
 					that.responses = responses;
@@ -182,24 +233,6 @@ var ProfileStory = {
 		    	table: new MediumEditorTable()
 		    }*/
 		});
-	},
-	beforeUpdate: function() {
-		var imageTags = document.querySelectorAll('#storyBody img');
-		for (var imgTag of imageTags) {
-			var parent = imgTag.parentElement;
-			var imgSrc = imgTag.src;
-			var imgWidth = imgTag.width;
-			var imgHeight = imgTag.height;
-			if (imgWidth == 0 && imgHeight == 0) {
-				parent.innerHTML = `<div onclick="page.showImage(this, '${imgSrc}', ${imgWidth}, ${imgHeight}); return false;" style="text-align: center; width: 100%; height: 30px; background-color: #555555; color: white; cursor: pointer;">Show Image</div>`;
-			} else if (imgHeight == 0) {
-				parent.innerHTML = `<div onclick="page.showImage(this, '${imgSrc}', ${imgWidth}, ${imgHeight}); return false;" style="text-align: center; width: ${imgWidth}px; height: 30px; background-color: #555555; color: white; cursor: pointer;">Show Image</div>`;
-			} else if (imgWidth == 0) {
-				parent.innerHTML = `<div onclick="page.showImage(this, '${imgSrc}', ${imgWidth}, ${imgHeight}); return false;" style="text-align: center; width: 100%; height: ${imgHeight}px; background-color: #555555; color: white; cursor: pointer;">Show Image</div>`;
-			} else {
-				parent.innerHTML = `<div onclick="page.showImage(this, '${imgSrc}', ${imgWidth}, ${imgHeight}); return false;" style="text-align: center; width: ${imgWidth}px; height: ${imgHeight}px; background-color: #555555; color: white; cursor: pointer;">Show Image</div>`;
-			}
-		}
 	},
 	methods: {
 		getClaps: function() {

@@ -233,6 +233,10 @@ var Newstory = {
 								page.cmd("fileWrite", [f_path, f_data], (res) => {
 									if (res == "ok") {
 										imageUpload.value = null;
+
+										// Pin file so it is excluded from the automatized optional file cleanup
+										page.cmd("optionalFilePin", {"inner_path": f_path});
+
 										/* if (imageUpload.value) {
 											imageUpload.parentNode.replaceChild(imageUpload.cloneNode(true), imageUpload)
 										}*/

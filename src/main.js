@@ -129,15 +129,28 @@ class ZeroApp extends ZeroFrame {
     }
 
     showImage(elem, imgLocation, width, height) {
-        if (height == 0 && width == 0) {
-            elem.parentElement.innerHTML = "<img src='" + imgLocation + "'>";
-        } else if (height == 0) {
-            elem.parentElement.innerHTML = "<img src='" + imgLocation + "' width='" + width + "'>";    
-        } else if (width == 0) {
-            elem.parentElement.innerHTML = "<img src='" + imgLocation + "' height='" + height + "'>";
-        } else {
-            elem.parentElement.innerHTML = "<img src='" + imgLocation + "' width='" + width + "' height='" + height + "'>";
-        }
+        var inner_path = imgLocation.replace(/(http:\/\/)?127.0.0.1:43110\//, '').replace(/(https:\/\/)?127.0.0.1:43110\//, '').replace(/18GAQeWN4B7Uum6rvJL2zh9oe4VfcnTM18\//, '').replace(/1CVmbCKWtbskK2GAZLM6gnMuiL6Je25Yds\//, '').replace(/ZeroMedium.bit\//, '');
+        console.log(inner_path);
+
+        // TODO: Change from placeholder to loading
+        //elem.innerHTML = "Loading...";
+
+        //page.cmd('fileNeed', {"inner_path": inner_path}, (res) => {
+            //if (res == "ok") {
+                if (height == 0 && width == 0) {
+                    elem.parentElement.innerHTML = "<img src='" + imgLocation + "'>";
+                } else if (height == 0) {
+                    elem.parentElement.innerHTML = "<img src='" + imgLocation + "' width='" + width + "'>";    
+                } else if (width == 0) {
+                    elem.parentElement.innerHTML = "<img src='" + imgLocation + "' height='" + height + "'>";
+                } else {
+                    elem.parentElement.innerHTML = "<img src='" + imgLocation + "' width='" + width + "' height='" + height + "'>";
+                }
+            /*} else {
+                // TODO: Change back from loading to placeholder
+                elem.innerHTML = "Failed to Load Image";
+            }*/
+        //});
     }
 
     getTopics(f = null) {

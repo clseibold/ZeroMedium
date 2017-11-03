@@ -99,11 +99,17 @@ var Profile = {
 				}
 				page.cmd("feedFollow", [newList]);
 			});
+		},
+		mute() {
+			var that = this;
+			page.cmd("muteAdd", [this.profileInfo.auth_address, this.profileInfo.cert_user_id, ''], () => {
+				Router.navigate('');
+			});
 		}
 	},
 	template: `
 		<div>
-			<profile-hero :name="profileInfo.name" :about="profileInfo.about" :cert-user-id="profileInfo.cert_user_id" :auth-address="profileInfo.auth_address" :follow-text="followText" v-on:follow="follow"></profile-hero>
+			<profile-hero :user-info="userInfo" :name="profileInfo.name" :about="profileInfo.about" :cert-user-id="profileInfo.cert_user_id" :auth-address="profileInfo.auth_address" :follow-text="followText" v-on:follow="follow" v-on:mute="mute"></profile-hero>
 			<profile-navbar v-model="currentTab"></profile-navbar>
 			<section class="section">
 				<div class="columns is-centered" v-if="profileInfo">
@@ -143,10 +149,13 @@ var Profile = {
 }
 
 Vue.component('profile-hero', {
-	props: ['name', 'about', 'certUserId', 'authAddress', 'followText'],
+	props: ['userInfo', 'name', 'about', 'certUserId', 'authAddress', 'followText'],
 	methods: {
 		follow: function() {
 			this.$emit('follow');
+		},
+		mute: function() {
+			this.$emit('mute');
 		}
 	},
     template: `
@@ -158,6 +167,7 @@ Vue.component('profile-hero', {
                     <p v-if="authAddress" style="margin-top: 5px;">Donate: <a :href="'bitcoin:' + authAddress + '?message=Donation to ' + name">{{ authAddress }}</a></p>
                     <p style="margin-top: 5px; margin-bottom: 15px;">{{ about }}</p>
                     <a class="button is-success is-small" :class="{ 'is-outlined': followText == 'Follow' }" v-on:click.prevent="follow()">{{ followText }}</a>
+                    <a class="button is-danger is-small" v-on:click.prevent="mute()" v-if="userInfo.auth_address != authAddress">Mute</a>
                 </div>
             </div>
         </div>
