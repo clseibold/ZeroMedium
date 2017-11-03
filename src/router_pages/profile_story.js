@@ -77,7 +77,9 @@ var ProfileStory = {
 						let inner_path = imgSrc.replace(/(http:\/\/)?127.0.0.1:43110\//, '').replace(/(https:\/\/)?127.0.0.1:43110\//, '').replace(/18GAQeWN4B7Uum6rvJL2zh9oe4VfcnTM18\//, '').replace(/1CVmbCKWtbskK2GAZLM6gnMuiL6Je25Yds\//, '').replace(/ZeroMedium.bit\//, '');
 						page.cmd("optionalFileInfo", {"inner_path": inner_path.slice(1)}, (row) => {
 							let imgContainer = document.getElementById(imgSrc);
-							if (row.is_downloaded) {
+							if (!row) {
+								imgContainer.innerHTML = "Cannot Find Image Info";
+							} else if (row.is_downloaded) {
 								imgContainer.click();
 							} else {
 								imgContainer.innerHTML = "Show Image (peers: " + row.peer + ", size: " + row.size / 1000 + "KB)";
