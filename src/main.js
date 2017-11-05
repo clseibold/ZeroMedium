@@ -91,9 +91,7 @@ class ZeroApp extends ZeroFrame {
             app.getUserInfo();
 
             ZeroGraph.addMerger(() => {
-                ZeroGraph.requestPermission(site_info, () => {
-                    console.log("Added!");
-                });
+                ZeroGraph.requestPermission(site_info);
             });
         });
     }
@@ -688,7 +686,7 @@ class ZeroApp extends ZeroFrame {
 
 page = new ZeroApp();
 
-var ZeroGraph = require("./ZeroGraph.js")(page, true);
+var ZeroGraph = require("./ZeroGraph.js")(page, "info");
 
 // Router Pages
 var Home = require("./router_pages/home.js");
