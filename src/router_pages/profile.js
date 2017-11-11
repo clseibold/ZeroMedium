@@ -127,7 +127,7 @@ var Profile = {
 					</div>
 
 					<div class="column is-three-quarters-tablet is-three-quarters-desktop" v-if="currentTab==1 && profileInfo.stories">
-						<p class="title is-4" style="border-bottom: 1px solid #AAAAAA; padding-bottom: 10px;">Latest</p>
+						<p class="title is-4" style="border-bottom: 1px solid #AAAAAA; padding-bottom: 10px;">Stories</p>
 						<story v-for="story in profileInfo.stories" :key="story.story_id" :story="story" :show-name="false"></story>
 					</div>
 
@@ -167,7 +167,7 @@ Vue.component('profile-hero', {
                     <p v-if="authAddress" style="margin-top: 5px;">Donate: <a :href="'bitcoin:' + authAddress + '?message=Donation to ' + name">{{ authAddress }}</a></p>
                     <p style="margin-top: 5px; margin-bottom: 15px;">{{ about }}</p>
                     <a class="button is-success is-small" :class="{ 'is-outlined': followText == 'Follow' }" v-on:click.prevent="follow()">{{ followText }}</a>
-                    <a class="button is-danger is-small" v-on:click.prevent="mute()" v-if="userInfo.auth_address != authAddress">Mute</a>
+                    <a class="button is-danger is-small" v-on:click.prevent="mute()" v-if="userInfo && userInfo.auth_address != authAddress">Mute</a>
                 </div>
             </div>
         </div>
@@ -186,7 +186,7 @@ Vue.component('profile-navbar', {
 			<div class="container">
 			    <div class="navbar-brand" style="overflow-x: hidden;">
 			        <a class="navbar-item is-tab" :class="{ 'is-active': value==0 }" v-on:click.prevent="setTab(0)">Profile</a>
-			        <a class="navbar-item is-tab" :class="{ 'is-active': value==1 }" v-on:click.prevent="setTab(1)">Latest</a>
+			        <a class="navbar-item is-tab" :class="{ 'is-active': value==1 }" v-on:click.prevent="setTab(1)">Stories</a>
 			        <!--<a class="navbar-item is-tab">Highlights</a>--> <!-- TODO: FUTURE -->
 			        <a class="navbar-item is-tab" :class="{ 'is-active': value==2 }" v-on:click.prevent="setTab(2)">Responses</a>
 			        <a class="navbar-item is-tab" :class="{ 'is-active': value==3 }" v-on:click.prevent="setTab(3)">Claps</a>
