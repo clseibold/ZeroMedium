@@ -686,7 +686,7 @@ class ZeroApp extends ZeroFrame {
 
 page = new ZeroApp();
 
-var ZeroGraph = require("./ZeroGraph.js")(page, "info");
+ZeroGraph = require("./ZeroGraph.js")(page, "info");
 
 // Router Pages
 var Home = require("./router_pages/home.js");

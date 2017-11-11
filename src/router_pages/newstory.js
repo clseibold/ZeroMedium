@@ -1,6 +1,7 @@
 var Vue = require("vue/dist/vue.min.js");
 var MediumEditor = require("medium-editor/dist/js/medium-editor");
 var MediumEditorAutolist = require("../medium-editor-plugins/inline-markdown");
+var MediumEditorZeroGraphLinks = require("../medium-editor-plugins/zerograph-links");
 // Medium Editor Tables has problems with requirejs
 // var MediumEditorTable = require("medium-editor-tables/dist/js/medium-editor-tables");
 var Router = require("../router.js");
@@ -23,6 +24,7 @@ var Newstory = {
 	},
 	mounted: function() {
 		var autolist = new MediumEditorAutolist();
+		var zerograph_links = new MediumEditorZeroGraphLinks();
 		this.editor = new MediumEditor('.editable', {
 			imageDragging: true,
 			placeholder: {
@@ -45,7 +47,8 @@ var Newstory = {
 		    },
 		    autoLink: true,
 		    extensions: {
-		        'autolist': autolist
+		        'autolist': autolist,
+		        'zerographlinks': zerograph_links
 		    },
 		    keyboardCommands: {
 			    commands: [

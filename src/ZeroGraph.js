@@ -114,6 +114,7 @@ var ZeroGraph = (zeroframe, debugLevel = "info") => {
 			var auth_address = object_share_url[0];
 			var date = object_share_url[1];
 			zeroframe.cmd('dbQuery', ['SELECT * FROM objects LEFT JOIN json USING (json_id) WHERE directory="data/users/' + auth_address + '" AND date_added=' + date + ' LIMIT 1'], (objects) => {
+				console.log(objects);
 				var object = JSON.parse(objects[0].type);
 
 				object["title"] = objects[0].title;
