@@ -14,7 +14,7 @@ var Search = {
 		return {
 			topics: [],
 			allStories: [],
-			listedStories: [],
+			//listedStories: [],
 			searchInput: "",
 			isSearchStrict: false
 		}
@@ -26,7 +26,7 @@ var Search = {
 			    return true;
 			}, (stories) => {
 			    that.allStories = stories;
-			    that.listedStories = stories;
+			    //that.listedStories = stories;
 			});
 		},
 		goto: function(to) {
@@ -37,16 +37,14 @@ var Search = {
 		}
 	},
 	computed: {
-        getSearchedStories() { // TODO: Add ability to search name also
-        	if (!this.allStories || this.allStories.length == 0) return null;
-        	var list = this.allStories;
+        getSearchedStories: function() { // TODO: Add ability to search name also
+        	var list = this.allStories.slice();
 			if (this.searchInput == "" || !this.searchInput) return list;
-			var searchInputWords = this.searchInput.trim().split(' '); // TODO
+			var searchInputWords = this.searchInput.trim().split(' ');
 			var that = this;
 			list = list.filter(function(story) {
-				console.log(story.title);
 				//story.order = 0;
-				story["order"] = 0;
+				story.order = 0;
 				var matches = 0;
 				for (var i = 0; i < searchInputWords.length; i++) {
 					var word = searchInputWords[i].trim().toLowerCase();
@@ -55,7 +53,7 @@ var Search = {
 						matches++;
 						continue;
 					}
-					if (story.title.toLowerCase().includes(word)) {
+					if (story.title && story.title.toLowerCase().includes(word)) {
 						story.order += 3;
 						matches++;
 						continue;
@@ -78,7 +76,7 @@ var Search = {
 						matches++;
 						continue;
 					}
-					if (story.body.toLowerCase().includes(word)) {
+					if (story.body && story.body.toLowerCase().includes(word)) {
 						matches++;
 						continue;
 					}
@@ -88,15 +86,10 @@ var Search = {
 						story.order--;
 					}
 				}
-				//console.log(that.isSearchStrict);
-				if (!that.isSearchStrict) {
-					if (matches == 0) return false;
-					else return true;
-				} else {
-					return true;
-				}
+				if (!that.isSearchStrict && matches == 0) return false;
+				else return true;
 			});
-			if (list.length > 0) {
+			if (list.length > 1) {
 				list.sort(function(a, b) {
 					return b.order - a.order;
 				});
@@ -114,7 +107,7 @@ var Search = {
 				<div class="columns is-centered">
 					<div class="column is-three-quarters-tablet is-half-desktop">
 						<div class="field has-addons">
-							 <p class="control has-icons-left is-expanded">
+							<p class="control has-icons-left is-expanded">
 								<input type="search" class="input" v-model="searchInput" style="display: inline; margin-bottom: 10px;" placeholder="Search ...">
 								<span class="icon is-small is-left">
 									<i class="fa fa-search"></i>
@@ -125,9 +118,9 @@ var Search = {
 								<a href="./?/me/newstory" v-on:click.prevent="goto('me/newstory')" class="button is-primary">Write A Story</route-link>
 							</div>
 						</div>
-						<a class="button is-link" v-on:click.prevent="toggleStrictness()">Use {{ getStrictText }}</a>\
+						<a class="button is-link" v-on:click.prevent="toggleStrictness()">Use {{ getStrictText }}</a>
 						<hr>
-						<story v-for="story in getSearchedStories" :key="story.story_id" :story="story" :show-name="true"></story>
+						<story v-for="story in getSearchedStories" :story="story" :show-name="true"></story>
 					</div>
 				</div>
 			</section>
