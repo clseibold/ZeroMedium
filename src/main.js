@@ -54,7 +54,7 @@ var app = new Vue({
         closeSigninModal: function() {
             this.signin_modal_active = false;
         },
-        getUserInfo: function() {
+		getUserInfo: function() { // TODO: This can be passed in a function as a callback
             if (this.siteInfo == null || this.siteInfo.cert_user_id == null) {
                 this.userInfo = null;
                 return;
@@ -694,6 +694,7 @@ var Home = require("./router_pages/home.js");
 var Help = require("./router_pages/help.js");
 var Search = require("./router_pages/search.js");
 
+var Topics = require("./router_pages/topics.js");
 var TopicSlug = require("./router_pages/topic_slug.js");
 var TagSlug = require("./router_pages/tag_slug.js");
 
@@ -710,6 +711,7 @@ var ProfileStory = require("./router_pages/profile_story.js");
 VueZeroFrameRouter.VueZeroFrameRouter_Init(Router, app, [
     { route: 'help', component: Help },
     { route: 'search', component: Search },
+	{ route: 'topics', component: Topics },
     { route: 'topic/:slug', component: TopicSlug },
     { route: 'tag/:slug', component: TagSlug },
     { route: 'me/settings', component: MeSettings },

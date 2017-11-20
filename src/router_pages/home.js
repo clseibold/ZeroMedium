@@ -99,6 +99,7 @@ var Home = {
                         <!--<a class="navbar-item is-active">Home</a>-->
                         <!--<a class="navbar-item">Popular</a>-->
                         <!--<a class="navbar-item">Staff Picks</a>-->
+                        <a class="navbar-item" v-on:click.prevent="goto('topics')">All Topics</a>
                         <a class="navbar-item" v-for="topic in topics" :key="topic.topic_id" :href="'./?/topic/' + topic.slug" v-on:click.prevent="topicClick(topic.slug)">{{topic.name}}</a>
                     </div>
                 </div>
