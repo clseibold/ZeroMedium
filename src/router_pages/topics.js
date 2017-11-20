@@ -40,9 +40,23 @@ var Topics = {
 			return this.interests.includes(this.getTopicName(slug));
 		},
 		followInterest: function(slug) {
+			var newInterests = this.interests.slice();
+			newInterests.push(this.getTopicName(slug));
+			var that = this;
+			page.setInterests(newInterests.join(','), () => {
+				that.interests = newInterests;
+			});
 		},
 		unfollowInterest: function(slug) {
-			
+			var newInterests = this.interests.slice();
+			var index = newInterests.indexOf(this.getTopicName(slug));
+			if (index > -1) {
+				newInterests.splice(index, 1);
+			}
+			var that = this;
+			page.setInterests(newInterests.join(','), () => {
+				that.interests = newInterests;
+			});
 		}
 	},
 	computed: {

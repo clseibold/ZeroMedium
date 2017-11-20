@@ -70,7 +70,7 @@ Vue.component('custom-nav', {
                                     <hr class="navbar-divider">
                                     
                                     <a class="navbar-item">Bookmarks</a>
-                                    <a class="navbar-item">Customize your interests</a>
+                                    <a class="navbar-item" v-on:click.prevent="goto('topics')">Customize your interests</a>
                                     
                                     <hr class="navbar-divider">
                                     
