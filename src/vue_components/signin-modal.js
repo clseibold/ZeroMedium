@@ -32,9 +32,12 @@ Vue.component('signin-modal', {
             slideTitle: "",
             name: "",
             about: "",
+            primaryLanguage: "",
+            secondaryLanguages: [],
             topics: [],
             interests: [],
-            existingUsers: []
+            existingUsers: [],
+            languages: [{code: 'EN', name: 'English'}, {code: 'ES', name: 'Espanol'}, {code: 'ZH', name: 'Chineese'}]
         }
     },
     computed: {
@@ -59,7 +62,7 @@ Vue.component('signin-modal', {
                 });
             });
         },
-        newUserData: function(name = null, about = null, interests = null) {
+        newUserData: function(name = null, about = null, language = null, interests = null) {
             var interestsString = "";
             for (i = 0; i < interests.length; i++) {
                 interestsString += interests[i];
@@ -71,6 +74,7 @@ Vue.component('signin-modal', {
             return {
                 name: name,
                 about: about,
+                languages: language,
                 interests: interestsString
             }
         },
@@ -153,7 +157,19 @@ Vue.component('signin-modal', {
                 }
             });
         },
-        toggleInterest(name) {
+        toggleLanguage: function(language) {
+            if (language.code == this.primaryLanguage) return;
+            var index = this.secondaryLanguages.indexOf(language.code);
+            if (index > -1) {
+                this.secondaryLanguages.splice(index, 1);
+            } else {
+                this.secondaryLanguages.push(language.code);
+            }
+        },
+        isLanguageChecked: function(language) {
+            return this.secondaryLanguages.includes(language.code) || language.code == this.primaryLanguage;
+        },
+        toggleInterest: function(name) {
             for (var i = 0; i < this.interests.length; i++) {
                 if (this.interests[i] == name) {
                     this.interests.splice(i, 1);
@@ -162,7 +178,7 @@ Vue.component('signin-modal', {
             }
             this.interests.push(name);
         },
-        isChecked(name) {
+        isChecked: function(name) {
             for (var i = 0; i < this.interests.length; i++) {
                 if (this.interests[i] == name) {
                     return true;
@@ -208,8 +224,30 @@ Vue.component('signin-modal', {
                             <textarea class="textarea" placeholder="About" v-model="about"></textarea>
                         </div>
                     </div>
+					
+                    <div class="field">
+                        <label class="label">Primary Language</label>
+                        <div class="select">
+    						<select v-model="primaryLanguage">
+                                <option v-for="language in languages" :value="language.code">{{ language.code }} - {{ language.name }}</option>
+    						</select>
+    					</div>
+                    </div>
 
-                    <button class="button" v-on:click.prevent="showNext()">Next</button>
+                    <div class="field">
+                        <label class="label">Other Languages</label>
+                        <div v-for="language in languages" :key="language.code" style="float: left; margin-right: 10px;">
+                            <a style="margin-right: 10px; display: inline-block;" v-on:click.prevent="toggleLanguage(language)">
+                                <span v-if="isLanguageChecked(language)" class="icon is-small">
+                                    <i class="fa fa-check" aria-hidden="true"></i>
+                                </span>
+                                {{ language.name }}
+                            </a>
+                        </div>
+                    </div>
+
+                    <br>
+                    <button class="button" v-on:click.prevent="showNext()" style="margin-top: 10px;">Next</button>
                 </section>
                 <section class="modal-card-body" v-if="currentSlide == 2 && topics">
                     <p><a v-on:click.prevent="signin()">{{ userInfo ? userInfo.cert_user_id : "" }}</a></p>

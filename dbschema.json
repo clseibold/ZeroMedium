@@ -8,7 +8,7 @@
         },
         "users/.+/data.json": {
             "to_table": ["stories", "responses", "claps", "images"],
-            "to_keyvalue": [ "next_story_id", "next_response_id", "next_clap_id", "name", "about", "interests" ]
+            "to_keyvalue": [ "next_story_id", "next_response_id", "next_clap_id", "name", "about", "interests", "languages" ]
         },
         "users/.+/content.json": {
             "to_json_table": ["cert_user_id"],
@@ -45,12 +45,13 @@
                 ["description", "TEXT"],
                 ["body", "TEXT"],
                 ["tags", "TEXT"],
+				["language", "TEXT"],
                 ["date_updated", "INTEGER"],
                 ["date_added", "INTEGER"],
                 ["json_id", "INTEGER REFERENCES json (json_id)"]
             ],
             "indexes": ["CREATE UNIQUE INDEX story_key ON stories (json_id, story_id)"],
-            "schema_changed": 15
+            "schema_changed": 17
         },
         "responses": {
             "cols": [
