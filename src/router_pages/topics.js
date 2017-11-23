@@ -1,5 +1,6 @@
 var Router = require("../router.js");
 var moment = require("moment");
+var { cache_add, cache_replace, cache_remove, cache_get, cache_getOrAdd, cache_exists, cache_clear } = require("../cache.js");
 
 var Topics = {
 	props: ['userInfo'],
@@ -29,9 +30,14 @@ var Topics = {
 		},
 		getTopics: function() {
 			var that = this;
-			page.getTopics((topics) => {
-				that.topics = topics;
-			});
+			if (cache_exists("home_topics")) {
+	            this.topics = cache_get("home_topics");
+	        } else {
+	            page.getTopics((topics) => {
+	                that.topics = topics;
+	                cache_add("home_topics", topics);
+	            });
+	        }
 		},
 		getTopicName: function(slug) {
 			return slug[0].toUpperCase() + slug.substring(1).replace(/-/, ' ');

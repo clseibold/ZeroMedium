@@ -14,6 +14,7 @@ var EditStory = {
 			profileInfo: null,
 			story: null,
 			title: '',
+			storyLanguage: '',
 			status: 'Unsaved changes'
 		}
 	},
@@ -38,8 +39,10 @@ var EditStory = {
 			});*/
 			var that = this;
 			page.getStory(userInfo.auth_address, Router.currentParams["slug"], (story) => {
-				that.story = story;
 				that.title = story.title;
+				that.storyLanguage = story.language;
+				that.story = story;
+				console.log(story.language)
 				that.$emit('setDefaults', story.tags, story.description);
 				that.createEditor();
 			});
@@ -192,19 +195,22 @@ var EditStory = {
 			});
 			this.editor.setContent(this.story.body);
 		},
-		publish: function(tags, description) {
+		publish: function(tags, description, language) {
 			var that = this;
-			page.editStory(this.story.story_id, this.title, description, this.editor.getContent(), tags, function() {
+			if (language == '') language = null;
+			page.editStory(this.story.story_id, this.title, description, this.editor.getContent(), tags, language, function() {
 				//cache_clear();
 				Router.navigate(that.userInfo.auth_address + '/' + sanitizeStringForUrl(that.title));
 			});
 		},
-		save: function(tags, description) {
+		save: function(tags, description, language) {
+			if (language == '') language = null;
+			page.unimplemented();
 		}
 	},
 	template: `
 		<div>
-			<editor-nav v-on:publish="publish" v-on:save="save">
+			<editor-nav v-on:publish="publish" v-on:save="save" :user-info="userInfo" :story-language="storyLanguage">
 				Edit
 				<span slot="status">{{status}}</span>
 			</editor-nav>

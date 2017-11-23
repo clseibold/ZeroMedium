@@ -172,14 +172,16 @@ var Newstory = {
 		});
 	},
 	methods: {
-		publish: function(tags, description) {
+		publish: function(tags, description, language) {
 			var that = this;
-			page.postStory(this.title, description, this.editor.getContent(), tags, function(slug) {
+			if (language == '') language = null;
+			page.postStory(this.title, description, this.editor.getContent(), tags, language, function(slug) {
 				//cache_clear();
 				Router.navigate(that.userInfo.auth_address + '/' + slug);
 			});
 		},
-		save: function(tags, description) {
+		save: function(tags, description, language) {
+			if (language == '') language = null;
 			page.unimplemented();
 		},
 		uploadImage: function() {
@@ -279,7 +281,7 @@ var Newstory = {
 	},
 	template: `
 		<div>
-			<editor-nav v-on:publish="publish" v-on:save="save">
+			<editor-nav v-on:publish="publish" v-on:save="save" :user-info="userInfo">
 				<span slot="status">{{status}}</span>
 			</editor-nav>
 			<section class="section">
@@ -308,11 +310,12 @@ var Newstory = {
 }
 
 Vue.component('editor-nav', {
-	props: ['value'],
+	props: ['value', 'userInfo', 'storyLanguage'],
 	data: function() {
 		return {
 			tags: '',
-			description: ''
+			description: '',
+			language: ''
 		}
 	},
 	mounted: function() {
@@ -320,14 +323,33 @@ Vue.component('editor-nav', {
 	},
 	methods: {
 		publish: function() {
-			this.$emit('publish', this.tags, this.description);
+			this.$emit('publish', this.tags, this.description, this.language);
 		},
 		save: function() {
-			this.$emit('save', this.tags, this.description);
+			this.$emit('save', this.tags, this.description, this.language);
 		},
 		setDefaults: function(tags, description) {
 			this.tags = tags;
 			this.description = description;
+		},
+	},
+	computed: {
+		getUserDefaultLanguage: function() {
+			if (!this.userInfo || !this.userInfo.keyvalue) return "";
+			return this.userInfo.keyvalue.languages.split(",")[0];
+		},
+		getLanguages: function() {
+			if (!this.userInfo || !this.userInfo.keyvalue) return [];
+			var userLanguages = this.userInfo.keyvalue.languages.split(",");
+			var returnLanguages = [];
+			for (var i = 0; i < userLanguages.length; i++) {
+				returnLanguages.push({
+					code: userLanguages[i],
+					name: page.languageNameFromCode(userLanguages[i])
+				});
+			}
+
+			return returnLanguages;
 		}
 	},
 	template: `
@@ -351,6 +373,14 @@ Vue.component('editor-nav', {
 	                				</div>
 	                				<div class="dropdown-item">
 	                					<textarea class="textarea" rows="2" style="min-height: 50px;" placeholder="Description" v-model="description"></textarea>
+	                				</div>
+	                				<div class="dropdown-item">
+	                					<div class="select" style="width: 100%;">
+		                					<select v-model="language" style="width: 100%;">
+		                						<option value="">{{ storyLanguage && storyLanguage != '' ? 'Current (' + storyLanguage + ')' : 'Default (' + getUserDefaultLanguage + ')' }}</option>
+		                						<option v-for="language in getLanguages" :key="language.code" :value="language.code">{{ language.code }} - {{ language.name }}</option>
+		                					</select>
+		                				</div>
 	                				</div>
 	                				<div class="dropdown-item">
 	                					<a class="button is-success is-outlined is-small" v-on:click.prevent="publish">Publish</a>

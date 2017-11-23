@@ -62,7 +62,7 @@ Vue.component('signin-modal', {
                 });
             });
         },
-        newUserData: function(name = null, about = null, language = null, interests = null) {
+        newUserData: function(name = null, about = null, primaryLanguage = null, secondaryLanguages = null, interests = null) {
             var interestsString = "";
             for (i = 0; i < interests.length; i++) {
                 interestsString += interests[i];
@@ -71,10 +71,16 @@ Vue.component('signin-modal', {
                 }
             }
 
+            // Make sure primaryLanguage isn't in secondaryLanguages array
+            var index = secondaryLanguages.indexOf(primaryLanguage);
+            if (index > -1) {
+                secondaryLanguages.splice(index, 1);
+            }
+
             return {
                 name: name,
                 about: about,
-                languages: language,
+                languages: primaryLanguage + "," + secondaryLanguages.join(','),
                 interests: interestsString
             }
         },
@@ -136,7 +142,7 @@ Vue.component('signin-modal', {
                 if (exists) {
                     that.close();
                 } else {
-                    data = that.newUserData(that.name.trim(), that.about.trim(), that.interests);
+                    data = that.newUserData(that.name.trim(), that.about.trim(), that.primaryLanguage, that.secondaryLanguages, that.interests);
 
                     var json_raw = unescape(encodeURIComponent(JSON.stringify(data, undefined, '\t')));
 

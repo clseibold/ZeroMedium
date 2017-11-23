@@ -93,7 +93,7 @@ var Home = {
     template: `
         <div>
             <div class="navbar is-transparent has-shadow" style="border-top: 1px solid rgba(0,0,0,.05);">
-                <div class="container">
+                <div class="container" style="overflow-x: hidden;">
                     <div class="navbar-brand" style="overflow-x: hidden;">
                         <!-- Categories -->
                         <!--<a class="navbar-item is-active">Home</a>-->

@@ -131,8 +131,30 @@ class ZeroApp extends ZeroFrame {
             if (f != null && typeof f == 'function') f();
         });
     }
-    // TESTING HOOKS
-    // ANOTHER TEST
+    
+    languageNameFromCode(code) {
+        switch (code) {
+            case "EN":
+            {
+                return "English";
+            } break;
+
+            case "ES":
+            {
+                return "Espanol";
+            } break;
+
+            case "ZH":
+            {
+                return "Chineese";
+            } break;
+
+            default:
+            {
+                return "Unknown: " + code;
+            } break;
+        }
+    }
 
     showImage(elem, imgLocation, width, height) {
         var inner_path = imgLocation.replace(/(http:\/\/)?127.0.0.1:43110\//, '').replace(/(https:\/\/)?127.0.0.1:43110\//, '').replace(/18GAQeWN4B7Uum6rvJL2zh9oe4VfcnTM18\//, '').replace(/1CVmbCKWtbskK2GAZLM6gnMuiL6Je25Yds\//, '').replace(/ZeroMedium.bit\//, '');
@@ -172,7 +194,7 @@ class ZeroApp extends ZeroFrame {
             // Get stories
             if (getStoryList) {
                 userProfileInfo["stories"] = [];
-                page.cmd('dbQuery', ['SELECT story_id, title, slug, description, tags, date_updated, date_added, cert_user_id, directory FROM stories LEFT JOIN json USING (json_id) WHERE directory="users/' + auth_address + '" ORDER BY date_added DESC'], (stories) => {
+                page.cmd('dbQuery', ['SELECT story_id, title, slug, description, tags, language, date_updated, date_added, cert_user_id, directory FROM stories LEFT JOIN json USING (json_id) WHERE directory="users/' + auth_address + '" ORDER BY date_added DESC'], (stories) => {
                     userProfileInfo["stories"] = stories;
 
                     if (getResponsesList) {
@@ -258,7 +280,7 @@ class ZeroApp extends ZeroFrame {
         });
     }
 
-    postStory(title, description, body, tags, f = null) {
+    postStory(title, description, body, tags, language, f = null) {
         if (!app.userInfo || !app.userInfo.cert_user_id) {
             this.cmd("wrapperNotification", ["info", "Please login first."]);
             //page.selectUser(); // TODO: Check if user has data, if not, show the registration modal.
@@ -288,6 +310,10 @@ class ZeroApp extends ZeroFrame {
                 }
             }
 
+            if (language == null) {
+                language = app.userInfo.keyvalue.languages.split(",")[0];
+            }
+
             data["stories"].push({
                 "story_id": app.userInfo.keyvalue["next_story_id"] || 1,
                 "title": title,
@@ -295,6 +321,7 @@ class ZeroApp extends ZeroFrame {
                 "description": description,
                 "body": page.sanitizeHtml(body),
                 "tags": tags,
+                "language": language,
                 "date_added": storyDate
             });
 
@@ -316,7 +343,7 @@ class ZeroApp extends ZeroFrame {
         });
     }
 
-    editStory(story_id, title, description, body, tags, f = null) {
+    editStory(story_id, title, description, body, tags, language, f = null) {
         if (!app.userInfo || !app.userInfo.cert_user_id) {
             this.cmd("wrapperNotification", ["info", "Please login first."]);
             //page.selectUser(); // TODO: Check if user has data, if not, show the registration modal.
@@ -348,6 +375,9 @@ class ZeroApp extends ZeroFrame {
                     story.slug = sanitizeStringForUrl(title); // TODO: IFFY
                     story.body = page.sanitizeHtml(body);
                     story.tags = tags;
+                    if (language && language != "") {
+                        story.language = language;
+                    }
                     story.description = description;
                     story.date_updated = Date.now();
                     break;
@@ -419,7 +449,7 @@ class ZeroApp extends ZeroFrame {
 
     getStory(auth_address, slug, f = null) {
         // TODO: If two stories have the same title, go with the oldest (ORDER BY ___)
-        page.cmd('dbQuery', ['SELECT story_id, title, slug, description, body, tags, date_updated, date_added, value FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE directory="users/' + auth_address + '" AND slug="' + slug + '" AND key="name"'], (stories) => {
+        page.cmd('dbQuery', ['SELECT story_id, title, slug, description, body, tags, language, date_updated, date_added, value FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE directory="users/' + auth_address + '" AND slug="' + slug + '" AND key="name"'], (stories) => {
             if (!stories || stories.length == 0) {
                 f(null);
                 return;
@@ -431,7 +461,7 @@ class ZeroApp extends ZeroFrame {
     // Used to get story that a response is on (for showing the response on an author's profile)
     // This will only get the stories id, title, and slug
     getStoryMinimal(auth_address, story_id, f = null) {
-        page.cmd('dbQuery', ['SELECT story_id, title, slug, directory, value FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND story_id=' + story_id + ' AND directory="users/' + auth_address + '"'], (stories) => {
+        page.cmd('dbQuery', ['SELECT story_id, title, slug, language, directory, value FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND story_id=' + story_id + ' AND directory="users/' + auth_address + '"'], (stories) => {
             if (!stories || stories.length == 0) {
                 f(null);
                 return;
