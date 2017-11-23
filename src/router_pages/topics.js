@@ -97,8 +97,8 @@ var Topics = {
 								<div class="box" v-for="topic in getLeftTopics">
 									<h2>
 										<a v-on:click.prevent="goto('topic/' + topic.slug)">{{ getTopicName(topic.slug) }}</a>
-										<a v-if="!checkInterestFollowed(topic.slug)" class="button is-primary is-outlined" style="float: right;" v-on:click.prevent="followInterest(topic.slug)">Follow</a>
-										<a v-else class="button is-primary" style="float: right;" v-on:click.prevent="unfollowInterest(topic.slug)">Following</a>
+										<a v-if="userInfo && !checkInterestFollowed(topic.slug)" class="button is-primary is-outlined" style="float: right;" v-on:click.prevent="followInterest(topic.slug)">Follow</a>
+										<a v-if="userInfo && checkInterestFollowed(topic.slug)" class="button is-primary" style="float: right;" v-on:click.prevent="unfollowInterest(topic.slug)">Following</a>
 									</h2>
 								</div>
 							</div>
@@ -106,8 +106,8 @@ var Topics = {
 								<div class="box" v-for="topic in getRightTopics">
 									<h2>
 										<a v-on:click.prevent="goto('topic/' + topic.slug)">{{ getTopicName(topic.slug) }}</a>
-										<a v-if="!checkInterestFollowed(topic.slug)" class="button is-primary is-outlined" style="float: right;" v-on:click.prevent="followInterest(topic.slug)">Follow</a>
-										<a v-else class="button is-primary" style="float: right;" v-on:click.prevent="unfollowInterest(topic.slug)">Following</a>
+										<a v-if="userInfo && !checkInterestFollowed(topic.slug)" class="button is-primary is-outlined" style="float: right;" v-on:click.prevent="followInterest(topic.slug)">Follow</a>
+										<a v-if="userInfo && checkInterestFollowed(topic.slug) && userInfo" class="button is-primary" style="float: right;" v-on:click.prevent="unfollowInterest(topic.slug)">Following</a>
 									</h2>
 								</div>
 							</div>
