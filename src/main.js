@@ -103,9 +103,9 @@ class ZeroApp extends ZeroFrame {
             app.siteInfo = this.site_info;
             app.getUserInfo();
 
-            ZeroGraph.addMerger(() => {
+            /*ZeroGraph.addMerger(() => {
                 ZeroGraph.requestPermission(site_info);
-            });
+            });*/
         });
     }
     
