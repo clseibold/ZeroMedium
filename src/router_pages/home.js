@@ -111,10 +111,10 @@ var Home = {
                         <home-user-interests v-if="userInfo && isLoggedIn && userInfo.keyvalue.interests" :user-info="userInfo"></home-user-interests>
                         <p class="title is-4" style="border-bottom: 1px solid #AAAAAA; padding-bottom: 10px;">Today's Top Stories</p>
                         <div v-if="topStories.length > 0 && recentStories.length > 0">
-                            <story v-for="story in topStories" :key="story.story_id" :story="story" :show-name="true"></story>
+                            <story v-for="story in topStories" :story="story" :show-name="true"></story>
 
                             <p class="title is-4" style="border-bottom: 1px solid #AAAAAA; padding-bottom: 10px;">Recent Stories</p>
-                            <story v-for="story in recentStories" :key="story.story_id" :story="story" :show-name="true"></story>
+                            <story v-for="story in recentStories" :story="story" :show-name="true"></story>
                         </div>
                     </div>
                 </div>

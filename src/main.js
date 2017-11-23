@@ -14,6 +14,7 @@ var VueZeroFrameRouter = require("./vue-zeroframe-router.js");
 // Vue Components
 require("./vue_components/navbar.js");
 require("./vue_components/signin-modal.js");
+require("./vue_components/language-modal.js");
 require("./vue_components/story.js");
 require("./vue_components/response.js");
 
@@ -29,6 +30,7 @@ var app = new Vue({
             <custom-nav v-on:show-signin-modal="showSigninModal()" v-on:get-user-info="getUserInfo()" v-bind:user-info="userInfo" v-bind:shadow="navbarShadow"></custom-nav>
             <component ref="view" v-bind:is="currentView" v-on:show-signin-modal="showSigninModal()" v-on:navbar-shadow-on="navbarShadowOn()" v-on:navbar-shadow-off="navbarShadowOff()" v-on:get-user-info="getUserInfo()" v-bind:user-info="userInfo" v-bind:response-content="responseContent" v-on:set-response-content="setResponseContent"></component>
             <signin-modal v-model="signin_modal_active" v-on:get-user-info="getUserInfo()" v-if="signin_modal_active" v-bind:user-info="userInfo"></signin-modal>
+            <language-modal v-model="language_modal_active" v-on:get-user-info="getUserInfo()" v-if="language_modal_active" v-bind:user-info="userInfo"></language-modal>
         </div>
         `,
     data: {
@@ -38,6 +40,7 @@ var app = new Vue({
         userInfo: null,
         navbarShadow: false,
         signin_modal_active: false,
+        language_modal_active: false,
         responseContent: '' // Used to transfer content from small response box to fullscreen route
     },
     methods: {
@@ -74,7 +77,17 @@ var app = new Vue({
                     keyvalue: keyvalue
                 };
 
-                that.$emit('setUserInfo', that.userInfo);
+                console.log(keyvalue);
+
+                if (!keyvalue.languages || keyvalue.languages == "") {
+                    that.language_modal_active = true;
+                    that.$on('setUserLanguages', (languages) => {
+                        that.keyvalue.languages = languages;
+                        that.$emit('setUserInfo', that.userInfo);
+                    });
+                } else {
+                    that.$emit('setUserInfo', that.userInfo);
+                }
             });
         },
         setResponseContent: function(content) {
@@ -99,26 +112,23 @@ class ZeroApp extends ZeroFrame {
     onRequest(cmd, message) {
         if (cmd == "setSiteInfo") {
             this.site_info = message.params;
-            //app.from = this.site_info.auth_address;
             app.siteInfo = this.site_info;
             app.getUserInfo();
         }
         Router.listenForBack(cmd, message);
         if (message.params.event[0] == "file_done") {
-            //getTags(true);
             if (Router.currentRoute == "" || Router.currentRoute == "search" || Router.currentRouter == "topic/:slug") {
                 app.$refs.view.getStories();
             }
         }
-        /*for (var i = 0; i < app.userInfo.keyvalue.length; i++) {
-            console.log(app.userInfo.keyvalue[i]);
-        }*/
     }
     
     selectUser(f = null) {
         this.cmd("certSelect", {accepted_domains: ["zeroid.bit", "kaffie.bit", "cryptoid.bit"]}, () => {
             cache_remove('user_profileInfo');
             cache_remove('user_claps');
+            cache_remove("home_recentStories");
+            cache_remove("home_topStories");
             if (f != null && typeof f == 'function') f();
         });
         return false;
@@ -470,52 +480,82 @@ class ZeroApp extends ZeroFrame {
         });
     }
 
+    // languages - array of languages
+    generateLanguageDBQuery(languages) {
+        var query = "(";
+
+        for (var i = 0; i < languages.length; i++) {
+            query += "language='" + languages[i] + "'";
+            if (i < languages.length - 1) {
+                query += " OR ";
+            }
+        }
+        query += ")";
+
+        return query;
+    }
+
     // Make getExtra true to get claps and responses on the story (TODO: does not include the responses on the responses)
     getAllStories(getExtra, includeTestFunction, f = null) {
-        page.cmd('dbQuery', ['SELECT * FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" ORDER BY date_added DESC'], (stories) => {
-            var storiesToInclude = [];
-            for (var i = 0; i < stories.length; i++) {
-                let story = stories[i];
-                let story_auth_address = story.directory.replace(/users\//, '').replace(/\//g, '');
+        // TODO: UserInfo may not be set yet. Check for userInfo, if not set, call function to set it and do rest once done.
+        var command = () => {
+            var languageDBQuery = "";
+            if (app.userInfo) {
+                var userLanguages = app.userInfo.keyvalue.languages.split(',');
+                var languageDBQuery = "AND " + page.generateLanguageDBQuery(userLanguages);
+            }
+            page.cmd('dbQuery', ['SELECT * FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" ' + languageDBQuery + ' ORDER BY date_added DESC'], (stories) => {
+                var storiesToInclude = [];
+                for (var i = 0; i < stories.length; i++) {
+                    let story = stories[i];
+                    let story_auth_address = story.directory.replace(/users\//, '').replace(/\//g, '');
 
-                if (getExtra) {
-                    if (i == stories.length - 1) {
-                        page.getResponses(story_auth_address, story.story_id, "s", (responses) => {
-                            story["responses"] = responses;
+                    if (getExtra) {
+                        if (i == stories.length - 1) {
+                            page.getResponses(story_auth_address, story.story_id, "s", (responses) => {
+                                story["responses"] = responses;
 
-                            page.getClaps(story_auth_address, story.story_id, "s", (claps) => {
-                                story["claps"] = claps;
+                                page.getClaps(story_auth_address, story.story_id, "s", (claps) => {
+                                    story["claps"] = claps;
 
-                                if (includeTestFunction(story)) {
-                                    storiesToInclude.push(story);
-                                }
-                                
-                                if (f && typeof f == 'function') f(storiesToInclude);
+                                    if (includeTestFunction(story)) {
+                                        storiesToInclude.push(story);
+                                    }
+                                    
+                                    if (f && typeof f == 'function') f(storiesToInclude);
+                                });
                             });
-                        });
+                        } else {
+                            page.getResponses(story_auth_address, story.story_id, "s", (responses) => {
+                                story["responses"] = responses;
+
+                                page.getClaps(story_auth_address, story.story_id, "s", (claps) => {
+                                    story["claps"] = claps;
+
+                                    if (includeTestFunction(story)) {
+                                        storiesToInclude.push(story);
+                                    }
+                                });
+                            });
+                        }
                     } else {
-                        page.getResponses(story_auth_address, story.story_id, "s", (responses) => {
-                            story["responses"] = responses;
-
-                            page.getClaps(story_auth_address, story.story_id, "s", (claps) => {
-                                story["claps"] = claps;
-
-                                if (includeTestFunction(story)) {
-                                    storiesToInclude.push(story);
-                                }
-                            });
-                        });
-                    }
-                } else {
-                    if (includeTestFunction(story)) {
-                        storiesToInclude.push(story);
-                    }
-                    if (i == stories.length - 1) {
-                        if (f && typeof f == 'function') f(storiesToInclude);
+                        if (includeTestFunction(story)) {
+                            storiesToInclude.push(story);
+                        }
+                        if (i == stories.length - 1) {
+                            if (f && typeof f == 'function') f(storiesToInclude);
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
+
+        if (!app.userInfo) {
+            command();
+            app.$on('setUserInfo', command);
+        } else {
+            command();
+        }
     }
 
     // Reference types:

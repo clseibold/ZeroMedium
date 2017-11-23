@@ -4,9 +4,6 @@ var Router = require("../router.js");
 Vue.component('signin-modal', {
     props: ['value', 'userInfo'],
     beforeMount: function() {
-        /*if (page.site_info.cert_user_id != null) {
-            this.close();
-        }*/
         if (this.userInfo && page.site_info.cert_user_id != null) {
             this.close();
         }
@@ -14,10 +11,7 @@ Vue.component('signin-modal', {
         this.slideTitle = "";
         this.name = "";
         this.about = "";
-        /*if (page.site_info.cert_user_id != null && !this.userInfo.keyvalue.name) {
-            this.currentSlide = 1;
-            this.slideTitle += "Setup Profile";
-        }*/
+
         var that = this;
         page.getTopics((topics) => {
             that.topics = topics;
