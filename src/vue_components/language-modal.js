@@ -51,9 +51,11 @@ Vue.component('language-modal', {
                     data["languages"] = languages;
 
                     // Set language of all current stories to primary language (as long as language isn't already set.
-                    for (var i = 0; i < data["stories"].length; i++) {
-                        if (!data["stories"][i]["language"] || data["stories"][i]["language"] == "") {
-                            data["stories"][i]["language"] = that.primaryLanguage;
+                    if (data["stories"]) {
+                        for (var i = 0; i < data["stories"].length; i++) {
+                            if (!data["stories"][i]["language"] || data["stories"][i]["language"] == "") {
+                                data["stories"][i]["language"] = that.primaryLanguage;
+                            }
                         }
                     }
 
