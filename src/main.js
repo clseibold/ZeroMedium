@@ -156,7 +156,7 @@ class ZeroApp extends ZeroFrame {
 
             case "ZH":
             {
-                return "Chineese";
+                return "Chinese";
             } break;
 
             default:
