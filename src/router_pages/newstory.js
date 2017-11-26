@@ -16,7 +16,8 @@ var Newstory = {
 			title: '',
 			status: 'Unsaved changes',
 			mobileTags: '',
-			mobileDescription: ''
+			mobileDescription: '',
+			mobileLanguage: ''
 		}
 	},
 	beforeMount: function() {
@@ -411,6 +412,14 @@ Vue.component('editor-nav', {
 	            				<div class="dropdown-item">
 	            					<textarea class="textarea" rows="2" style="min-height: 50px;" placeholder="Description" v-model="description"></textarea>
 	            				</div>
+                				<div class="dropdown-item">
+                					<div class="select" style="width: 100%;">
+	                					<select v-model="language" style="width: 100%;">
+	                						<option value="">{{ storyLanguage && storyLanguage != '' ? 'Current (' + storyLanguage + ')' : 'Default (' + getUserDefaultLanguage + ')' }}</option>
+	                						<option v-for="language in getLanguages" :key="language.code" :value="language.code">{{ language.code }} - {{ language.name }}</option>
+	                					</select>
+	                				</div>
+                				</div>
 	            				<div class="dropdown-item">
 	            					<a class="button is-success is-outlined is-small" v-on:click.prevent="publish">Publish</a>
 	            				</div>
