@@ -58,17 +58,20 @@
         }
         this.base.execAction(command);
         this.base.execAction('insertText', {
-          value: match[0].slice(surroundLength, -surroundLength - 1) + " "
+          value: match[0].slice(surroundLength, -surroundLength - 1)
         });
         this.base.execAction(command);
+        this.base.execAction('insertText', {
+          value: match[0][match[0].length - 1]
+        });
       };
 
-      var i_match = /\*.+\*\s/.exec(list_start);
-      var i_match_2 = /_.+_\s/.exec(list_start);
-      var b_match = /\*\*.+\*\*\s/.exec(list_start);
-      var b_match_2 = /__.+__\s/.exec(list_start);
-      var s_match = /~.+~\s/.exec(list_start);
-      var s_match_2 = /~~.+~~\s/.exec(list_start);
+      var i_match = /\*.+\*[\s.,?!()\[\]{}]/.exec(list_start);
+      var i_match_2 = /_.+_[\s.,?!()\[\]{}]/.exec(list_start);
+      var b_match = /\*\*.+\*\*[\s.,?!()\[\]{}]/.exec(list_start);
+      var b_match_2 = /__.+__[\s.,?!()\[\]{}]/.exec(list_start);
+      var s_match = /~.+~[\s.,?!()\[\]{}]/.exec(list_start);
+      var s_match_2 = /~~.+~~[\s.,?!()\[\]{}]/.exec(list_start);
       if (b_match)
         doEdit(b_match, 'bold', 2);
       else if (b_match_2)
