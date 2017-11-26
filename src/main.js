@@ -411,7 +411,7 @@ class ZeroApp extends ZeroFrame {
             page.cmd('fileWrite', [data_inner_path, btoa(json_raw)], (res) => {
                 if (res == "ok") {
                     page.cmd('siteSign', {"inner_path": content_inner_path}, (res) => {
-                        if (f != null && typeof f == 'function') f();
+                        if (f != null && typeof f == 'function') f(storySlug);
                         page.cmd('sitePublish', {"inner_path": content_inner_path, "sign": false});
                     });
                 }

@@ -198,9 +198,9 @@ var EditStory = {
 		publish: function(tags, description, language) {
 			var that = this;
 			if (language == '') language = null;
-			page.editStory(this.story.story_id, this.title, description, this.editor.getContent(), tags, language, function() {
+			page.editStory(this.story.story_id, this.title, description, this.editor.getContent(), tags, language, function(storySlug) {
 				//cache_clear();
-				Router.navigate(that.userInfo.auth_address + '/' + sanitizeStringForUrl(that.title));
+				Router.navigate(that.userInfo.auth_address + '/' + storySlug);
 			});
 		},
 		save: function(tags, description, language) {
