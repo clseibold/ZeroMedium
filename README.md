@@ -8,5 +8,7 @@ Medium for ZeroNet
 
 Update: ZeroMedium no longer uses Typescript (there were problems with it and vue and I didn't want to spend forever trying to figure them out).
 
+**NOTE:** This repo uses the GitFlow development model, which you can read about [here](http://nvie.com/posts/a-successful-git-branching-model/) and [here](https://datasift.github.io/gitflow/IntroducingGitFlow.html).
+
 TODO: 
 * Change gulp-minify-css to gulp-clean-css
