@@ -507,6 +507,11 @@ class ZeroApp extends ZeroFrame {
         return query;
     }
 
+    getStoriesFromTag(tagSlug, f = null) {
+        console.log(tagSlug);
+        page.cmd('dbQuery', ['SELECT * FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND REPLACE(tags, " ", "-") LIKE "%' + tagSlug + '%" ORDER BY date_added DESC'], f); // AND includes tag name generated from tag slug
+    }
+
     // Make getExtra true to get claps and responses on the story (TODO: does not include the responses on the responses)
     getAllStories(getExtra, includeTestFunction, f = null) {
         // TODO: UserInfo may not be set yet. Check for userInfo, if not set, call function to set it and do rest once done.

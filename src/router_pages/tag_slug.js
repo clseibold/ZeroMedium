@@ -11,6 +11,8 @@ var TagSlug = {
 	},
 	beforeMount: function() {
 		this.$emit('navbar-shadow-on');
+		this.tagName = Router.currentParams.slug/*.replace(/---/, ' - ')*/.replace(/-/g, ' ');
+		this.getStories(Router.currentParams.slug);
 		/*var that = this;
 		page.getTopics((topics) => {
             that.topics = topics;
@@ -27,6 +29,13 @@ var TagSlug = {
         });*/
 	},
 	methods: {
+		getStories: function(tagSlug) {
+			var that = this;
+			page.getStoriesFromTag(tagSlug, (stories) => {
+				that.stories = stories;
+				console.log(tagSlug, stories.error);
+			});
+		},
 		datePosted: function(date) {
 			return moment(date).fromNow();
 		},
@@ -47,7 +56,7 @@ var TagSlug = {
 					<div class="column is-three-quarters-tablet is-half-desktop">
 						<p class="title is-4">{{ tagName }}</p>
 						<hr>
-						<p>This function has not been implemented yet!</p>
+						<story v-for="story in stories" :key="story.story_id" v-bind:story="story" v-bind:show-name="true"></story>
 					</div>
 				</div>
 			</section>
