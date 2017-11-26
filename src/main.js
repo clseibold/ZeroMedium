@@ -310,6 +310,7 @@ class ZeroApp extends ZeroFrame {
 
             if (!data["stories"]) data["stories"] = [];
 
+            // Is slug already exists, append date to it
             var storyDate = Date.now();
             var storySlug = sanitizeStringForUrl(title);
 
@@ -378,18 +379,29 @@ class ZeroApp extends ZeroFrame {
                 return;
             }
 
+            // Is slug already exists, append (updated) date to it
+            var storyDate = Date.now();
+            var storySlug = sanitizeStringForUrl(title);
+
+            for (var story of data["stories"]) {
+                if (story.slug == storySlug) {
+                    storySlug += "-" + storyDate;
+                    break;
+                }
+            }
+
             for (var i = 0; i < data["stories"].length; i++) {
                 var story = data["stories"][i];
                 if (story.story_id == story_id) {
                     story.title = title;
-                    story.slug = sanitizeStringForUrl(title); // TODO: IFFY
+                    story.slug = storySlug; // TODO: IFFY
                     story.body = page.sanitizeHtml(body);
                     story.tags = tags;
                     if (language && language != "") {
                         story.language = language;
                     }
                     story.description = description;
-                    story.date_updated = Date.now();
+                    story.date_updated = storyDate;
                     break;
                 }
             }
