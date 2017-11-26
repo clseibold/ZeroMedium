@@ -77,8 +77,6 @@ var app = new Vue({
                     keyvalue: keyvalue
                 };
 
-                console.log(keyvalue);
-
                 if (!keyvalue.languages || keyvalue.languages == "") {
                     that.language_modal_active = true;
                     that.$on('setUserLanguages', (languages) => {
@@ -508,7 +506,6 @@ class ZeroApp extends ZeroFrame {
     }
 
     getStoriesFromTag(tagSlug, f = null) {
-        console.log(tagSlug);
         page.cmd('dbQuery', ['SELECT * FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND REPLACE(tags, " ", "-") LIKE "%' + tagSlug + '%" ORDER BY date_added DESC'], f); // AND includes tag name generated from tag slug
     }
 

@@ -33,7 +33,6 @@ var TagSlug = {
 			var that = this;
 			page.getStoriesFromTag(tagSlug, (stories) => {
 				that.stories = stories;
-				console.log(tagSlug, stories.error);
 			});
 		},
 		datePosted: function(date) {
