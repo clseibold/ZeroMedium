@@ -18,12 +18,13 @@ var Profile = {
 		this.$emit("navbar-shadow-off");
 		var that = this;
 		if (this.userInfo && this.userInfo.auth_address == Router.currentParams["userauthaddress"]) {
-			// Use the cache!
 			var userProfileInfo = cache_get("user_profileInfo");
+			var userClaps = cache_get("user_claps");
+
 			if (userProfileInfo) {
 				that.profileInfo = userProfileInfo;
 			}
-			var userClaps = cache_get("user_claps");
+
 			if (userClaps) {
 				that.claps = userClaps;
 			}

@@ -16,34 +16,34 @@
     },
     onInput: function (evt) {
       var list_start = this.base.getSelectedParentElement().textContent;
-      if (/^1\.\s/.test(list_start) && this.base.getExtensionByName("orderedlist")){
+      if (/^1\.\s/.test(list_start) && this.base.getExtensionByName("orderedlist")) {
         this.base.execAction("delete");
         this.base.execAction("delete");
         this.base.execAction("delete");
         this.base.execAction("insertorderedlist");
       }
-      else if (/^\*\s/.test(list_start) && this.base.getExtensionByName("unorderedlist")){
+      else if (/^\*\s/.test(list_start) && this.base.getExtensionByName("unorderedlist")) {
         this.base.execAction("delete");
         this.base.execAction("delete");
         this.base.execAction("insertunorderedlist");
       }
-      else if (/^\#\#\s/.test(list_start) && this.base.getExtensionByName("h3")){
+      else if (/^\#\#\s/.test(list_start) && this.base.getExtensionByName("h3")) {
         this.base.execAction("delete");
         this.base.execAction("delete");
         this.base.execAction("delete");
         this.base.execAction("append-h3");
       }
-      else if (/^\#\s/.test(list_start) && this.base.getExtensionByName("h2")){
+      else if (/^\#\s/.test(list_start) && this.base.getExtensionByName("h2")) {
         this.base.execAction("delete");
         this.base.execAction("delete");
         this.base.execAction("append-h2");
       }
-      else if (/^\>\s/.test(list_start) && this.base.getExtensionByName("quote")){
+      else if (/^\>\s/.test(list_start) && this.base.getExtensionByName("quote")) {
         this.base.execAction("delete");
         this.base.execAction("delete");
         this.base.execAction("append-blockquote");
       }
-      else if (/^\-\-\-\s/.test(list_start)){
+      else if (/^\-\-\-\s/.test(list_start)) {
         this.base.execAction("delete");
         this.base.execAction("delete");
         this.base.execAction("delete");
