@@ -18,7 +18,7 @@ var Newstory = {
 			mobileTags: "",
 			mobileDescription: "",
 			mobileLanguage: ""
-		}
+		};
 	},
 	beforeMount: function() {
 		this.$emit("navbar-shadow-off");
@@ -26,6 +26,7 @@ var Newstory = {
 	mounted: function() {
 		var autolist = new MediumEditorAutolist();
 		var zerograph_links = new MediumEditorZeroGraphLinks();
+
 		this.editor = new MediumEditor(".editable", {
 			imageDragging: true,
 			placeholder: {
@@ -167,9 +168,6 @@ var Newstory = {
 	                }
 	            ]
 	        }
-		    /*extensions: {
-		    	table: new MediumEditorTable()
-		    }*/
 		});
 	},
 	methods: {

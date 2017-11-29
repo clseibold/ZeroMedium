@@ -18,8 +18,8 @@ require("./vue_components/language-modal.js");
 require("./vue_components/story.js");
 require("./vue_components/response.js");
 
-var sanitizeHtml = require('sanitize-html');
-var { sanitizeStringForUrl, sanitizeStringForUrl_SQL, html_substr } = require('./util.js');
+var sanitizeHtml = require("sanitize-html");
+var { sanitizeStringForUrl, sanitizeStringForUrl_SQL, html_substr } = require("./util.js");
 
 Vue.use(VueZeroFrameRouter.VueZeroFrameRouter);
 
@@ -34,14 +34,13 @@ var app = new Vue({
         </div>
         `,
     data: {
-        //page: null,
         currentView: null,
         siteInfo: null,
         userInfo: null,
         navbarShadow: false,
         signin_modal_active: false,
         language_modal_active: false,
-        responseContent: '' // Used to transfer content from small response box to fullscreen route
+        responseContent: "" // Used to transfer content from small response box to fullscreen route
     },
     methods: {
         navbarShadowOn: function() {
@@ -66,27 +65,31 @@ var app = new Vue({
             }
 
             var that = this;
-            page.cmd('dbQuery', ['SELECT key, value FROM keyvalue LEFT JOIN json USING (json_id) WHERE cert_user_id="' + this.siteInfo.cert_user_id + '" AND directory="users/' + this.siteInfo.auth_address + '"'], (rows) => {
+
+            page.cmd("dbQuery", ['SELECT key, value FROM keyvalue LEFT JOIN json USING (json_id) WHERE cert_user_id="' + this.siteInfo.cert_user_id + '" AND directory="users/' + this.siteInfo.auth_address + '"'], (rows) => {
                 var keyvalue = {};
+
                 for (var i = 0; i < rows.length; i++) {
                     var row = rows[i];
                     keyvalue[row.key] = row.value;
                 }
-                if (!keyvalue.name || keyvalue.name == "") return;
+                if (!keyvalue.name || keyvalue.name === "") {
+                    return;
+                }
                 that.userInfo = {
                     cert_user_id: that.siteInfo.cert_user_id,
                     auth_address: that.siteInfo.auth_address,
                     keyvalue: keyvalue
                 };
 
-                if (!keyvalue.languages || keyvalue.languages == "") {
+                if (!keyvalue.languages || keyvalue.languages === "") {
                     that.language_modal_active = true;
-                    that.$on('setUserLanguages', (languages) => {
+                    that.$on("setUserLanguages", (languages) => {
                         that.keyvalue.languages = languages;
-                        that.$emit('setUserInfo', that.userInfo);
+                        that.$emit("setUserInfo", that.userInfo);
                     });
                 } else {
-                    that.$emit('setUserInfo', that.userInfo);
+                    that.$emit("setUserInfo", that.userInfo);
                 }
             });
         },
@@ -103,42 +106,42 @@ class ZeroApp extends ZeroFrame {
             app.siteInfo = this.site_info;
             app.getUserInfo();
 
-            /*ZeroGraph.addMerger(() => {
+            /* ZeroGraph.addMerger(() => {
                 ZeroGraph.requestPermission(site_info);
             });*/
         });
     }
-    
+
     onRequest(cmd, message) {
-        if (cmd == "setSiteInfo") {
+        if (cmd === "setSiteInfo") {
             this.site_info = message.params;
             app.siteInfo = this.site_info;
             app.getUserInfo();
         }
         Router.listenForBack(cmd, message);
-        if (message.params.event[0] == "file_done") {
-            if (Router.currentRoute == "" || Router.currentRoute == "search" || Router.currentRouter == "topic/:slug") {
+        if (message.params.event[0] === "file_done") {
+            if (Router.currentRoute === "" || Router.currentRoute === "search" || Router.currentRouter === "topic/:slug") {
                 app.$refs.view.getStories();
             }
         }
     }
     
     selectUser(f = null) {
-        this.cmd("certSelect", {accepted_domains: ["zeroid.bit", "kaffie.bit", "cryptoid.bit"]}, () => {
-            cache_remove('user_profileInfo');
-            cache_remove('user_claps');
+        this.cmd("certSelect", { accepted_domains: ["zeroid.bit", "kaffie.bit", "cryptoid.bit"] }, () => {
+            cache_remove("user_profileInfo");
+            cache_remove("user_claps");
             cache_remove("home_recentStories");
             cache_remove("home_topStories");
-            if (f != null && typeof f == 'function') f();
+            if (f != null && typeof f === "function") f();
         });
         return false;
     }
 
     signout(f = null) {
-        this.cmd("certSelect", {accepted_domains: [""]}, () => {
-            cache_remove('user_profileInfo');
-            cache_remove('user_claps');
-            if (f != null && typeof f == 'function') f();
+        this.cmd("certSelect", { accepted_domains: [""] }, () => {
+            cache_remove("user_profileInfo");
+            cache_remove("user_claps");
+            if (f != null && typeof f === "function") f();
         });
     }
     
@@ -181,29 +184,33 @@ class ZeroApp extends ZeroFrame {
     }
 
     getTopics(f = null) {
-        page.cmd('dbQuery', ['SELECT * FROM topics'], (topics) => {
-            if (f != null && typeof f == 'function') f(topics);
+        page.cmd("dbQuery", ["SELECT * FROM topics"], (topics) => {
+            if (f != null && typeof f === "function") {
+                f(topics);
+            }
         });
     }
 
     getUserProfileInfo(auth_address, getStoryList, getResponsesList, f = null) {
         var userProfileInfo = {};
+
         userProfileInfo["auth_address"] = auth_address;
         // Get Keyvalue data
-        page.cmd('dbQuery', ['SELECT key, value, cert_user_id FROM keyvalue LEFT JOIN json USING (json_id) WHERE directory="users/' + auth_address + '"'], (rows) => {
+        page.cmd("dbQuery", ['SELECT key, value, cert_user_id FROM keyvalue LEFT JOIN json USING (json_id) WHERE directory="users/' + auth_address + '"'], (rows) => {
             if (rows && rows.length > 0 && rows[0]) {
                 userProfileInfo["cert_user_id"] = rows[0].cert_user_id;
             }
             for (var i = 0; i < rows.length; i++) {
                 var row = rows[i];
-                if (row.key == 'name') userProfileInfo["name"] = row.value;
-                if (row.key == 'about') userProfileInfo["about"] = row.value;
+
+                if (row.key === "name") userProfileInfo["name"] = row.value;
+                if (row.key === "about") userProfileInfo["about"] = row.value;
             }
 
             // Get stories
             if (getStoryList) {
                 userProfileInfo["stories"] = [];
-                page.cmd('dbQuery', ['SELECT story_id, title, slug, description, tags, language, date_updated, date_added, cert_user_id, directory FROM stories LEFT JOIN json USING (json_id) WHERE directory="users/' + auth_address + '" ORDER BY date_added DESC'], (stories) => {
+                page.cmd("dbQuery", ['SELECT story_id, title, slug, description, tags, language, date_updated, date_added, cert_user_id, directory FROM stories LEFT JOIN json USING (json_id) WHERE directory="users/' + auth_address + '" ORDER BY date_added DESC'], (stories) => {
                     userProfileInfo["stories"] = stories;
 
                     if (getResponsesList) {
@@ -211,10 +218,14 @@ class ZeroApp extends ZeroFrame {
                         page.cmd('dbQuery', ['SELECT * FROM responses LEFT JOIN json USING (json_id) WHERE directory="users/' + auth_address + '" ORDER BY date_added DESC'], (responses) => {
                             userProfileInfo["responses"] = responses;
 
-                            if (f != null && typeof f == 'function') f(userProfileInfo);
+                            if (f != null && typeof f === "function") {
+                                f(userProfileInfo);
+                            }
                         });
                     } else {
-                        if (f != null && typeof f == 'function') f(userProfileInfo);
+                        if (f != null && typeof f === "function") {
+                            f(userProfileInfo);
+                        }
                     }
                 });
             } else if (getResponsesList) {
@@ -223,10 +234,14 @@ class ZeroApp extends ZeroFrame {
                 page.cmd('dbQuery', ['SELECT * FROM responses LEFT JOIN json USING (json_id) WHERE directory="users/' + auth_address + '" ORDER BY date_added DESC'], (responses) => {
                     userProfileInfo["responses"] = responses;
 
-                    if (f != null && typeof f == 'function') f(userProfileInfo);
+                    if (f != null && typeof f === "function") {
+                        f(userProfileInfo);
+                    }
                 });
             } else {
-                if (f != null && typeof f == 'function') f(userProfileInfo);
+                if (f != null && typeof f === "function") {
+                    f(userProfileInfo);
+                }
             }
         });
     }
@@ -241,19 +256,21 @@ class ZeroApp extends ZeroFrame {
         var data_inner_path = "data/users/" + app.userInfo.auth_address + "/data.json";
         var content_inner_path = "data/users/" + app.userInfo.auth_address + "/content.json";
 
-        page.cmd("fileGet", {"inner_path": data_inner_path, "required": false}, (data) => {
+        page.cmd("fileGet", { "inner_path": data_inner_path, "required": false }, (data) => {
 			if (!data) return;
 			data = JSON.parse(data);
 
 			data["interests"] = interests;
 
-            var json_raw = unescape(encodeURIComponent(JSON.stringify(data, undefined, '\t')));
+            var json_raw = unescape(encodeURIComponent(JSON.stringify(data, undefined, "\t")));
 
-            page.cmd('fileWrite', [data_inner_path, btoa(json_raw)], (res) => {
-                if (res == "ok") {
-                    page.cmd('siteSign', {"inner_path": content_inner_path}, (res) => {
-                        if (f != null && typeof f == 'function') f();
-                        page.cmd('sitePublish', {"inner_path": content_inner_path, "sign": false});
+            page.cmd("fileWrite", [data_inner_path, btoa(json_raw)], (res) => {
+                if (res === "ok") {
+                    page.cmd("siteSign", { "inner_path": content_inner_path }, () => {
+                        if (f != null && typeof f === "function") {
+                            f();
+                        }
+                        page.cmd("sitePublish", { "inner_path": content_inner_path, "sign": false });
                     });
                 }
 			});
@@ -262,29 +279,29 @@ class ZeroApp extends ZeroFrame {
 
     sanitizeHtml(text) {
         return sanitizeHtml(text, {
-            allowedTags: ['b', 'i', 'em', 'strong', 'u', 'a', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'br', 'div', 'blockquote', 'code', 'strike', 'ul', 'li', 'ol', 'nl', 'hr', 'table', 'thead', 'caption', 'tbody', 'tr', 'th', 'td', 'pre', 'span', 'img'],
+            allowedTags: ["b", "i", "em", "strong", "u", "a", "h1", "h2", "h3", "h4", "h5", "h6", "p", "br", "div", "blockquote", "code", "strike", "ul", "li", "ol", "nl", "hr", "table", "thead", "caption", "tbody", "tr", "th", "td", "pre", "span", "img"],
             allowedAttributes: {
-                'a': [ 'href', 'name', 'target', 'align' ],
-                'img': [ 'src', 'align', 'width', 'height'],
-                'div': [ 'align' ],
-                'p': [ 'align' ],
-                'h1': [ 'align' ],
-                'h2': [ 'align' ],
-                'h3': [ 'align' ],
-                'h4': [ 'align' ],
-                'h5': [ 'align' ],
-                'h6': [ 'align' ],
-                'strong': [ 'align' ],
-                'u': [ 'align' ],
-                'b': [ 'align' ],
-                'i': [ 'align' ],
-                'em': [ 'align' ],
-                'pre': [ 'align' ],
-                'code': [ 'align' ],
-                'table': [ 'align' ]
+                "a": [ "href", "name", "target", "align" ],
+                "img": [ "src", "align", "width", "height"],
+                "div": [ "align" ],
+                "p": [ "align" ],
+                "h1": [ "align" ],
+                "h2": [ "align" ],
+                "h3": [ "align" ],
+                "h4": [ "align" ],
+                "h5": [ "align" ],
+                "h6": [ "align" ],
+                "strong": [ "align" ],
+                "u": [ "align" ],
+                "b": [ "align" ],
+                "i": [ "align" ],
+                "em": [ "align" ],
+                "pre": [ "align" ],
+                "code": [ "align" ],
+                "table": [ "align" ]
             },
             allowedSchemesByTag: {
-              img: [ 'data' ]
+              img: [ "data" ]
             }
         });
     }
@@ -299,7 +316,7 @@ class ZeroApp extends ZeroFrame {
         var data_inner_path = "data/users/" + app.userInfo.auth_address + "/data.json";
         var content_inner_path = "data/users/" + app.userInfo.auth_address + "/content.json";
 
-        page.cmd('fileGet', {"inner_path": data_inner_path, "required": false}, (data) => {
+        page.cmd("fileGet", { "inner_path": data_inner_path, "required": false }, (data) => {
             if (!data) {
                 // TODO: Show registration modal.
                 return;
@@ -340,13 +357,15 @@ class ZeroApp extends ZeroFrame {
             app.userInfo.keyvalue["next_story_id"]++;
             data["next_story_id"] = app.userInfo.keyvalue["next_story_id"];
 
-            var json_raw = unescape(encodeURIComponent(JSON.stringify(data, undefined, '\t')));
+            var json_raw = unescape(encodeURIComponent(JSON.stringify(data, undefined, "\t")));
 
             page.cmd('fileWrite', [data_inner_path, btoa(json_raw)], (res) => {
-                if (res == "ok") {
-                    page.cmd('siteSign', {"inner_path": content_inner_path}, (res) => {
-                        if (f != null && typeof f == 'function') f(storySlug);
-                        page.cmd('sitePublish', {"inner_path": content_inner_path, "sign": false});
+                if (res === "ok") {
+                    page.cmd("siteSign", { "inner_path": content_inner_path }, (res) => {
+                        if (f != null && typeof f === "function") {
+                            f(storySlug);
+                        }
+                        page.cmd("sitePublish", { "inner_path": content_inner_path, "sign": false });
                     });
                 }
             });
@@ -363,7 +382,7 @@ class ZeroApp extends ZeroFrame {
         var data_inner_path = "data/users/" + app.userInfo.auth_address + "/data.json";
         var content_inner_path = "data/users/" + app.userInfo.auth_address + "/content.json";
 
-        page.cmd('fileGet', {"inner_path": data_inner_path, "required": false}, (data) => {
+        page.cmd("fileGet", { "inner_path": data_inner_path, "required": false }, (data) => {
             if (!data) {
                 console.log("ERROR");
                 return;
@@ -394,7 +413,7 @@ class ZeroApp extends ZeroFrame {
                     story.slug = storySlug;
                     story.body = page.sanitizeHtml(body);
                     story.tags = tags;
-                    if (language && language != "") {
+                    if (language && language !== "") {
                         story.language = language;
                     }
                     story.description = description;
@@ -403,13 +422,15 @@ class ZeroApp extends ZeroFrame {
                 }
             }
 
-            var json_raw = unescape(encodeURIComponent(JSON.stringify(data, undefined, '\t')));
+            var json_raw = unescape(encodeURIComponent(JSON.stringify(data, undefined, "\t")));
 
-            page.cmd('fileWrite', [data_inner_path, btoa(json_raw)], (res) => {
-                if (res == "ok") {
-                    page.cmd('siteSign', {"inner_path": content_inner_path}, (res) => {
-                        if (f != null && typeof f == 'function') f(storySlug);
-                        page.cmd('sitePublish', {"inner_path": content_inner_path, "sign": false});
+            page.cmd("fileWrite", [data_inner_path, btoa(json_raw)], (res) => {
+                if (res === "ok") {
+                    page.cmd("siteSign", { "inner_path": content_inner_path }, (res) => {
+                        if (f != null && typeof f === "function") {
+                            f(storySlug);
+                        }
+                        page.cmd("sitePublish", { "inner_path": content_inner_path, "sign": false });
                     });
                 }
             });
@@ -426,7 +447,7 @@ class ZeroApp extends ZeroFrame {
         var data_inner_path = "data/users/" + app.userInfo.auth_address + "/data.json";
         var content_inner_path = "data/users/" + app.userInfo.auth_address + "/content.json";
 
-        page.cmd('fileGet', {"inner_path": data_inner_path, "required": false}, (data) => {
+        page.cmd("fileGet", { "inner_path": data_inner_path, "required": false }, (data) => {
             if (!data) {
                 console.log("ERROR");
                 return;
@@ -447,15 +468,17 @@ class ZeroApp extends ZeroFrame {
                 }
             }
 
-            var json_raw = unescape(encodeURIComponent(JSON.stringify(data, undefined, '\t')));
+            var json_raw = unescape(encodeURIComponent(JSON.stringify(data, undefined, "\t")));
 
             page.cmd("wrapperConfirm", ["Are you sure?", "Delete"], (confirmed) =>{
                 if (confirmed) {
-                    page.cmd('fileWrite', [data_inner_path, btoa(json_raw)], (res) => {
-                        if (res == "ok") {
-                            page.cmd('siteSign', {"inner_path": content_inner_path}, (res) => {
-                                if (f != null && typeof f == 'function') f();
-                                page.cmd('sitePublish', {"inner_path": content_inner_path, "sign": false});
+                    page.cmd("fileWrite", [data_inner_path, btoa(json_raw)], (res) => {
+                        if (res === "ok") {
+                            page.cmd('siteSign', {"inner_path": content_inner_path}, () => {
+                                if (f != null && typeof f === "function") {
+                                    f();
+                                }
+                                page.cmd("sitePublish", { "inner_path": content_inner_path, "sign": false });
                             });
                         }
                     });
@@ -466,24 +489,28 @@ class ZeroApp extends ZeroFrame {
 
     getStory(auth_address, slug, f = null) {
         // TODO: If two stories have the same title, go with the oldest (ORDER BY ___)
-        page.cmd('dbQuery', ['SELECT story_id, title, slug, description, body, tags, language, date_updated, date_added, value FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE directory="users/' + auth_address + '" AND slug="' + slug + '" AND key="name"'], (stories) => {
+        page.cmd("dbQuery", ['SELECT story_id, title, slug, description, body, tags, language, date_updated, date_added, value FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE directory="users/' + auth_address + '" AND slug="' + slug + '" AND key="name"'], (stories) => {
             if (!stories || stories.length == 0) {
                 f(null);
                 return;
             }
-            if (f != null && typeof f == 'function') f(stories[0]);
+            if (f != null && typeof f === "function") {
+                f(stories[0]);
+            }
         });
     }
 
     // Used to get story that a response is on (for showing the response on an author's profile)
     // This will only get the stories id, title, and slug
     getStoryMinimal(auth_address, story_id, f = null) {
-        page.cmd('dbQuery', ['SELECT story_id, title, slug, language, directory, value FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND story_id=' + story_id + ' AND directory="users/' + auth_address + '"'], (stories) => {
+        page.cmd("dbQuery", ['SELECT story_id, title, slug, language, directory, value FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND story_id=' + story_id + ' AND directory="users/' + auth_address + '"'], (stories) => {
             if (!stories || stories.length == 0) {
                 f(null);
                 return;
             }
-            if (f != null && typeof f == 'function') f(stories[0]);
+            if (f != null && typeof f === "function") {
+                f(stories[0]);
+            }
         });
     }
 
@@ -503,7 +530,7 @@ class ZeroApp extends ZeroFrame {
     }
 
     getStoriesFromTag(tagSlug, f = null) {
-        page.cmd('dbQuery', ['SELECT * FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND REPLACE(tags, " ", "-") LIKE "%' + tagSlug + '%" ORDER BY date_added DESC'], f); // AND includes tag name generated from tag slug
+        page.cmd("dbQuery", ['SELECT * FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND REPLACE(tags, " ", "-") LIKE "%' + tagSlug + '%" ORDER BY date_added DESC'], f); // AND includes tag name generated from tag slug
     }
 
     // Make getExtra true to get claps and responses on the story (TODO: does not include the responses on the responses)
@@ -511,15 +538,17 @@ class ZeroApp extends ZeroFrame {
         // Since userInfo may not be set yet, this will check for userInfo. If it is not set, call function to set it and do rest once done.
         var command = () => {
             var languageDBQuery = "";
+
             if (app.userInfo) {
-                var userLanguages = app.userInfo.keyvalue.languages.split(',');
-                var languageDBQuery = "AND " + page.generateLanguageDBQuery(userLanguages);
+                var userLanguages = app.userInfo.keyvalue.languages.split(",");
+                languageDBQuery = "AND " + page.generateLanguageDBQuery(userLanguages);
             }
-            page.cmd('dbQuery', ['SELECT * FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" ' + languageDBQuery + ' ORDER BY date_added DESC'], (stories) => {
+            page.cmd("dbQuery", ['SELECT * FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" ' + languageDBQuery + ' ORDER BY date_added DESC'], (stories) => {
                 var storiesToInclude = [];
+
                 for (var i = 0; i < stories.length; i++) {
                     let story = stories[i];
-                    let story_auth_address = story.directory.replace(/users\//, '').replace(/\//g, '');
+                    let story_auth_address = story.directory.replace(/users\//, "").replace(/\//g, "");
 
                     if (getExtra) {
                         if (i == stories.length - 1) {
@@ -533,7 +562,9 @@ class ZeroApp extends ZeroFrame {
                                         storiesToInclude.push(story);
                                     }
                                     
-                                    if (f && typeof f == 'function') f(storiesToInclude);
+                                    if (f && typeof f === "function") {
+                                        f(storiesToInclude);
+                                    }
                                 });
                             });
                         } else {
@@ -554,7 +585,9 @@ class ZeroApp extends ZeroFrame {
                             storiesToInclude.push(story);
                         }
                         if (i == stories.length - 1) {
-                            if (f && typeof f == 'function') f(storiesToInclude);
+                            if (f && typeof f === "function") {
+                                f(storiesToInclude);
+                            }
                         }
                     }
                 }
@@ -563,7 +596,7 @@ class ZeroApp extends ZeroFrame {
 
         if (!app.userInfo) {
             command();
-            app.$on('setUserInfo', command);
+            app.$on("setUserInfo", command);
         } else {
             command();
         }
@@ -582,7 +615,7 @@ class ZeroApp extends ZeroFrame {
         var data_inner_path = "data/users/" + app.userInfo.auth_address + "/data.json";
         var content_inner_path = "data/users/" + app.userInfo.auth_address + "/content.json";
 
-        page.cmd('fileGet', {"inner_path": data_inner_path, "required": false}, (data) => {
+        page.cmd("fileGet", { "inner_path": data_inner_path, "required": false }, (data) => {
             if (!data) {
                 // TODO: Show registration modal.
                 return;
@@ -605,13 +638,15 @@ class ZeroApp extends ZeroFrame {
             app.userInfo.keyvalue["next_response_id"]++;
             data["next_response_id"] = app.userInfo.keyvalue["next_response_id"];
 
-            var json_raw = unescape(encodeURIComponent(JSON.stringify(data, undefined, '\t')));
+            var json_raw = unescape(encodeURIComponent(JSON.stringify(data, undefined, "\t")));
 
-            page.cmd('fileWrite', [data_inner_path, btoa(json_raw)], (res) => {
-                if (res == "ok") {
-                    page.cmd('siteSign', {"inner_path": content_inner_path}, (res) => {
-                        if (f != null && typeof f == 'function') f();
-                        page.cmd('sitePublish', {"inner_path": content_inner_path, "sign": false});
+            page.cmd("fileWrite", [data_inner_path, btoa(json_raw)], (res) => {
+                if (res === "ok") {
+                    page.cmd("siteSign", { "inner_path": content_inner_path }, () => {
+                        if (f != null && typeof f === "function") {
+                            f();
+                        }
+                        page.cmd("sitePublish", { "inner_path": content_inner_path, "sign": false });
                     });
                 }
             });
@@ -619,15 +654,18 @@ class ZeroApp extends ZeroFrame {
     }
 
     getResponses(reference_auth_address, reference_id, reference_type, f) {
-        page.cmd('dbQuery', ['SELECT * FROM responses LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE reference_auth_address="' + reference_auth_address + '" AND reference_id=' + reference_id + ' AND reference_type="' + reference_type + '" AND key="name" ORDER BY date_added DESC'], f);
+        page.cmd("dbQuery", ['SELECT * FROM responses LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE reference_auth_address="' + reference_auth_address + '" AND reference_id=' + reference_id + ' AND reference_type="' + reference_type + '" AND key="name" ORDER BY date_added DESC'], f);
     }
 
     getResponse(auth_address, response_id, f) {
-        page.cmd('dbQuery', ['SELECT * FROM responses LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND directory="users/' + auth_address + '" AND response_id=' + response_id + " LIMIT 1"], (responses) => {
+        page.cmd("dbQuery", ['SELECT * FROM responses LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND directory="users/' + auth_address + '" AND response_id=' + response_id + " LIMIT 1"], (responses) => {
             var response = responses[0];
-            page.cmd('dbQuery', ['SELECT * FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND directory="users/' + response.reference_auth_address + '" AND story_id=' + response.reference_id + " LIMIT 1"], (stories) => {
+
+            page.cmd("dbQuery", ['SELECT * FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND directory="users/' + response.reference_auth_address + '" AND story_id=' + response.reference_id + " LIMIT 1"], (stories) => {
                 response["story"] = stories[0];
-                if (f != null && typeof f == 'function') f(response);
+                if (f != null && typeof f === "function") {
+                    f(response);
+                }
             });
         });
     }
@@ -645,7 +683,7 @@ class ZeroApp extends ZeroFrame {
         var data_inner_path = "data/users/" + app.userInfo.auth_address + "/data.json";
         var content_inner_path = "data/users/" + app.userInfo.auth_address + "/content.json";
 
-        page.cmd('fileGet', {"inner_path": data_inner_path, "required": false}, (data) => {
+        page.cmd("fileGet", { "inner_path": data_inner_path, "required": false }, (data) => {
             if (!data) {
                 // TODO: Show registration modal.
                 return;
@@ -698,11 +736,13 @@ class ZeroApp extends ZeroFrame {
 
             var json_raw = unescape(encodeURIComponent(JSON.stringify(data, undefined, '\t')));
 
-            page.cmd('fileWrite', [data_inner_path, btoa(json_raw)], (res) => {
-                if (res == "ok") {
-                    page.cmd('siteSign', {"inner_path": content_inner_path}, (res) => {
-                        if (f != null && typeof f == 'function') f();
-                        page.cmd('sitePublish', {"inner_path": content_inner_path, "sign": false});
+            page.cmd("fileWrite", [data_inner_path, btoa(json_raw)], (res) => {
+                if (res === "ok") {
+                    page.cmd("siteSign", { "inner_path": content_inner_path }, () => {
+                        if (f != null && typeof f === 'function') {
+                            f();
+                        }
+                        page.cmd("sitePublish", { "inner_path": content_inner_path, "sign": false });
                     });
                 }
             });
@@ -710,25 +750,28 @@ class ZeroApp extends ZeroFrame {
     }
 
     getClaps(reference_auth_address, reference_id, reference_type, f) {
-        page.cmd('dbQuery', ['SELECT * FROM claps LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE reference_auth_address="' + reference_auth_address + '" AND reference_id=' + reference_id + ' AND reference_type="' + reference_type + '" AND key="name" ORDER BY date_added DESC'], f);
+        page.cmd("dbQuery", ['SELECT * FROM claps LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE reference_auth_address="' + reference_auth_address + '" AND reference_id=' + reference_id + ' AND reference_type="' + reference_type + '" AND key="name" ORDER BY date_added DESC'], f);
     }
 
     getUserClaps(auth_address, f) {
-        page.cmd('dbQuery', ['SELECT number, reference_auth_address, reference_id, reference_type FROM claps LEFT JOIN json USING (json_id) WHERE directory="users/' + auth_address + '" AND number=1 ORDER BY date_added DESC'], (claps) => {
+        page.cmd("dbQuery", ['SELECT number, reference_auth_address, reference_id, reference_type FROM claps LEFT JOIN json USING (json_id) WHERE directory="users/' + auth_address + '" AND number=1 ORDER BY date_added DESC'], (claps) => {
             var newClaps = [];
 
             for (var i = 0; i < claps.length; i++) {
                 let clap = claps[i]; // Don't use var, otherwise the lambda's will use the same value for this (because var is function scope, not block scope and because javascript is dumb).
+                
                 if (clap.reference_type == "s") {
                     if (i == claps.length - 1) { // If last clap
-                        page.cmd('dbQuery', ['SELECT story_id, description, slug, title, date_updated, date_added, directory, value FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND story_id=' + clap.reference_id + ' AND directory="users/' + clap.reference_auth_address + '"'], (story) => {
+                        page.cmd("dbQuery", ['SELECT story_id, description, slug, title, date_updated, date_added, directory, value FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND story_id=' + clap.reference_id + ' AND directory="users/' + clap.reference_auth_address + '"'], (story) => {
                             clap["story"] = story[0];
                             newClaps.push(clap);
 
-                            if (typeof f == 'function') f(newClaps);
+                            if (typeof f === "function") {
+                                f(newClaps);
+                            }
                         });
                     } else {
-                        page.cmd('dbQuery', ['SELECT story_id, description, slug, title, date_updated, date_added, directory, value FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND story_id=' + clap.reference_id + ' AND directory="users/' + clap.reference_auth_address + '"'], (story) => {
+                        page.cmd("dbQuery", ['SELECT story_id, description, slug, title, date_updated, date_added, directory, value FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND story_id=' + clap.reference_id + ' AND directory="users/' + clap.reference_auth_address + '"'], (story) => {
                             clap["story"] = story[0];
 
                             newClaps.push(clap);
@@ -740,7 +783,7 @@ class ZeroApp extends ZeroFrame {
     }
 
     getUsers(f) {
-        page.cmd('dbQuery', ['SELECT * FROM keyvalue LEFT JOIN json USING (json_id) WHERE key="name"'], f);
+        page.cmd("dbQuery", ['SELECT * FROM keyvalue LEFT JOIN json USING (json_id) WHERE key="name"'], f);
     }
 
     unimplemented() {
@@ -758,7 +801,7 @@ class ZeroApp extends ZeroFrame {
         var content_inner_path = "data/users/" + page.site_info.auth_address + "/content.json";
 
         // Verify that user has correct "optional" and "ignore" values
-        page.cmd("fileGet", {"inner_path": content_inner_path, "required": false}, (data) => {
+        page.cmd("fileGet", { "inner_path": content_inner_path, "required": false }, (data) => {
             if (!data) return;
             data = JSON.parse(data);
 
@@ -769,16 +812,16 @@ class ZeroApp extends ZeroFrame {
                 changed = true;
             }
 
-            var json_raw = unescape(encodeURIComponent(JSON.stringify(data, undefined, '\t')));
+            var json_raw = unescape(encodeURIComponent(JSON.stringify(data, undefined, "\t")));
 
             if (changed) {
                 // Write (and Sign and Publish is doSignPublish=true)
                 page.cmd("fileWrite", [content_inner_path, btoa(json_raw)], (res) => {
-                    if (res == "ok") {
-                        if (f != null && typeof f == "function") f();
+                    if (res === "ok") {
+                        if (f != null && typeof f === "function") f();
                         if (doSignPublish) {
-                            page.cmd('siteSign', {"inner_path": content_inner_path}, (res) => {
-                                page.cmd('sitePublish', {"inner_path": content_inner_path, "sign": false});
+                            page.cmd("siteSign", { "inner_path": content_inner_path }, () => {
+                                page.cmd("sitePublish", { "inner_path": content_inner_path, "sign": false });
                             });
                         }
                     } else {
@@ -788,7 +831,7 @@ class ZeroApp extends ZeroFrame {
                     }
                 });
             } else {
-                if (f != null && typeof f == "function") f();
+                if (f != null && typeof f === "function") f();
             }
         });
     }
@@ -810,28 +853,28 @@ var TagSlug = require("./router_pages/tag_slug.js");
 
 var Newstory = require("./router_pages/newstory.js");
 var EditStory = require("./router_pages/edit_story.js");
-var ResponseFullscreenEditor = require('./router_pages/response_fullscreen_editor.js');
+var ResponseFullscreenEditor = require("./router_pages/response_fullscreen_editor.js");
 
 var MeSettings = require("./router_pages/me_settings.js");
 var MeStories = require("./router_pages/me_stories.js");
 var Profile = require("./router_pages/profile.js");
-var ResponseFullscreen = require('./router_pages/response_fullscreen.js');
+var ResponseFullscreen = require("./router_pages/response_fullscreen.js");
 var ProfileStory = require("./router_pages/profile_story.js");
 
 VueZeroFrameRouter.VueZeroFrameRouter_Init(Router, app, [
-    { route: 'help', component: Help },
-    { route: 'search', component: Search },
-	{ route: 'topics', component: Topics },
-    { route: 'topic/:slug', component: TopicSlug },
-    { route: 'tag/:slug', component: TagSlug },
-    { route: 'me/settings', component: MeSettings },
-    { route: 'me/newstory', component: Newstory },
-    { route: 'me/stories/:slug/edit', component: EditStory },
-    { route: 'me/stories', component: MeStories },
-    { route: ':userauthaddress/response/:id/response', component: ResponseFullscreenEditor },
-    { route: ':userauthaddress/:slug/response', component: ResponseFullscreenEditor },
-    { route: ':userauthaddress/response/:id', component: ResponseFullscreen },
-    { route: ':userauthaddress/:slug', component: ProfileStory },
-    { route: ':userauthaddress', component: Profile }, // TODO: Have tabs use '&tab='?
-    { route: '', component: Home }
+    { route: "help", component: Help },
+    { route: "search", component: Search },
+	{ route: "topics", component: Topics },
+    { route: "topic/:slug", component: TopicSlug },
+    { route: "tag/:slug", component: TagSlug },
+    { route: "me/settings", component: MeSettings },
+    { route: "me/newstory", component: Newstory },
+    { route: "me/stories/:slug/edit", component: EditStory },
+    { route: "me/stories", component: MeStories },
+    { route: ":userauthaddress/response/:id/response", component: ResponseFullscreenEditor },
+    { route: ":userauthaddress/:slug/response", component: ResponseFullscreenEditor },
+    { route: ":userauthaddress/response/:id", component: ResponseFullscreen },
+    { route: ":userauthaddress/:slug", component: ProfileStory },
+    { route: ":userauthaddress", component: Profile }, // TODO: Have tabs use "&tab="?
+    { route: "", component: Home }
 ]);

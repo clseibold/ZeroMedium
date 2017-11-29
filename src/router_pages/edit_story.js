@@ -1,8 +1,8 @@
-var Vue = require("vue/dist/vue.min.js");
+// var Vue = require("vue/dist/vue.min.js");
 var MediumEditor = require("medium-editor/dist/js/medium-editor");
 var MediumEditorAutolist = require("../medium-editor-plugins/inline-markdown");
 // Medium Editor Tables has problems with requirejs
-//var MediumEditorTable = require("medium-editor-tables/dist/js/medium-editor-tables");
+// var MediumEditorTable = require("medium-editor-tables/dist/js/medium-editor-tables");
 var Router = require("../router.js");
 var { sanitizeStringForUrl } = require("../util.js");
 var { cache_add, cache_replace, cache_remove, cache_get, cache_getOrAdd, cache_exists, cache_clear } = require("../cache.js");
@@ -16,7 +16,7 @@ var EditStory = {
 			title: "",
 			storyLanguage: "",
 			status: "Unsaved changes"
-		}
+		};
 	},
 	beforeMount: function() {
 		this.$emit("navbar-shadow-on");
@@ -28,7 +28,7 @@ var EditStory = {
 	},
 	methods: {
 		getStory: function(userInfo) {
-			/*page.getUserProfileInfo(userInfo.auth_address, false, (profileInfo) => {
+			/* page.getUserProfileInfo(userInfo.auth_address, false, (profileInfo) => {
 				that.profileInfo = profileInfo;
 				page.getStory(userInfo.auth_address, Router.currentParams["slug"], (story) => {
 					that.story = story;
@@ -38,17 +38,18 @@ var EditStory = {
 				});
 			});*/
 			var that = this;
+
 			page.getStory(userInfo.auth_address, Router.currentParams["slug"], (story) => {
 				that.title = story.title;
 				that.storyLanguage = story.language;
 				that.story = story;
-				console.log(story.language)
 				that.$emit("setDefaults", story.tags, story.description);
 				that.createEditor();
 			});
 		},
 		createEditor: function() {
 			var autolist = new MediumEditorAutolist();
+
 			this.editor = new MediumEditor(".editable", {
 				imageDragging: true,
 				placeholder: {
@@ -189,9 +190,6 @@ var EditStory = {
 	                    }
 	                ]
 	            }
-			    /*extensions: {
-			    	table: new MediumEditorTable()
-			    }*/
 			});
 			this.editor.setContent(this.story.body);
 		},
