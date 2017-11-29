@@ -71,6 +71,7 @@ var app = new Vue({
 
                 for (var i = 0; i < rows.length; i++) {
                     var row = rows[i];
+                    
                     keyvalue[row.key] = row.value;
                 }
                 if (!keyvalue.name || keyvalue.name === "") {
@@ -172,11 +173,11 @@ class ZeroApp extends ZeroFrame {
     showImage(elem, imgLocation, width, height) {
         var inner_path = imgLocation.replace(/(http:\/\/)?127.0.0.1:43110\//, '').replace(/(https:\/\/)?127.0.0.1:43110\//, '').replace(/18GAQeWN4B7Uum6rvJL2zh9oe4VfcnTM18\//, '').replace(/1CVmbCKWtbskK2GAZLM6gnMuiL6Je25Yds\//, '').replace(/ZeroMedium.bit\//, '');
 
-        if (height == 0 && width == 0) {
+        if (height === 0 && width === 0) {
             elem.parentElement.innerHTML = "<img src='" + imgLocation + "'>";
-        } else if (height == 0) {
+        } else if (height === 0) {
             elem.parentElement.innerHTML = "<img src='" + imgLocation + "' width='" + width + "'>";    
-        } else if (width == 0) {
+        } else if (width === 0) {
             elem.parentElement.innerHTML = "<img src='" + imgLocation + "' height='" + height + "'>";
         } else {
             elem.parentElement.innerHTML = "<img src='" + imgLocation + "' width='" + width + "' height='" + height + "'>";

@@ -1,8 +1,8 @@
 var Router = {
 	routes: [],
-	currentRoute: '',
+	currentRoute: "",
 	currentParams: {},
-	root: '/',
+	root: "/",
 	notFoundFunction: null,
 	hookFunctions: {}, // hooks that are called for each route, functions for 'before' and 'after'.
 	config: function(options) {

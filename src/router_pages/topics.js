@@ -76,7 +76,7 @@ var Topics = {
 			var newList = [];
 
 			for (var i = 0; i < this.topics.length; i++) {
-				if (i % 2 == 0) {
+				if (i % 2 === 0) {
 					newList.push(this.topics[i]);
 				}
 			}

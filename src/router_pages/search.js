@@ -1,10 +1,11 @@
 var Router = require("../router.js");
-var moment = require('moment');
+var moment = require("moment");
 
 var Search = {
 	beforeMount: function() {
-		this.$emit('navbar-shadow-on');
+		this.$emit("navbar-shadow-on");
 		var that = this;
+
 		page.getTopics((topics) => {
             that.topics = topics;
         });
@@ -14,19 +15,18 @@ var Search = {
 		return {
 			topics: [],
 			allStories: [],
-			//listedStories: [],
 			searchInput: "",
 			isSearchStrict: false
-		}
+		};
 	},
 	methods: {
 		getStories: function() {
 			var that = this;
+
 			page.getAllStories(false, (story) => {
 			    return true;
 			}, (stories) => {
 			    that.allStories = stories;
-			    //that.listedStories = stories;
 			});
 		},
 		goto: function(to) {
@@ -39,15 +39,20 @@ var Search = {
 	computed: {
         getSearchedStories: function() {
         	var list = this.allStories.slice();
-			if (this.searchInput == "" || !this.searchInput) return list;
+
+			if (this.searchInput === "" || !this.searchInput) return list;
+
 			var searchInputWords = this.searchInput.trim().split(' ');
 			var that = this;
+
 			list = list.filter(function(story) {
 				story.order = 0;
 				var matches = 0;
+
 				for (var i = 0; i < searchInputWords.length; i++) {
 					var word = searchInputWords[i].trim().toLowerCase();
-					if (story.tags && story.tags != "" && story.tags.toLowerCase().includes(word)) {
+
+					if (story.tags && story.tags !== "" && story.tags.toLowerCase().includes(word)) {
 						story.order += 4;
 						matches++;
 						continue;
@@ -57,7 +62,7 @@ var Search = {
 						matches++;
 						continue;
 					}
-					if (story.cert_user_id && word[0] == "@" && word.length > 1) {
+					if (story.cert_user_id && word[0] === "@" && word.length > 1) {
 						var wordId = word.substring(1, word.length);
 						if (story.cert_user_id.replace(/@.*\.bit/, '').toLowerCase().includes(wordId)) {
 							story.order += 2;
@@ -85,7 +90,7 @@ var Search = {
 						story.order--;
 					}
 				}
-				if (!that.isSearchStrict && matches == 0) return false;
+				if (!that.isSearchStrict && matches === 0) return false;
 				else return true;
 			});
 			if (list.length > 1) {
@@ -96,8 +101,11 @@ var Search = {
 			return list;
         },
         getStrictText: function() {
-			if (this.isSearchStrict) return "Inclusive";
-			else return "Strict";
+			if (this.isSearchStrict) {
+				return "Inclusive";
+			} else {
+				return "Strict";
+			}
 		}
 	},
 	template: `

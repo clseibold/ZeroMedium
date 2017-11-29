@@ -45,7 +45,7 @@ Vue.component("signin-modal", {
             this.$emit("input", false);
         },
         signin: function() {
-            var previousId = page.site_info.cert_user_id;
+            // var previousId = page.site_info.cert_user_id;
             var that = this;
 
             page.selectUser(function() {
@@ -110,13 +110,13 @@ Vue.component("signin-modal", {
                 // Username blacklist
                 var name = this.name.toLowerCase();
 
-                if (name == "admin" || name == "Admin" || name == "account" || name == "blog"
-                    || name == "api" || name == "cache" || name == "changelog" || name == "enterprise"
-                    || name == "gist" || name == "help" || name == "jobs" || name == "lists" || name == "login"
-                    || name == "logout" || name == "mine" || name == "news" || name == "plans"
-                    || name == "popular" || name == "projects" || name == "security" || name == "shop" || name == "translations"
-                    || name == "signup" || name == "register" || name == "status" || name == "wiki" || name == "stories" || name == "medium"
-                    || name == "organizations" || name == "better" || name == "compare" || name == "hosting" || name == "tour" || name == "styleguide") {
+                if (name === "admin" || name === "Admin" || name === "account" || name === "blog"
+                    || name === "api" || name === "cache" || name === "changelog" || name === "enterprise"
+                    || name === "gist" || name === "help" || name === "jobs" || name === "lists" || name === "login"
+                    || name === "logout" || name === "mine" || name === "news" || name === "plans"
+                    || name === "popular" || name === "projects" || name === "security" || name === "shop" || name === "translations"
+                    || name === "signup" || name === "register" || name === "status" || name === "wiki" || name === "stories" || name === "medium"
+                    || name === "organizations" || name === "better" || name === "compare" || name === "hosting" || name === "tour" || name === "styleguide") {
                     page.cmd("wrapperNotification", ["error", "You aren't allowed to use this username!"]);
                     return;
                 }
@@ -124,7 +124,8 @@ Vue.component("signin-modal", {
                 for (var i = 0; i < this.existingUsers.length; i++) {
                     if (!this.existingUsers[i].value || typeof this.existingUsers[i].value !== "string") continue;
                     var existingName = this.existingUsers[i].value.toLowerCase().trim();
-                    if (existingName == name) {
+
+                    if (existingName === name) {
                         page.cmd("wrapperNotification", ["error", "Username already taken!"]);
                         return;
                     }
@@ -166,7 +167,7 @@ Vue.component("signin-modal", {
             });
         },
         toggleLanguage: function(language) {
-            if (language.code == this.primaryLanguage) {
+            if (language.code === this.primaryLanguage) {
                 return;
             }
             

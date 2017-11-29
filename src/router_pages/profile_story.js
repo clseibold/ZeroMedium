@@ -1,4 +1,4 @@
-var Vue = require("vue/dist/vue.min.js");
+// var Vue = require("vue/dist/vue.min.js");
 var MediumEditor = require("medium-editor/dist/js/medium-editor");
 var MediumEditorAutolist = require("../medium-editor-plugins/inline-markdown");
 var Router = require("../router.js");
@@ -69,11 +69,11 @@ var ProfileStory = {
 						// Create the string for the placeholder box html
 						let placeholderHtml = "";
 
-						if (imgWidth_int == 0 && imgHeight_int == 0) {
+						if (imgWidth_int === 0 && imgHeight_int === 0) {
 							placeholderHtml = `<div id="${imgSrc}" onclick="page.showImage(this, '${imgSrc}', ${imgWidth_int}, ${imgHeight_int}); return false;" style="text-align: center; width: 100%; height: 30px; background-color: #555555; color: white; cursor: pointer;">Show Image</div>`;
-						} else if (imgHeight_int == 0) {
+						} else if (imgHeight_int === 0) {
 							placeholderHtml = `<div id="${imgSrc}" onclick="page.showImage(this, '${imgSrc}', ${imgWidth_int}, ${imgHeight_int}); return false;" style="text-align: center; width: ${imgWidth_int}px; height: 30px; background-color: #555555; color: white; cursor: pointer;">Show Image</div>`;
-						} else if (imgWidth_int == 0) {
+						} else if (imgWidth_int === 0) {
 							placeholderHtml = `<div id="${imgSrc}" onclick="page.showImage(this, '${imgSrc}', ${imgWidth_int}, ${imgHeight_int}); return false;" style="text-align: center; width: 100%; height: ${imgHeight_int}px; background-color: #555555; color: white; cursor: pointer;">Show Image</div>`;
 						} else {
 							placeholderHtml = `<div id="${imgSrc}" onclick="page.showImage(this, '${imgSrc}', ${imgWidth_int}, ${imgHeight_int}); return false;" style="text-align: center; width: ${imgWidth_int}px; height: ${imgHeight_int}px; background-color: #555555; color: white; cursor: pointer;">Show Image</div>`;

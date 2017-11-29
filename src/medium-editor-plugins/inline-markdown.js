@@ -52,7 +52,8 @@
       }
 
       var doEdit = (match, command, surroundLength) => {
-        let last_index_exclusive = match.index + match[0].length;
+        // let last_index_exclusive = match.index + match[0].length;
+
         for (var i = 0; i < match[0].length; i++) {
           this.base.execAction('delete');
         }

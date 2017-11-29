@@ -2,7 +2,7 @@ var Router = require("../router.js");
 var moment = require('moment');
 
 var TopicSlug = {
-	props: ['userInfo'],
+	props: ["userInfo"],
 	data: function() {
 		return {
 			topicName: "",
@@ -12,13 +12,14 @@ var TopicSlug = {
 		}
 	},
 	beforeMount: function() {
-		this.$emit('navbar-shadow-on');
+		this.$emit("navbar-shadow-on");
 		var that = this;
+
 		page.getTopics((topics) => {
             that.topics = topics;
             for (var i = 0; i < topics.length; i++) {
             	var topic = topics[i];
-				if (topic.slug == Router.currentParams.slug) {
+				if (topic.slug === Router.currentParams.slug) {
 					that.topicName = topic.name;
 					that.topicTags = topic.tags.split(',').map(function(tag) {
 						return tag.toLowerCase().trim();
@@ -33,11 +34,16 @@ var TopicSlug = {
 	methods: {
 		getStories: function() {
 			var that = this;
-			if (this.topicTags == "") return;
+
+			if (this.topicTags === "") {
+				return;
+			}
+
 			var amount = 0;
+
 			page.getAllStories(false, function(story) {
 				var amount = 0;
-				var storyTags = story.tags.split(',').map(function(tag) {
+				var storyTags = story.tags.split(",").map(function(tag) {
 					return tag.toLowerCase().trim();
 				});
 				if (story.tags && storyTags) {
@@ -63,7 +69,7 @@ var TopicSlug = {
 			Router.navigate(to);
 		},
 		getTagSlug(tag) {
-			return tag.replace(/ /, '-');
+			return tag.replace(/ /, "-");
 		}
 	},
 	template: `

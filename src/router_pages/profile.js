@@ -2,7 +2,7 @@ var Vue = require("vue/dist/vue.min.js");
 var Router = require("../router.js");
 var { sanitizeStringForUrl, sanitizeStringForUrl_SQL, html_substr, stripHTML_SQL } = require("../util.js");
 var { cache_add, cache_replace, cache_remove, cache_get, cache_getOrAdd, cache_exists, cache_clear } = require("../cache.js");
-var moment = require("moment");
+// var moment = require("moment");
 
 var Profile = {
 	props: ["userInfo"],
@@ -17,7 +17,7 @@ var Profile = {
 	beforeMount: function() {
 		this.$emit("navbar-shadow-off");
 		var that = this;
-		if (this.userInfo && this.userInfo.auth_address == Router.currentParams["userauthaddress"]) {
+		if (this.userInfo && this.userInfo.auth_address === Router.currentParams["userauthaddress"]) {
 			var userProfileInfo = cache_get("user_profileInfo");
 			var userClaps = cache_get("user_claps");
 
@@ -31,7 +31,7 @@ var Profile = {
 		}
 		page.getUserProfileInfo(Router.currentParams["userauthaddress"], true, true, (profileInfo) => {
 			that.profileInfo = profileInfo;
-			if (that.userInfo && that.userInfo.auth_address == Router.currentParams["userauthaddress"]) {
+			if (that.userInfo && that.userInfo.auth_address === Router.currentParams["userauthaddress"]) {
 				cache_add("user_profileInfo", profileInfo);
 			}
 			that.isFollowing();
@@ -59,6 +59,7 @@ var Profile = {
 		},
 		limitResponses: function(limit) { // Returns list of responses limited to 'limit'
 			var responses = [];
+
 			if (!this.profileInfo.responses) return responses;
 			for (var i = 0; i < limit && i < this.profileInfo.responses.length; i++) {
 				responses.push(this.profileInfo.responses[i]);
@@ -67,6 +68,7 @@ var Profile = {
 		},
 		limitClaps: function(limit) { // Returns list of claps limited to 'limit'
 			var claps = [];
+
 			if (!this.claps) return claps;
 			for (var i = 0; i < limit && i < this.claps.length; i++) {
 				claps.push(this.claps[i]);
