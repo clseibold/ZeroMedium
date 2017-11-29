@@ -13,20 +13,20 @@ var Newstory = {
 	data: function() {
 		return {
 			editor: null,
-			title: '',
-			status: 'Unsaved changes',
-			mobileTags: '',
-			mobileDescription: '',
-			mobileLanguage: ''
+			title: "",
+			status: "Unsaved changes",
+			mobileTags: "",
+			mobileDescription: "",
+			mobileLanguage: ""
 		}
 	},
 	beforeMount: function() {
-		this.$emit('navbar-shadow-off');
+		this.$emit("navbar-shadow-off");
 	},
 	mounted: function() {
 		var autolist = new MediumEditorAutolist();
 		var zerograph_links = new MediumEditorZeroGraphLinks();
-		this.editor = new MediumEditor('.editable', {
+		this.editor = new MediumEditor(".editable", {
 			imageDragging: true,
 			placeholder: {
 				text: "Tell your story...",
@@ -48,8 +48,8 @@ var Newstory = {
 		    },
 		    autoLink: true,
 		    extensions: {
-		        'autolist': autolist,
-		        'zerographlinks': zerograph_links
+		        "autolist": autolist,
+		        "zerographlinks": zerograph_links
 		    },
 		    keyboardCommands: {
 			    commands: [
@@ -175,32 +175,38 @@ var Newstory = {
 	methods: {
 		publish: function(tags, description, language) {
 			var that = this;
-			if (language == '') language = null;
+
+			if (language === "") {
+				language = null;
+			}
 			page.postStory(this.title, description, this.editor.getContent(), tags, language, function(slug) {
-				//cache_clear();
-				Router.navigate(that.userInfo.auth_address + '/' + slug);
+				Router.navigate(that.userInfo.auth_address + "/" + slug);
 			});
 		},
 		save: function(tags, description, language) {
-			if (language == '') language = null;
+			if (language === "") {
+				language = null;
+			}
 			page.unimplemented();
 		},
 		uploadImage: function() {
 			if (!window.File || !window.FileReader || !window.FileList || !window.Blob) {
-				alert('The File APIs are not fully supported in this browser.');
+				alert("The File APIs are not fully supported in this browser.");
 				return;
 			}
 
 			var that = this;
 			var imageUpload = document.getElementById('imageUpload');
 			var files = imageUpload.files;
-			if (!files) return;
+
+			if (!files) {
+				return;
+			}
 
 			for (let fX in files) {
 				let fY = files[fX];
-				//console.log(fX, fY);
 
-				if (!fY || typeof fY !== 'object' || !fY.type.match('(image)\/(png|jpg|jpeg|gif)|(audio)\/(mp3|ogg)|(video)\/(ogg|mp4)')) // |audio|video      || !fY.name.match(/\.IMAGETYPE$/gm)
+				if (!fY || typeof fY !== "object" || !fY.type.match("(image)\/(png|jpg|jpeg|gif)|(audio)\/(mp3|ogg)|(video)\/(ogg|mp4)")) // |audio|video      || !fY.name.match(/\.IMAGETYPE$/gm)
 					continue;
 
 				let reader = new FileReader();
@@ -233,7 +239,7 @@ var Newstory = {
 
 								var f_path = "data/users/" + page.site_info.auth_address + "/" + fY.name;
 
-								var json_raw = unescape(encodeURIComponent(JSON.stringify(data, undefined, '\t')));
+								var json_raw = unescape(encodeURIComponent(JSON.stringify(data, undefined, "\t")));
 
 								// Write image to disk
 								page.cmd("fileWrite", [f_path, f_data], (res) => {
@@ -241,7 +247,7 @@ var Newstory = {
 										imageUpload.value = null;
 
 										// Pin file so it is excluded from the automatized optional file cleanup
-										page.cmd("optionalFilePin", {"inner_path": f_path});
+										page.cmd("optionalFilePin", { "inner_path": f_path });
 
 										/* if (imageUpload.value) {
 											imageUpload.parentNode.replaceChild(imageUpload.cloneNode(true), imageUpload)
@@ -252,7 +258,7 @@ var Newstory = {
 											if (res == "ok") {
 												var output_url = "/" + page.site_info.address + "/" + f_path;
 												// Add to Medium-editor
-												that.editor.execAction('insertHtml', {
+												that.editor.execAction("insertHtml", {
 													value: '<div class="img"><img src="' + output_url + '"></div>'
 												});
 
@@ -310,24 +316,24 @@ var Newstory = {
 		`
 }
 
-Vue.component('editor-nav', {
-	props: ['value', 'userInfo', 'storyLanguage'],
+Vue.component("editor-nav", {
+	props: ["value", "userInfo", "storyLanguage"],
 	data: function() {
 		return {
-			tags: '',
-			description: '',
-			language: ''
+			tags: "",
+			description: "",
+			language: ""
 		}
 	},
 	mounted: function() {
-		this.$parent.$on('setDefaults', this.setDefaults);
+		this.$parent.$on("setDefaults", this.setDefaults);
 	},
 	methods: {
 		publish: function() {
-			this.$emit('publish', this.tags, this.description, this.language);
+			this.$emit("publish", this.tags, this.description, this.language);
 		},
 		save: function() {
-			this.$emit('save', this.tags, this.description, this.language);
+			this.$emit("save", this.tags, this.description, this.language);
 		},
 		setDefaults: function(tags, description) {
 			this.tags = tags;
@@ -336,13 +342,20 @@ Vue.component('editor-nav', {
 	},
 	computed: {
 		getUserDefaultLanguage: function() {
-			if (!this.userInfo || !this.userInfo.keyvalue) return "";
+			if (!this.userInfo || !this.userInfo.keyvalue) {
+				return "";
+			}
+
 			return this.userInfo.keyvalue.languages.split(",")[0];
 		},
 		getLanguages: function() {
-			if (!this.userInfo || !this.userInfo.keyvalue) return [];
+			if (!this.userInfo || !this.userInfo.keyvalue) {
+				return [];
+			}
+			
 			var userLanguages = this.userInfo.keyvalue.languages.split(",");
 			var returnLanguages = [];
+
 			for (var i = 0; i < userLanguages.length; i++) {
 				returnLanguages.push({
 					code: userLanguages[i],

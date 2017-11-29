@@ -1,3 +1,5 @@
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/a6ba219b2945469f9299df1c67b17b83)](https://www.codacy.com/app/krixano/ZeroMedium?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=krixano/ZeroMedium&amp;utm_campaign=Badge_Grade)
+
 # ZeroMedium
 Medium for ZeroNet
 

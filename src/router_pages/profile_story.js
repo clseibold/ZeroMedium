@@ -6,7 +6,7 @@ var moment = require('moment');
 var { sanitizeStringForUrl, sanitizeStringForUrl_SQL, html_substr } = require('../util.js');
 
 var ProfileStory = {
-	props: ['userInfo'],
+	props: ["userInfo"],
 	data: function() {
 		return {
 			responseEditor: null,
@@ -19,9 +19,10 @@ var ProfileStory = {
 		}
 	},
 	beforeMount: function() {
-		this.$emit('navbar-shadow-on');
-		this.$emit('set-response-content', "");
+		this.$emit("navbar-shadow-on");
+		this.$emit("set-response-content", "");
 		var that = this;
+
 		page.getUserProfileInfo(Router.currentParams["userauthaddress"], false, false, (profileInfo) => {
 			that.profileInfo = profileInfo;
 			page.getStory(Router.currentParams["userauthaddress"], Router.currentParams["slug"], (story) => {
@@ -43,19 +44,23 @@ var ProfileStory = {
 						
 						let imgSrc = re_src.exec(m[0])[2];
 						let imgWidth = re_width.exec(m[0]);
+
 						if (imgWidth) {
 							imgWidth = imgWidth[2];
 						}
 						let imgHeight = re_height.exec(m[0]);
+						
 						if (imgHeight) {
 							imgHeight = imgHeight[2];
 						}
 
 						let imgWidth_int = 0;
+						
 						if (imgWidth) {
 							imgWidth_int = parseInt(imgWidth);
 						}
 						let imgHeight_int = 0;
+						
 						if (imgHeight) {
 							imgHeight_int = parseInt(imgHeight);
 						}
@@ -75,7 +80,8 @@ var ProfileStory = {
 						}
 
 						let inner_path = imgSrc.replace(/(http:\/\/)?127.0.0.1:43110\//, '').replace(/(https:\/\/)?127.0.0.1:43110\//, '').replace(/18GAQeWN4B7Uum6rvJL2zh9oe4VfcnTM18\//, '').replace(/1CVmbCKWtbskK2GAZLM6gnMuiL6Je25Yds\//, '').replace(/ZeroMedium.bit\//, '');
-						page.cmd("optionalFileInfo", {"inner_path": inner_path.slice(1)}, (row) => {
+						
+						page.cmd("optionalFileInfo", { "inner_path": inner_path.slice(1) }, (row) => {
 							let imgContainer = document.getElementById(imgSrc);
 							if (!row) {
 								imgContainer.innerHTML = "Cannot Find Image Info";
@@ -102,7 +108,8 @@ var ProfileStory = {
 	},
 	mounted: function() {
 		var autolist = new MediumEditorAutolist();
-		this.responseEditor = new MediumEditor('.editableResponse', {
+
+		this.responseEditor = new MediumEditor(".editableResponse", {
 			placeholder: {
 				text: "Write a response...",
 				hideOnClick: false
@@ -123,7 +130,7 @@ var ProfileStory = {
 		    },
 		    autoLink: true,
 		    extensions: {
-		        'autolist': autolist
+		        "autolist": autolist
 		    },
     	    keyboardCommands: {
     		    commands: [
@@ -249,18 +256,20 @@ var ProfileStory = {
 	methods: {
 		getClaps: function() {
 			var that = this;
+
 			page.getClaps(that.profileInfo.auth_address, that.story.story_id, "s", (claps) => {
 				that.claps = claps;
 			});
 		},
 		getTagSlug(tag) {
-			return tag.replace(/ /, '-');
+			return tag.replace(/ /, "-");
 		},
 		goto: function(to) {
 			Router.navigate(to);
 		},
 		postResponse: function() {
 			var that = this;
+
 			page.postResponse(this.profileInfo.auth_address, this.story.story_id, 's', this.responseEditor.getContent(), function() {
 				// Get the responses again.
 				page.getResponses(that.profileInfo.auth_address, that.story.story_id, "s", (responses) => {
@@ -274,18 +283,19 @@ var ProfileStory = {
 		},
 		clap: function() {
 			var that = this;
+
 			page.postClap(this.profileInfo.auth_address, this.story.story_id, "s", () => {
 				that.getClaps();
 			});
 		},
 		responseFullscreen: function() {
-			this.$emit('set-response-content', this.responseEditor.getContent());
-			this.goto(this.profileInfo.auth_address + '/' + this.story.slug + '/response');
+			this.$emit("set-response-content", this.responseEditor.getContent());
+			this.goto(this.profileInfo.auth_address + "/" + this.story.slug + "/response");
 		}
 	},
 	computed: {
 		getTags: function() {
-			return this.story.tags.split(',').map(function(tag) {
+			return this.story.tags.split(",").map(function(tag) {
 				return tag.toLowerCase().trim();
 			});
 		},
@@ -306,7 +316,7 @@ var ProfileStory = {
 			if (!this.userInfo) return false;
 			for (var i = 0; i < this.claps.length; i++) {
 				var clap = this.claps[i];
-				var clap_auth_address = clap.directory.replace(/users\//, '').replace(/\//g, '');
+				var clap_auth_address = clap.directory.replace(/users\//, "").replace(/\//g, "");
 				if (clap_auth_address == this.userInfo.auth_address) {
 					if (clap.number > 0) {
 						return true;
@@ -315,6 +325,7 @@ var ProfileStory = {
 					}
 				}
 			}
+			
 			return false;
 		}
 	},
