@@ -270,6 +270,11 @@ var ProfileStory = {
 		postResponse: function() {
 			var that = this;
 
+			if (this.responseEditor.getContent() === "") { // TODO: Doesn't work all of the time
+				page.cmd("wrapperNotification", ["error", "You cannot post an empty response."]);
+				return;
+			}
+
 			page.postResponse(this.profileInfo.auth_address, this.story.story_id, 's', this.responseEditor.getContent(), function() {
 				// Get the responses again.
 				page.getResponses(that.profileInfo.auth_address, that.story.story_id, "s", (responses) => {

@@ -174,6 +174,11 @@ var Newstory = {
 		publish: function(tags, description, language) {
 			var that = this;
 
+			if (this.editor.getContent() === "" || this.title === "") { // TODO: Doesn't work all of the time
+				page.cmd("wrapperNotification", ["error", "You cannot post an empty story."]);
+				return;
+			}
+
 			if (language === "") {
 				language = null;
 			}

@@ -200,6 +200,11 @@ var ResponseFullscreenEditor = {
 		publish: function(tags, description) {
 			var that = this;
 
+			if (this.editor.getContent() === "") { // TODO: Doesn't work all of the time
+				page.cmd("wrapperNotification", ["error", "You cannot post an empty response."]);
+				return;
+			}
+
 			if (this.story) {
 				page.postResponse(this.referenceProfileInfo.auth_address, this.story.story_id, "s", this.editor.getContent(), function() {
 					that.editor.resetContent();

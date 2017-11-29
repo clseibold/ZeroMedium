@@ -181,6 +181,11 @@ var ResponseFullscreen = {
 		postResponse: function() {
 			var that = this;
 
+            if (this.responseEditor.getContent() === "") { // TODO: Doesn't work all of the time
+                page.cmd("wrapperNotification", ["error", "You cannot post an empty response."]);
+                return;
+            }
+
 			page.postResponse(this.getAuthAddress, this.response.response_id, "r", this.responseEditor.getContent(), function() {
 				that.responseEditor.resetContent();
 				//Router.navigate(that.getAuthAddress + '/response/' + that.response.response_id);
