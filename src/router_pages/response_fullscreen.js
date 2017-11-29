@@ -14,7 +14,8 @@ var ResponseFullscreen = {
 			response: null,
 			referenceResponse: null,
 			subResponses: null,
-			responseEditor: null
+			responseEditor: null,
+            reponsePublishBtnDisabled: false
 		};
 	},
 	beforeMount: function() {
@@ -186,11 +187,13 @@ var ResponseFullscreen = {
                 return;
             }
 
+            this.reponsePublishBtnDisabled = true;
 			page.postResponse(this.getAuthAddress, this.response.response_id, "r", this.responseEditor.getContent(), function() {
 				that.responseEditor.resetContent();
 				//Router.navigate(that.getAuthAddress + '/response/' + that.response.response_id);
 				page.getResponses(Router.currentParams["userauthaddress"], that.response.response_id, "r", (responses) => {
 					that.subResponses = responses;
+                    that.reponsePublishBtnDisabled = false;
 				});
 			});
 		},
@@ -236,7 +239,7 @@ var ResponseFullscreen = {
 							<div class="box" style="margin-top: 10px; margin-bottom: 25px;" v-show="userInfo && response">
 								<p><strong>{{ userInfo ? userInfo.keyvalue.name : "" }}</strong></p>
 								<div class="editableResponse custom-content" style="outline: none; margin-top: 10px; margin-bottom: 10px;"></div>
-								<a v-on:click.prevent="postResponse()" class="button is-primary is-small is-outlined">Publish</a>
+								<a v-on:click.prevent="postResponse()" class="button is-primary is-small is-outlined" :disabled="reponsePublishBtnDisabled">Publish</a>
 								<a v-on:click.prevent="responseFullscreen()" class="button is-info is-small is-outlined">Fullscreen</a>
 							</div>
 							<response v-for="response in subResponses" :key="response.response_id" v-bind:response="response" v-bind:show-name="true" v-bind:show-reference="false"></response>

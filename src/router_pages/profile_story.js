@@ -15,7 +15,8 @@ var ProfileStory = {
 			storyAuthor: "",
 			sanitizedBody: "", // NOTE: Use this instead of story.body for security reasons - it's sanitized
 			responses: [],
-			claps: []
+			claps: [],
+			reponsePublishBtnDisabled: false
 		}
 	},
 	beforeMount: function() {
@@ -275,11 +276,13 @@ var ProfileStory = {
 				return;
 			}
 
+			this.reponsePublishBtnDisabled = true;
 			page.postResponse(this.profileInfo.auth_address, this.story.story_id, 's', this.responseEditor.getContent(), function() {
 				// Get the responses again.
 				page.getResponses(that.profileInfo.auth_address, that.story.story_id, "s", (responses) => {
 					that.responses = responses;
 					that.responseEditor.resetContent();
+					that.reponsePublishBtnDisabled = false;
 				});
 			});
 		},
@@ -355,7 +358,7 @@ var ProfileStory = {
 							<div class="box" style="margin-top: 10px; margin-bottom: 25px;" v-show="userInfo">
 								<p><strong>{{ userInfo ? userInfo.keyvalue.name : "" }}</strong></p>
 								<div class="editableResponse custom-content" style="outline: none; margin-top: 10px; margin-bottom: 10px;"></div>
-								<a v-on:click.prevent="postResponse()" class="button is-primary is-small is-outlined">Publish</a>
+								<a v-on:click.prevent="postResponse()" class="button is-primary is-small is-outlined" :disabled="reponsePublishBtnDisabled">Publish</a>
 								<a v-on:click.prevent="responseFullscreen()" class="button is-info is-small is-outlined">Fullscreen</a>
 							</div>
 							<response v-for="response in responses" :key="response.response_id" v-bind:response="response" v-bind:show-name="true" v-bind:show-reference="false"></response>
