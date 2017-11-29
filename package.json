@@ -30,6 +30,7 @@
     "gulp-uglify": "^3.0.0",
     "gulp-util": "^3.0.8",
     "patch-package": "^4.0.0",
+    "sidekick": "^1.12.2",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.9.0"
