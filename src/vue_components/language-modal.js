@@ -17,7 +17,7 @@ Vue.component('language-modal', {
     },
     computed: {
         shouldShowClose: function() {
-            return this.currentSlide == 0;
+            return this.currentSlide === 0;
         }
     },
     methods: {
@@ -30,9 +30,11 @@ Vue.component('language-modal', {
             var content_inner_path = "data/users/" + page.site_info.auth_address + "/content.json";
             
             page.cmd("fileGet", {"inner_path": data_inner_path, "required": false}, (data) => {
-                if (data)
+                if (data) {
                     f(true, JSON.parse(data), data_inner_path, content_inner_path);
-                else f(false, null, data_inner_path, content_inner_path);
+                } else {
+                    f(false, null, data_inner_path, content_inner_path);
+                }
             });
         },
         finish: function() {

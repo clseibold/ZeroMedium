@@ -5,25 +5,25 @@ var { cache_add, cache_replace, cache_remove, cache_get, cache_getOrAdd, cache_e
 var moment = require("moment");
 
 var Profile = {
-	props: ['userInfo'],
+	props: ["userInfo"],
 	data: function() {
 		return {
 			profileInfo: {},
 			claps: [],
 			currentTab: 0,
-			followText: 'Follow'
+			followText: "Follow"
 		}
 	},
 	beforeMount: function() {
-		this.$emit('navbar-shadow-off');
+		this.$emit("navbar-shadow-off");
 		var that = this;
 		if (this.userInfo && this.userInfo.auth_address == Router.currentParams["userauthaddress"]) {
 			// Use the cache!
-			var userProfileInfo = cache_get('user_profileInfo');
+			var userProfileInfo = cache_get("user_profileInfo");
 			if (userProfileInfo) {
 				that.profileInfo = userProfileInfo;
 			}
-			var userClaps = cache_get('user_claps');
+			var userClaps = cache_get("user_claps");
 			if (userClaps) {
 				that.claps = userClaps;
 			}
@@ -31,13 +31,13 @@ var Profile = {
 		page.getUserProfileInfo(Router.currentParams["userauthaddress"], true, true, (profileInfo) => {
 			that.profileInfo = profileInfo;
 			if (that.userInfo && that.userInfo.auth_address == Router.currentParams["userauthaddress"]) {
-				cache_add('user_profileInfo', profileInfo);
+				cache_add("user_profileInfo", profileInfo);
 			}
 			that.isFollowing();
 			page.getUserClaps(Router.currentParams["userauthaddress"], (claps) => {
 				that.claps = claps;
 				if (that.userInfo && that.userInfo.auth_address == Router.currentParams["userauthaddress"]) {
-					cache_add('user_claps', claps);
+					cache_add("user_claps", claps);
 				}
 			});
 		});
@@ -46,15 +46,17 @@ var Profile = {
 		goto: function(to) {
 			Router.navigate(to);
 		},
-		limitStories(limit) { // Returns list of stories limited to 'limit'
+		limitStories: function(limit) { // Returns list of stories limited to 'limit'
 			var stories = [];
-			if (!this.profileInfo.stories) return stories;
+			if (!this.profileInfo.stories) {
+				return stories;
+			}
 			for (var i = 0; i < limit && i < this.profileInfo.stories.length; i++) {
 				stories.push(this.profileInfo.stories[i]);
 			}
 			return stories;
 		},
-		limitResponses(limit) { // Returns list of responses limited to 'limit'
+		limitResponses: function(limit) { // Returns list of responses limited to 'limit'
 			var responses = [];
 			if (!this.profileInfo.responses) return responses;
 			for (var i = 0; i < limit && i < this.profileInfo.responses.length; i++) {
@@ -62,7 +64,7 @@ var Profile = {
 			}
 			return responses;
 		},
-		limitClaps(limit) { // Returns list of claps limited to 'limit'
+		limitClaps: function(limit) { // Returns list of claps limited to 'limit'
 			var claps = [];
 			if (!this.claps) return claps;
 			for (var i = 0; i < limit && i < this.claps.length; i++) {
@@ -80,11 +82,11 @@ var Profile = {
 				}
 			});
 		},
-		follow() {
+		follow: function() {
 			var that = this;
 			page.cmd("feedListFollow", [], (followList) => {
-				var query = "SELECT stories.story_id AS event_uri, 'article' AS type, stories.date_added AS date_added, '" + that.profileInfo.name + ": ' || stories.title AS title, " + stripHTML_SQL('stories.body') + " AS body, '?/" + that.profileInfo.auth_address + "/' || stories.slug AS url FROM stories LEFT JOIN json USING (json_id) WHERE json.directory='users/" + that.profileInfo.auth_address + "'";
-				var queryResponses = "SELECT responses.response_id AS event_uri, 'article' AS type, responses.date_added AS date_added, '" + that.profileInfo.name + ": Response' AS title, " + stripHTML_SQL('responses.body') + " AS body, '?/" + that.profileInfo.auth_address + "/response/' || responses.response_id AS url FROM responses LEFT JOIN json USING (json_id) WHERE json.directory='users/" + that.profileInfo.auth_address + "'";
+				var query = "SELECT stories.story_id AS event_uri, 'article' AS type, stories.date_added AS date_added, '" + that.profileInfo.name + ": ' || stories.title AS title, " + stripHTML_SQL("stories.body") + " AS body, '?/" + that.profileInfo.auth_address + "/' || stories.slug AS url FROM stories LEFT JOIN json USING (json_id) WHERE json.directory='users/" + that.profileInfo.auth_address + "'";
+				var queryResponses = "SELECT responses.response_id AS event_uri, 'article' AS type, responses.date_added AS date_added, '" + that.profileInfo.name + ": Response' AS title, " + stripHTML_SQL("responses.body") + " AS body, '?/" + that.profileInfo.auth_address + "/response/' || responses.response_id AS url FROM responses LEFT JOIN json USING (json_id) WHERE json.directory='users/" + that.profileInfo.auth_address + "'";
 				var params = "";
 				var paramsResponses = "";
 				var newList = followList;
@@ -100,9 +102,9 @@ var Profile = {
 				page.cmd("feedFollow", [newList]);
 			});
 		},
-		mute() {
+		mute: function() {
 			var that = this;
-			page.cmd("muteAdd", [this.profileInfo.auth_address, this.profileInfo.cert_user_id, ''], () => {
+			page.cmd("muteAdd", [this.profileInfo.auth_address, this.profileInfo.cert_user_id, ""], () => {
 				Router.navigate('');
 			});
 		}
@@ -148,14 +150,14 @@ var Profile = {
 		`
 }
 
-Vue.component('profile-hero', {
-	props: ['userInfo', 'name', 'about', 'certUserId', 'authAddress', 'followText'],
+Vue.component("profile-hero", {
+	props: ["userInfo", "name", "about", "certUserId", "authAddress", "followText"],
 	methods: {
 		follow: function() {
-			this.$emit('follow');
+			this.$emit("follow");
 		},
 		mute: function() {
-			this.$emit('mute');
+			this.$emit("mute");
 		}
 	},
     template: `
@@ -174,11 +176,11 @@ Vue.component('profile-hero', {
         `
 });
 
-Vue.component('profile-navbar', {
+Vue.component("profile-navbar", {
 	props: ['value'],
 	methods: {
 		setTab: function(i) {
-			this.$emit('input', i);
+			this.$emit("input", i);
 		}
 	},
 	template: `

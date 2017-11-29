@@ -6,7 +6,7 @@ var Router = {
 	notFoundFunction: null,
 	hookFunctions: {}, // hooks that are called for each route, functions for 'before' and 'after'.
 	config: function(options) {
-		this.root = options && options.root ? '/' + this.clearSlashes(options.root) + '/' : '/';
+		this.root = options && options.root ? "/" + this.clearSlashes(options.root) + "/" : "/";
 		return this;
 	},
 	getURL: function() { // get's current query string/hash & clears slashes from beginning and end, Note: only for initial load
@@ -61,14 +61,14 @@ var Router = {
 				// Call 'before' hook
 				if (this.hookFunctions && this.hookFunctions["before"]) { // TODO: Move this into navigate function?
 					if (!this.hookFunctions["before"].call(object, this.routes[i].path, routeParams)) {
-						page.cmd('wrapperPushState', [{"route": this.currentRoute}, null, this.root + this.clearSlashes(this.currentRoute)]);
+						page.cmd("wrapperPushState", [{"route": this.currentRoute}, null, this.root + this.clearSlashes(this.currentRoute)]);
 						return this;
 					}
 				}
 				// Call route-specific 'before' hook
 				if (this.routes[i].hooks && this.routes[i].hooks["before"]) {
 					if (!this.routes[i].hooks["before"].call(object, routeParams)) {
-						page.cmd('wrapperPushState', [{"route": this.currentRoute}, null, this.root + this.clearSlashes(this.currentRoute)]);
+						page.cmd("wrapperPushState", [{"route": this.currentRoute}, null, this.root + this.clearSlashes(this.currentRoute)]);
 						return this;
 					}
 				}
@@ -118,7 +118,7 @@ var Router = {
 		}
 
 		path = path ? path : '';
-		page.cmd('wrapperPushState', [{"route": path}, null, this.root + this.clearSlashes(path)]);
+		page.cmd("wrapperPushState", [{"route": path}, null, this.root + this.clearSlashes(path)]);
 		this.check(path);
 		return this;
 	},
@@ -127,7 +127,7 @@ var Router = {
 		return this;
 	},
 	notFound: function(f) {
-		if (f && typeof f === 'function') {
+		if (f && typeof f === "function") {
 			this.notFoundFunction = f;
 		}
 		return this;
@@ -139,7 +139,7 @@ Router.init = function() {
 	// if '?/' isn't on address - add it
 	var address = window.location.search.replace(/&wrapper_nonce=([A-Za-z0-9]+)/, "").replace(/\?wrapper_nonce=([A-Za-z0-9]+)/, ""); // TODO: Fix this to replace the root instead of just a slash
 	if (address == '') {
-		page.cmd('wrapperPushState', [{"route": ''}, null, this.root]);
+		page.cmd("wrapperPushState", [{"route": ''}, null, this.root]);
 	}
 	// Resolve the initial route
 	Router.check(Router.getURL());

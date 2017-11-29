@@ -51,7 +51,9 @@ var app = new Vue({
             this.navbarShadow = false;
         },
         showSigninModal: function() {
-            if (this.siteInfo == null) return;
+            if (this.siteInfo == null) {
+                return;
+            }
             this.signin_modal_active = true;
         },
         closeSigninModal: function() {

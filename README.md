@@ -12,3 +12,27 @@ Update: ZeroMedium no longer uses Typescript (there were problems with it and vu
 
 TODO: 
 * Change gulp-minify-css to gulp-clean-css
+
+## Style Guidelines for Contributions
+* Always use camelCase
+* Strings should use double quotes
+* Always use curly braces ({}) with if statements
+* Never use object method shorthand (`functionName() {}`)
+  * Instead use `functionName: function() {}`
+* Always put semicolons at end of statements
+* Use `const` when variable is not modified
+* Put empty line after declaration lines
+* Put 1 space in curly braces (Ex: `{ 'foo': 'bar' }`)
+* Don't use assignment inside conditions
+* Don't put spaces in brackets
+* Don't put spaces in function calls (Must be of this form `functionName()`, *without spaces*)
+* Don't put spaces inside parentheses
+* Don't use `delete` on variables, they can only delete properties
+* Always put 1 space after initial `//` or `/*` of comment
+* Always put 1 space before blocks (Ex: `function() {}`, *not* `function(){}`)
+* You must have parentheses around arrow function parameters
+* Always put 1 space around infix operators (+, -, \*, /, ?, etc.)
+* Always wrap regexes in parentheses (Ex: `(/[.?!]/)`)
+* You are only allowed to use `that` as an alias for `this` (don't use `self`, etc.)
+* Never use `alert`, `confirm`, or `prompt`
+* Never use `eval()`
