@@ -73,18 +73,40 @@
       var b_match_2 = /__.+__[\s.,?!()\[\]{}]/.exec(list_start);
       var s_match = /~.+~[\s.,?!()\[\]{}]/.exec(list_start);
       var s_match_2 = /~~.+~~[\s.,?!()\[\]{}]/.exec(list_start);
-      if (b_match)
+      var link_match = /\[(\S.*)\]\((\S.*)\)[\s.,?!()\[\]{}]/.exec(list_start)
+      if (b_match) {
         doEdit(b_match, "bold", 2);
-      else if (b_match_2)
+      } else if (b_match_2) {
         doEdit(b_match_2, "bold", 2);
-      else if (i_match)
+      } else if (i_match) {
         doEdit(i_match, "italic", 1);
-      else if (i_match_2)
+      } else if (i_match_2) {
         doEdit(i_match_2, "italic", 1);
-      else if (s_match_2)
+      } else if (s_match_2) {
         doEdit(s_match_2, "strikeThrough", 2);
-      else if (s_match)
+      } else if (s_match) {
         doEdit(s_match, "strikeThrough", 1);
+      } else if (link_match) {
+        console.log("Testing Link Match");
+        for (var i = 0; i < link_match[0].length; i++) {
+          this.base.execAction('delete');
+        }
+
+        var linkText = link_match[1];
+        var link = link_match[2];
+        var linkHTML = "<a href='" + link + "'>" + linkText + "</a>";
+        console.log(linkText);
+        console.log(link);
+        console.log(linkHTML);
+
+        this.base.execAction("insertHTML", {
+          value: linkHTML
+        });
+
+        this.base.execAction("insertText", {
+          value: link_match[0][link_match[0].length - 1]
+        });
+      }
     }
   });
 
