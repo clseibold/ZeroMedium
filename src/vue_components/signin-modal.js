@@ -144,7 +144,7 @@ Vue.component('signin-modal', {
                         if (res == "ok") {
                             // Get user info again
                             page.cmd("siteSign", {"inner_path": content_inner_path}, (res) => {
-                                that.$emit('get-user-info'); // TODO: Doesn't seem to be working
+                                that.$emit('get-user-info');
                                 page.cmd("sitePublish", {"inner_path": content_inner_path, "sign": false});
                                 Router.navigate('help');
                             });
@@ -153,7 +153,6 @@ Vue.component('signin-modal', {
                         }
                     });
                     that.close();
-                    // TODO: Navigate to a certain page after signup?
                 }
             });
         },

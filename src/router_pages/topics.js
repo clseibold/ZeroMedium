@@ -26,7 +26,6 @@ var Topics = {
 		},
 		loadInterests: function(userInfo) {
 			this.interests = userInfo.keyvalue.interests.split(',');
-			console.log(this.interests);
 		},
 		getTopics: function() {
 			var that = this;

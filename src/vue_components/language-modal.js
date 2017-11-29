@@ -80,7 +80,6 @@ Vue.component('language-modal', {
                         }
                     });
                     that.close();
-                    // TODO: Navigate to a certain page after signup?
                 }
             });
         },

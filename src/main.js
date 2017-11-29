@@ -189,7 +189,6 @@ class ZeroApp extends ZeroFrame {
         userProfileInfo["auth_address"] = auth_address;
         // Get Keyvalue data
         page.cmd('dbQuery', ['SELECT key, value, cert_user_id FROM keyvalue LEFT JOIN json USING (json_id) WHERE directory="users/' + auth_address + '"'], (rows) => {
-            //console.log(rows); // TODO
             if (rows && rows.length > 0 && rows[0]) {
                 userProfileInfo["cert_user_id"] = rows[0].cert_user_id;
             }
@@ -364,7 +363,6 @@ class ZeroApp extends ZeroFrame {
 
         page.cmd('fileGet', {"inner_path": data_inner_path, "required": false}, (data) => {
             if (!data) {
-                // TODO: Error out
                 console.log("ERROR");
                 return;
             } else {
@@ -372,7 +370,6 @@ class ZeroApp extends ZeroFrame {
             }
 
             if (!data["stories"]) {
-                // TODO: Error out
                 console.log("ERROR");
                 return;
             }
@@ -392,7 +389,7 @@ class ZeroApp extends ZeroFrame {
                 var story = data["stories"][i];
                 if (story.story_id == story_id) {
                     story.title = title;
-                    story.slug = storySlug; // TODO: IFFY
+                    story.slug = storySlug;
                     story.body = page.sanitizeHtml(body);
                     story.tags = tags;
                     if (language && language != "") {
@@ -429,7 +426,6 @@ class ZeroApp extends ZeroFrame {
 
         page.cmd('fileGet', {"inner_path": data_inner_path, "required": false}, (data) => {
             if (!data) {
-                // TODO: Error out
                 console.log("ERROR");
                 return;
             } else {
@@ -437,7 +433,6 @@ class ZeroApp extends ZeroFrame {
             }
 
             if (!data["stories"]) {
-                // TODO: Error out
                 console.log("ERROR");
                 return;
             }
@@ -511,7 +506,7 @@ class ZeroApp extends ZeroFrame {
 
     // Make getExtra true to get claps and responses on the story (TODO: does not include the responses on the responses)
     getAllStories(getExtra, includeTestFunction, f = null) {
-        // TODO: UserInfo may not be set yet. Check for userInfo, if not set, call function to set it and do rest once done.
+        // Since userInfo may not be set yet, this will check for userInfo. If it is not set, call function to set it and do rest once done.
         var command = () => {
             var languageDBQuery = "";
             if (app.userInfo) {
@@ -835,6 +830,6 @@ VueZeroFrameRouter.VueZeroFrameRouter_Init(Router, app, [
     { route: ':userauthaddress/:slug/response', component: ResponseFullscreenEditor },
     { route: ':userauthaddress/response/:id', component: ResponseFullscreen },
     { route: ':userauthaddress/:slug', component: ProfileStory },
-    { route: ':userauthaddress', component: Profile }, // TODO: Have tabs use '&tab=' ?
+    { route: ':userauthaddress', component: Profile }, // TODO: Have tabs use '&tab='?
     { route: '', component: Home }
 ]);

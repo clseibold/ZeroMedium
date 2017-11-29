@@ -29,13 +29,13 @@
     "gulp-sourcemaps": "^2.6.1",
     "gulp-uglify": "^3.0.0",
     "gulp-util": "^3.0.8",
-    "patch-package": "^3.5.1",
+    "patch-package": "^4.0.0",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.9.0"
   },
   "dependencies": {
-    "bulma": "^0.5.1",
+    "bulma": "^0.6.1",
     "medium-editor": "^5.23.2",
     "medium-editor-tables": "^0.6.1",
     "moment": "^2.18.1",

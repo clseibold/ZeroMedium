@@ -37,7 +37,7 @@ var MeSettings = {
             
             page.cmd("fileGet", {"inner_path": data_inner_path, "required": false}, (data) => {
                 if (!data) {
-                	// TODO: ERROR
+                	page.cmd("wrapperNotification", ["error", "You must be signed in to save profile settings!"]);
                 	return;
                 }
 

@@ -22,7 +22,7 @@ var Search = {
 	methods: {
 		getStories: function() {
 			var that = this;
-			page.getAllStories(false, (story) => { // TODO
+			page.getAllStories(false, (story) => {
 			    return true;
 			}, (stories) => {
 			    that.allStories = stories;
@@ -37,13 +37,12 @@ var Search = {
 		}
 	},
 	computed: {
-        getSearchedStories: function() { // TODO: Add ability to search name also
+        getSearchedStories: function() {
         	var list = this.allStories.slice();
 			if (this.searchInput == "" || !this.searchInput) return list;
 			var searchInputWords = this.searchInput.trim().split(' ');
 			var that = this;
 			list = list.filter(function(story) {
-				//story.order = 0;
 				story.order = 0;
 				var matches = 0;
 				for (var i = 0; i < searchInputWords.length; i++) {

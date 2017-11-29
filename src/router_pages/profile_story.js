@@ -28,7 +28,6 @@ var ProfileStory = {
 				that.story = story;
 				that.storyAuthor = story.value;
 				
-				// TODO: Only replace the images that have not been downloaded already with placeholders
 				var newBody = page.sanitizeHtml(story.body);
 				var re = /<img .*? \/>/ig;
 				var m;
