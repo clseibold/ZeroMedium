@@ -73,7 +73,7 @@
       var b_match_2 = /__.+__[\s.,?!()\[\]{}]/.exec(list_start);
       var s_match = /~.+~[\s.,?!()\[\]{}]/.exec(list_start);
       var s_match_2 = /~~.+~~[\s.,?!()\[\]{}]/.exec(list_start);
-      var link_match = /\[(\S.*)\]\((\S.*)\)[\s.,?!()\[\]{}]/.exec(list_start)
+      var link_match = /\[(\S.*)\]\((\S+)\)[\s.,?!()\[\]{}]/.exec(list_start)
       if (b_match) {
         doEdit(b_match, "bold", 2);
       } else if (b_match_2) {
@@ -95,9 +95,6 @@
         var linkText = link_match[1];
         var link = link_match[2];
         var linkHTML = "<a href='" + link + "'>" + linkText + "</a>";
-        console.log(linkText);
-        console.log(link);
-        console.log(linkHTML);
 
         this.base.execAction("insertHTML", {
           value: linkHTML

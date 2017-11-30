@@ -39,7 +39,7 @@ Vue.component("response", {
 
 			page.getResponse(this.response.reference_auth_address, this.response.reference_id, (response) => {
 				that.referenceResponse = response;
-				//that.referenceAuthor = response.value;
+				// that.referenceAuthor = response.value;
 			});
 		},
 		getResponses: function() {
@@ -48,7 +48,7 @@ Vue.component("response", {
 			var that = this;
 
 			page.getResponses(this.getAuthAddress, this.response.response_id, "r", (responses) => {
-				//console.log(responses);
+				// console.log(responses);
 				that.subResponses = responses;
 			});
 		},
@@ -59,8 +59,8 @@ Vue.component("response", {
 			return story.directory.replace(/users\//, "").replace(/\//, "");
 		},
 		getShortened: function(body) {
-			//console.log(body);
-			//console.log(html_substr(body, 300));
+			// console.log(body);
+			// console.log(html_substr(body, 300));
 			return html_substr(body, 300);
 		},
 		fullscreen: function() { // TODO: Not used right now because of a router bug.

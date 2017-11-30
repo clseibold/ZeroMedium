@@ -4,7 +4,7 @@
 
 var ZeroGraph = (zeroframe, debugLevel = "info") => {
 	return {
-		printDebug: function(level, message) { // Internal Ussage
+		printDebug: function(level, message) { // Internal Usage
 			if (level === "info") {
 				if (debugLevel === "info") {
 					console.log("[ZeroGraph.js] " + level + ": " + message);

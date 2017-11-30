@@ -86,9 +86,9 @@ var Search = {
 					}
 					if (that.isSearchStrict) {
 						return false;
-					} else {
-						story.order--;
 					}
+
+					story.order--;
 				}
 				if (!that.isSearchStrict && matches === 0) return false;
 				else return true;

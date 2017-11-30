@@ -66,7 +66,7 @@ var app = new Vue({
 
             var that = this;
 
-            page.cmd("dbQuery", ['SELECT key, value FROM keyvalue LEFT JOIN json USING (json_id) WHERE cert_user_id="' + this.siteInfo.cert_user_id + '" AND directory="users/' + this.siteInfo.auth_address + '"'], (rows) => {
+            page.cmd("dbQuery", ["SELECT key, value FROM keyvalue LEFT JOIN json USING (json_id) WHERE cert_user_id=\"" + this.siteInfo.cert_user_id + "\" AND directory=\"users/" + this.siteInfo.auth_address + "\""], (rows) => {
                 var keyvalue = {};
 
                 for (var i = 0; i < rows.length; i++) {

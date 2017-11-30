@@ -1,19 +1,19 @@
-(function (root, factory) {
+(function(root, factory) {
     'use strict';
-    if (typeof module === 'object') {
+    if (typeof module === "object") {
         module.exports = factory;
     } else if (typeof define === "function" && define.amd) {
         define(factory);
     } else {
         root.ZeroGraphLinks = factory;
     }
-}(this, function (MediumEditor) {
+}(this, function(MediumEditor) {
   var ZeroGraphLinks = MediumEditor.Extension.extend({
     name: 'zerographlinks',
     init: function() {
       this.subscribe('editableInput', this.onInput.bind(this));
     },
-    onInput: function (evt) {
+    onInput: function(evt) {
       var list_start = this.base.getSelectedParentElement().textContent;
 
       var doEdit = (match, command, surroundLength) => {
@@ -58,4 +58,4 @@
 
   return ZeroGraphLinks;
 
-}(typeof require === 'function' ? require('medium-editor') : MediumEditor)));
+}(typeof require === "function" ? require("medium-editor") : MediumEditor)));

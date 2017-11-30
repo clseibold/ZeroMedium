@@ -21,7 +21,7 @@ var TopicSlug = {
             	var topic = topics[i];
 				if (topic.slug === Router.currentParams.slug) {
 					that.topicName = topic.name;
-					that.topicTags = topic.tags.split(',').map(function(tag) {
+					that.topicTags = topic.tags.split(",").map(function(tag) {
 						return tag.toLowerCase().trim();
 					});
 					that.getStories();
