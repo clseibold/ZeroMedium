@@ -199,7 +199,7 @@ var Newstory = {
 			}
 
 			var that = this;
-			var imageUpload = document.getElementById('imageUpload');
+			var imageUpload = document.getElementById("imageUpload");
 			var files = imageUpload.files;
 
 			if (!files) {
@@ -214,83 +214,16 @@ var Newstory = {
 
 				let reader = new FileReader();
 				reader.onload = function(event) {
-						console.log("Reading ", fY, "with event ", event);
+						//console.log("Reading ", fY, "with event ", event);
 
 						var f_data = btoa(event.target.result);
 
-						var data_inner_path = "data/users/" + page.site_info.auth_address + "/data.json";
-						var content_inner_path = "data/users/" + page.site_info.auth_address + "/content.json";
+						page.uploadImage(f_data, false, () => {
+							imageUpload.value = null;
 
-						// Verify that user has correct "optional" and "ignore" values
-						page.checkOptional(false, function() {
-							page.cmd("fileGet", { "inner_path": data_inner_path, "required": false }, (data) => {
-								if (!data) {
-									//page.cmd("wrapperNotification");
-									return; // ERROR
-								}
-
-								data = JSON.parse(data);
-
-								if (!data["images"]) {
-									data["images"] = [];
-								}
-
-								var date_added = Date.now();
-
-								// .replace(/[^\x00-\x7F]/g, "") removes non-ascii characters
-								// Ascii is defined as being between 0 and 127 (x7F is 127 in hex)
-								// [^] matches anything that is NOT within the brackets, therefore
-								// [^\x00-\x7F] will match anything that is NOT ascii
-								var orig_filename_list = fY.name.split(".");
-								var filename = orig_filename_list[0].replace(/\s/g, "_").replace(/[^\x00-\x7F]/g, "") + "-" + date_added + "." + orig_filename_list[1];
-								console.log(filename);
-
-								data["images"].push({
-									"file_name": filename,
-									"date_added": date_added
-								});
-
-								var f_path = "data/users/" + page.site_info.auth_address + "/" + filename;
-
-								var json_raw = unescape(encodeURIComponent(JSON.stringify(data, undefined, "\t")));
-
-								// Write image to disk
-								page.cmd("fileWrite", [f_path, f_data], (res) => {
-									if (res == "ok") {
-										imageUpload.value = null;
-
-										// Pin file so it is excluded from the automatized optional file cleanup
-										page.cmd("optionalFilePin", { "inner_path": f_path });
-
-										/* if (imageUpload.value) {
-											imageUpload.parentNode.replaceChild(imageUpload.cloneNode(true), imageUpload)
-										}*/
-
-										// Write data to disk
-										page.cmd("fileWrite", [data_inner_path, btoa(json_raw)], (res) => {
-											if (res == "ok") {
-												var output_url = "/" + page.site_info.address + "/" + f_path;
-												// Add to Medium-editor
-												that.editor.execAction("insertHtml", {
-													value: '<div class="img"><img src="' + output_url + '"></div>'
-												});
-
-												// NOTE: Disabled signing and publishing because publishing the story will do this.
-												// Sign and Publish file
-												/*page.cmd('siteSign', {"inner_path": content_inner_path}, (res) => {
-												    //if (f != null && typeof f == 'function') f();
-												    page.cmd('sitePublish', {"inner_path": content_inner_path, "sign": false});
-												});*/
-											} else {
-												page.cmd("wrapperNotification", ["error", "File write error: " + JSON.stringify(res)]);
-											}
-										});
-									} else {
-										page.cmd("wrapperNotification", [
-                                                "error", "Image-File write error: " + JSON.stringify(res)
-										]);
-									}
-								});
+							// Add to Medium-editor
+							that.editor.execAction("insertHtml", {
+							    value: '<div class="img"><img src="' + output_url + '"></div>'
 							});
 						});
 						

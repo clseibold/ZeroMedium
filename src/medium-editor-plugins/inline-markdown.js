@@ -16,34 +16,30 @@
     },
     onInput: function (evt) {
       var list_start = this.base.getSelectedParentElement().textContent;
-      if (/^1\.\s/.test(list_start) && this.base.getExtensionByName("orderedlist")) {
+
+      if ((/^1\.\s/).test(list_start) && this.base.getExtensionByName("orderedlist")) {
         this.base.execAction("delete");
         this.base.execAction("delete");
         this.base.execAction("delete");
         this.base.execAction("insertorderedlist");
-      }
-      else if (/^\*\s/.test(list_start) && this.base.getExtensionByName("unorderedlist")) {
+      } else if ((/^\*\s/).test(list_start) && this.base.getExtensionByName("unorderedlist")) {
         this.base.execAction("delete");
         this.base.execAction("delete");
         this.base.execAction("insertunorderedlist");
-      }
-      else if (/^\#\#\s/.test(list_start) && this.base.getExtensionByName("h3")) {
+      } else if ((/^\#\#\s/).test(list_start) && this.base.getExtensionByName("h3")) {
         this.base.execAction("delete");
         this.base.execAction("delete");
         this.base.execAction("delete");
         this.base.execAction("append-h3");
-      }
-      else if (/^\#\s/.test(list_start) && this.base.getExtensionByName("h2")) {
+      } else if ((/^\#\s/).test(list_start) && this.base.getExtensionByName("h2")) {
         this.base.execAction("delete");
         this.base.execAction("delete");
         this.base.execAction("append-h2");
-      }
-      else if (/^\>\s/.test(list_start) && this.base.getExtensionByName("quote")) {
+      } else if ((/^\>\s/).test(list_start) && this.base.getExtensionByName("quote")) {
         this.base.execAction("delete");
         this.base.execAction("delete");
         this.base.execAction("append-blockquote");
-      }
-      else if (/^\-\-\-\s/.test(list_start)) {
+      } else if ((/^\-\-\-\s/).test(list_start)) {
         this.base.execAction("delete");
         this.base.execAction("delete");
         this.base.execAction("delete");
@@ -67,13 +63,14 @@
         });
       };
 
-      var i_match = /\*.+\*[\s.,?!()\[\]{}]/.exec(list_start);
-      var i_match_2 = /_.+_[\s.,?!()\[\]{}]/.exec(list_start);
-      var b_match = /\*\*.+\*\*[\s.,?!()\[\]{}]/.exec(list_start);
-      var b_match_2 = /__.+__[\s.,?!()\[\]{}]/.exec(list_start);
-      var s_match = /~.+~[\s.,?!()\[\]{}]/.exec(list_start);
-      var s_match_2 = /~~.+~~[\s.,?!()\[\]{}]/.exec(list_start);
-      var link_match = /\[(\S.*)\]\((\S+)\)[\s.,?!()\[\]{}]/.exec(list_start)
+      var i_match = (/\*.+\*[\s.,?!()\[\]{}]/).exec(list_start);
+      var i_match_2 = (/_.+_[\s.,?!()\[\]{}]/).exec(list_start);
+      var b_match = (/\*\*.+\*\*[\s.,?!()\[\]{}]/).exec(list_start);
+      var b_match_2 = (/__.+__[\s.,?!()\[\]{}]/).exec(list_start);
+      var s_match = (/~.+~[\s.,?!()\[\]{}]/).exec(list_start);
+      var s_match_2 = (/~~.+~~[\s.,?!()\[\]{}]/).exec(list_start);
+      var link_match = (/\[(\S.*)\]\((\S+)\)[\s.,?!()\[\]{}]/).exec(list_start)
+
       if (b_match) {
         doEdit(b_match, "bold", 2);
       } else if (b_match_2) {
@@ -87,7 +84,6 @@
       } else if (s_match) {
         doEdit(s_match, "strikeThrough", 1);
       } else if (link_match) {
-        console.log("Testing Link Match");
         for (var i = 0; i < link_match[0].length; i++) {
           this.base.execAction('delete');
         }
