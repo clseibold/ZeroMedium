@@ -3,8 +3,8 @@ var Router = require("../router.js");
 var moment = require('moment');
 var { sanitizeStringForUrl, sanitizeStringForUrl_SQL, html_substr } = require('../util.js');
 
-Vue.component('response', {
-	props: ['response', 'showName', 'showReference', 'shorten'],
+Vue.component("response", {
+	props: ["response", "showName", "showReference", "shorten"],
 	data: function() {
 		return {
 			story: null,
@@ -17,9 +17,9 @@ Vue.component('response', {
 	},
 	mounted: function() {
 		if (this.showReference) {
-			if (this.response.reference_type == "s") {
+			if (this.response.reference_type === "s") {
 				this.getResponseStory();
-			} else if (this.response.reference_type == "r") {
+			} else if (this.response.reference_type === "r") {
 				this.getResponseResponse();
 			}
 		}
@@ -36,17 +36,19 @@ Vue.component('response', {
 		},
 		getResponseResponse: function() {
 			var that = this;
+
 			page.getResponse(this.response.reference_auth_address, this.response.reference_id, (response) => {
 				that.referenceResponse = response;
-				//that.referenceAuthor = response.value;
+				// that.referenceAuthor = response.value;
 			});
 		},
 		getResponses: function() {
 			// TODO: Performance (only get number?)
 			//  show only some responses (perhaps from author of story and/or original/root response's author)
 			var that = this;
+
 			page.getResponses(this.getAuthAddress, this.response.response_id, "r", (responses) => {
-				//console.log(responses);
+				// console.log(responses);
 				that.subResponses = responses;
 			});
 		},
@@ -54,26 +56,26 @@ Vue.component('response', {
 			return moment(date).fromNow();
 		},
 		getStoryAuthAddress: function(story) {
-			return story.directory.replace(/users\//, '').replace(/\//, '');
+			return story.directory.replace(/users\//, "").replace(/\//, "");
 		},
 		getShortened: function(body) {
-			//console.log(body);
-			//console.log(html_substr(body, 300));
+			// console.log(body);
+			// console.log(html_substr(body, 300));
 			return html_substr(body, 300);
 		},
 		fullscreen: function() { // TODO: Not used right now because of a router bug.
-			this.goto(this.getAuthAddress + '/response/' + this.response.response_id);
+			this.goto(this.getAuthAddress + "/response/" + this.response.response_id);
 		},
 		respond: function() {
-			this.goto(this.getAuthAddress + '/response/' + this.response.response_id + '/response');
+			this.goto(this.getAuthAddress + "/response/" + this.response.response_id + "/response");
 		}
 	},
 	computed: {
 		getAuthAddress: function() {
-			return this.response.directory.replace(/users\//, '').replace(/\//, '');
+			return this.response.directory.replace(/users\//, "").replace(/\//, "");
 		},
 		getReferenceResponseAuthAddress: function() {
-			return this.referenceResponse.directory.replace(/users\//, '').replace(/\//g, '');
+			return this.referenceResponse.directory.replace(/users\//, "").replace(/\//g, "");
 		}
 	},
 	template: `

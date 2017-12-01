@@ -1,22 +1,22 @@
 var gulp = require("gulp");
 var browserify = require("browserify");
 var source = require("vinyl-source-stream");
-var watchify = require("watchify");
-//var tsify = require("tsify");
-var uglify = require("gulp-uglify");
-var gutil = require("gulp-util");
+// var watchify = require("watchify");
+// var tsify = require("tsify");
+// var uglify = require("gulp-uglify");
+// var gutil = require("gulp-util");
 var sourcemaps = require("gulp-sourcemaps");
 var buffer = require("vinyl-buffer");
-//var prefix = require("gulp-autoprefixer");
+// var prefix = require("gulp-autoprefixer");
 
 var sass = require("gulp-sass");
 var minify = require("gulp-minify-css");
-var concat = require("gulp-concat");
+// var concat = require("gulp-concat");
 
 var paths = {
-    pages: ['src/**/*.html'],
-    styles: ['src/sass/**/*.sass'],
-    scripts: ['src/**/*.js']
+    pages: ["src/**/*.html"],
+    styles: ["src/sass/**/*.sass"],
+    scripts: ["src/**/*.js"]
 };
 
 gulp.task("html", function() {
@@ -30,40 +30,40 @@ gulp.task("styles", function() {
             "includePaths": [
                 "./node_modules"
             ]
-        }).on('error', sass.logError))
-        //.pipe(prefix({cascade: true}))
+        }).on("error", sass.logError))
+        // .pipe(prefix({cascade: true}))
         .pipe(minify())
-        .pipe(gulp.dest('./css/'));
+        .pipe(gulp.dest("./css/"));
 });
 
 gulp.task("scripts", function() {
     return browserify({
-        basedir: '.',
+        basedir: ".",
         debug: true,
-        entries: ['src/main.js'],
+        entries: ["src/main.js"],
         cache: {},
         packageCache: {},
         insertGlobals: true
     })
-    //.plugin(tsify)
+    // .plugin(tsify)
     .bundle()
-    .pipe(source('bundle.js'))
+    .pipe(source("bundle.js"))
     .pipe(buffer())
-    .pipe(sourcemaps.init({loadMaps: true}))
-    //.pipe(uglify())
-    .pipe(sourcemaps.write('./'))
+    .pipe(sourcemaps.init({ loadMaps: true }))
+    // .pipe(uglify())
+    .pipe(sourcemaps.write("./"))
     .pipe(gulp.dest("./js/"));
 });
 
-gulp.task('watch', function() {
-    gulp.watch(paths.scripts, ['scripts']);
-    gulp.watch(paths.styles, ['styles']);
-    gulp.watch(paths.pages, ['html']);
+gulp.task("watch", function() {
+    gulp.watch(paths.scripts, ["scripts"]);
+    gulp.watch(paths.styles, ["styles"]);
+    gulp.watch(paths.pages, ["html"]);
 });
 
 gulp.task("default", ["scripts", "styles", "html", "watch"]);
 
-/*var watchedBrowserify = watchify(browserify({
+/* var watchedBrowserify = watchify(browserify({
     basedir: '.',
     debug: true,
     entries: ['src/main.ts'],
@@ -71,7 +71,7 @@ gulp.task("default", ["scripts", "styles", "html", "watch"]);
     packageCache: {}
 }).plugin(tsify));*/
 
-/*function bundle() {
+/* function bundle() {
     return watchedBrowserify
         .bundle()
         .pipe(source('bundle.js'))
@@ -82,6 +82,6 @@ gulp.task("default", ["scripts", "styles", "html", "watch"]);
         .pipe(gulp.dest("./js/"));
 }*/
 
-//gulp.task("default", ["copy-html", "styles"], bundle);
-//watchedBrowserify.on("update", bundle);
-//watchedBrowserify.on("log", gutil.log);
+// gulp.task("default", ["copy-html", "styles"], bundle);
+// watchedBrowserify.on("update", bundle);
+// watchedBrowserify.on("log", gutil.log);

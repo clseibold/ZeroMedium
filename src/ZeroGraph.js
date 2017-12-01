@@ -4,13 +4,13 @@
 
 var ZeroGraph = (zeroframe, debugLevel = "info") => {
 	return {
-		printDebug: function(level, message) { // Internal Ussage
-			if (level == "info") {
-				if (debugLevel == "info") {
+		printDebug: function(level, message) { // Internal Usage
+			if (level === "info") {
+				if (debugLevel === "info") {
 					console.log("[ZeroGraph.js] " + level + ": " + message);
 				}
-			} else if (level == "error") {
-				if (debugLevel == "info" || debugLevel == "error") {
+			} else if (level === "error") {
+				if (debugLevel === "info" || debugLevel === "error") {
 					console.log("[ZeroGraph.js] " + level + ": " + message);
 				}
 			}
@@ -68,7 +68,7 @@ var ZeroGraph = (zeroframe, debugLevel = "info") => {
 			var data_inner_path = "merged-ZeroGraph/1Q5gKHs3v6GBJRisQCJVCqXeoyii31mqCs/data/users/" + auth_address + "/data.json";
 			var content_inner_path = "merged-ZeroGraph/1Q5gKHs3v6GBJRisQCJVCqXeoyii31mqCs/data/users/" + auth_address + "/content.json";
 
-			zeroframe.cmd("fileGet", {"inner_path": data_inner_path, "required": false}, (data) => {
+			zeroframe.cmd("fileGet", { "inner_path": data_inner_path, "required": false }, (data) => {
 				data = JSON.parse(data);
 				if (!data) {
 					data = {
@@ -91,21 +91,23 @@ var ZeroGraph = (zeroframe, debugLevel = "info") => {
 					"date_added": date
 				});
 
-				var json_raw = unescape(encodeURIComponent(JSON.stringify(data, undefined, '\t')));
+				var json_raw = unescape(encodeURIComponent(JSON.stringify(data, undefined, "\t")));
 				var object_share_url = "zerograph://" + auth_address + "/" + date;
 
-				page.cmd('fileWrite', [data_inner_path, btoa(json_raw)], (res) => {
-				    if (res == "ok") {
-				        page.cmd('siteSign', {"inner_path": content_inner_path}, (res) => {
-				            if (cb != null && typeof cb == 'function') cb(object_share_url);
-				            page.cmd('sitePublish', {"inner_path": content_inner_path, "sign": false});
+				page.cmd("fileWrite", [data_inner_path, btoa(json_raw)], (res) => {
+				    if (res === "ok") {
+				        page.cmd("siteSign", { "inner_path": content_inner_path }, () => {
+				            if (cb != null && typeof cb === "function") {
+				            	cb(object_share_url);
+				            }
+				            page.cmd("sitePublish", { "inner_path": content_inner_path, "sign": false });
 				        });
 				    }
 				});
 			});
 		},
 		getAllObjects: function(cb) {
-			zeroframe.cmd('dbQuery', ['SELECT * FROM objects LEFT JOIN json USING (json_id)'], cb);
+			zeroframe.cmd("dbQuery", ["SELECT * FROM objects LEFT JOIN json USING (json_id)"], cb);
 		},
 		// Share url of the form zerograph://auth_address/date
 		getObject: function(object_share_url, cb) {
@@ -113,7 +115,7 @@ var ZeroGraph = (zeroframe, debugLevel = "info") => {
 			object_share_url = object_share_url.replace(/zerograph:\/\//, '').split('/');
 			var auth_address = object_share_url[0];
 			var date = object_share_url[1];
-			zeroframe.cmd('dbQuery', ['SELECT * FROM objects LEFT JOIN json USING (json_id) WHERE directory="data/users/' + auth_address + '" AND date_added=' + date + ' LIMIT 1'], (objects) => {
+			zeroframe.cmd("dbQuery", ['SELECT * FROM objects LEFT JOIN json USING (json_id) WHERE directory="data/users/' + auth_address + '" AND date_added=' + date + ' LIMIT 1'], (objects) => {
 				console.log(objects);
 				var object = JSON.parse(objects[0].type);
 

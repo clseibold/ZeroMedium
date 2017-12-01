@@ -1,0 +1,3 @@
+[submodule "src/ZeroQuery"]
+	path = src/ZeroQuery
+	url = git@github.com:krixano/ZeroQuery.git

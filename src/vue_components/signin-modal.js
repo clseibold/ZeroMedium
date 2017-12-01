@@ -1,8 +1,8 @@
 var Vue = require("vue/dist/vue.min.js");
 var Router = require("../router.js");
 
-Vue.component('signin-modal', {
-    props: ['value', 'userInfo'],
+Vue.component("signin-modal", {
+    props: ["value", "userInfo"],
     beforeMount: function() {
         if (this.userInfo && page.site_info.cert_user_id != null) {
             this.close();
@@ -13,6 +13,7 @@ Vue.component('signin-modal', {
         this.about = "";
 
         var that = this;
+
         page.getTopics((topics) => {
             that.topics = topics;
         });
@@ -31,21 +32,22 @@ Vue.component('signin-modal', {
             topics: [],
             interests: [],
             existingUsers: [],
-            languages: [{code: 'EN', name: 'English'}, {code: 'ES', name: 'Espanol'}, {code: 'ZH', name: 'Chineese'}]
-        }
+            languages: [{ code: "EN", name: "English" }, { code: "ES", name: "Espanol" }, { code: "ZH", name: "Chineese" }]
+        };
     },
     computed: {
         shouldShowClose: function() {
-            return this.currentSlide == 0;
+            return this.currentSlide === 0;
         }
     },
     methods: {
         close: function() {
-            this.$emit('input', false);
+            this.$emit("input", false);
         },
         signin: function() {
-            var previousId = page.site_info.cert_user_id;
+            // var previousId = page.site_info.cert_user_id;
             var that = this;
+
             page.selectUser(function() {
                 that.usersFileExists((exists) => {
                     if (exists) {
@@ -58,6 +60,7 @@ Vue.component('signin-modal', {
         },
         newUserData: function(name = null, about = null, primaryLanguage = null, secondaryLanguages = null, interests = null) {
             var interestsString = "";
+
             for (i = 0; i < interests.length; i++) {
                 interestsString += interests[i];
                 if (i < interests.length - 1) {
@@ -67,6 +70,7 @@ Vue.component('signin-modal', {
 
             // Make sure primaryLanguage isn't in secondaryLanguages array
             var index = secondaryLanguages.indexOf(primaryLanguage);
+
             if (index > -1) {
                 secondaryLanguages.splice(index, 1);
             }
@@ -74,18 +78,18 @@ Vue.component('signin-modal', {
             return {
                 name: name,
                 about: about,
-                languages: primaryLanguage + "," + secondaryLanguages.join(','),
+                languages: primaryLanguage + "," + secondaryLanguages.join(","),
                 interests: interestsString
-            }
+            };
         },
         createId: function(from) {
-            if (from == 'zeroid') {
+            if (from === "zeroid") {
                 page.cmd("wrapperOpenWindow", ["../zeroid.bit", "_blank"]);
             }
-            if (from == 'kaffieid') {
+            if (from === "kaffieid") {
                 page.cmd("wrapperOpenWindow", ["../id.kaffie.bit", "_blank"]);
             }
-            if (from == 'cryptoid') {
+            if (from === "cryptoid") {
                 page.cmd("wrapperOpenWindow", ["../cryptoid.bit", "_blank"]);
             }
         },
@@ -93,30 +97,35 @@ Vue.component('signin-modal', {
             var data_inner_path = "data/users/" + page.site_info.auth_address + "/data.json";
             var content_inner_path = "data/users/" + page.site_info.auth_address + "/content.json";
             
-            page.cmd("fileGet", {"inner_path": data_inner_path, "required": false}, (data) => {
-                if (data)
+            page.cmd("fileGet", { "inner_path": data_inner_path, "required": false }, (data) => {
+                if (data) {
                     f(true, null, null, null);
-                else f(false, data, data_inner_path, content_inner_path);
+                } else {
+                    f(false, data, data_inner_path, content_inner_path);
+                }
             });
         },
         showNext: function() {
             if (this.currentSlide == 1) {
                 // Username blacklist
                 var name = this.name.toLowerCase();
-                if (name == "admin" || name == "Admin" || name == "account" || name == "blog"
-                    || name == "api" || name == "cache" || name == "changelog" || name == "enterprise"
-                    || name == "gist" || name == "help" || name == "jobs" || name == "lists" || name == "login"
-                    || name == "logout" || name == "mine" || name == "news" || name == "plans"
-                    || name == "popular" || name == "projects" || name == "security" || name == "shop" || name == "translations"
-                    || name == "signup" || name == "register" || name == "status" || name == "wiki" || name == "stories" || name == "medium"
-                    || name == "organizations" || name == "better" || name == "compare" || name == "hosting" || name == "tour" || name == "styleguide") {
+
+                if (name === "admin" || name === "Admin" || name === "account" || name === "blog"
+                    || name === "api" || name === "cache" || name === "changelog" || name === "enterprise"
+                    || name === "gist" || name === "help" || name === "jobs" || name === "lists" || name === "login"
+                    || name === "logout" || name === "mine" || name === "news" || name === "plans"
+                    || name === "popular" || name === "projects" || name === "security" || name === "shop" || name === "translations"
+                    || name === "signup" || name === "register" || name === "status" || name === "wiki" || name === "stories" || name === "medium"
+                    || name === "organizations" || name === "better" || name === "compare" || name === "hosting" || name === "tour" || name === "styleguide") {
                     page.cmd("wrapperNotification", ["error", "You aren't allowed to use this username!"]);
                     return;
                 }
+
                 for (var i = 0; i < this.existingUsers.length; i++) {
-                    if (!this.existingUsers[i].value || typeof this.existingUsers[i].value != "string") continue;
+                    if (!this.existingUsers[i].value || typeof this.existingUsers[i].value !== "string") continue;
                     var existingName = this.existingUsers[i].value.toLowerCase().trim();
-                    if (existingName == name) {
+
+                    if (existingName === name) {
                         page.cmd("wrapperNotification", ["error", "Username already taken!"]);
                         return;
                     }
@@ -132,34 +141,38 @@ Vue.component('signin-modal', {
         },
         finish: function() {
             var that = this;
+
             this.usersFileExists((exists, data, data_inner_path, content_inner_path) => {
                 if (exists) {
                     that.close();
                 } else {
                     data = that.newUserData(that.name.trim(), that.about.trim(), that.primaryLanguage, that.secondaryLanguages, that.interests);
 
-                    var json_raw = unescape(encodeURIComponent(JSON.stringify(data, undefined, '\t')));
+                    var json_raw = unescape(encodeURIComponent(JSON.stringify(data, undefined, "\t")));
 
                     page.cmd("fileWrite", [data_inner_path, btoa(json_raw)], (res) => {
-                        if (res == "ok") {
+                        if (res === "ok") {
                             // Get user info again
-                            page.cmd("siteSign", {"inner_path": content_inner_path}, (res) => {
-                                that.$emit('get-user-info'); // TODO: Doesn't seem to be working
-                                page.cmd("sitePublish", {"inner_path": content_inner_path, "sign": false});
-                                Router.navigate('help');
+                            page.cmd("siteSign", { "inner_path": content_inner_path }, () => {
+                                that.$emit("get-user-info");
+                                page.cmd("sitePublish", { "inner_path": content_inner_path, "sign": false });
+                                Router.navigate("help");
                             });
                         } else {
                             page.cmd("wrapperNotification", ["error", "File write error: #{res}"]);
                         }
                     });
                     that.close();
-                    // TODO: Navigate to a certain page after signup?
                 }
             });
         },
         toggleLanguage: function(language) {
-            if (language.code == this.primaryLanguage) return;
+            if (language.code === this.primaryLanguage) {
+                return;
+            }
+            
             var index = this.secondaryLanguages.indexOf(language.code);
+
             if (index > -1) {
                 this.secondaryLanguages.splice(index, 1);
             } else {

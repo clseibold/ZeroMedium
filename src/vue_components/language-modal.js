@@ -1,8 +1,8 @@
 var Vue = require("vue/dist/vue.min.js");
 var Router = require("../router.js");
 
-Vue.component('language-modal', {
-    props: ['value', 'userInfo'],
+Vue.component("language-modal", {
+    props: ["value", "userInfo"],
     beforeMount: function() {
         if (!this.userInfo || page.site_info.cert_user_id == null) {
             this.close();
@@ -12,43 +12,44 @@ Vue.component('language-modal', {
         return {
             primaryLanguage: "",
             secondaryLanguages: [],
-            languages: [{code: 'EN', name: 'English'}, {code: 'ES', name: 'Espanol'}, {code: 'ZH', name: 'Chineese'}]
-        }
+            languages: [{ code: "EN", name: "English" }, { code: "ES", name: "Espanol" }, { code: "ZH", name: "Chineese" }]
+        };
     },
     computed: {
         shouldShowClose: function() {
-            return this.currentSlide == 0;
+            return this.currentSlide === 0;
         }
     },
     methods: {
         close: function() {
-            this.$emit('input', false);
+            this.$emit("input", false);
         },
         usersFileExists: function(f) {
-            console.log(page.site_info.auth_address);
             var data_inner_path = "data/users/" + page.site_info.auth_address + "/data.json";
             var content_inner_path = "data/users/" + page.site_info.auth_address + "/content.json";
-            
-            page.cmd("fileGet", {"inner_path": data_inner_path, "required": false}, (data) => {
-                if (data)
+
+            page.cmd("fileGet", { "inner_path": data_inner_path, "required": false }, (data) => {
+                if (data) {
                     f(true, JSON.parse(data), data_inner_path, content_inner_path);
-                else f(false, null, data_inner_path, content_inner_path);
+                } else {
+                    f(false, null, data_inner_path, content_inner_path);
+                }
             });
         },
         finish: function() {
             var that = this;
+
             this.usersFileExists((exists, data, data_inner_path, content_inner_path) => {
-                if (!exists) {
-                    that.close();
-                } else {
+                if (exists) {
                     // Make sure primaryLanguage isn't in secondaryLanguages array
                     var index = that.secondaryLanguages.indexOf(that.primaryLanguage);
+                    var languages = "";
+
                     if (index > -1) {
                         that.secondaryLanguages.splice(index, 1);
                     }
 
-                    var languages = "";
-                    if (!that.secondaryLanguages || that.secondaryLanguages.length == 0) {
+                    if (!that.secondaryLanguages || that.secondaryLanguages.length === 0) {
                         languages = that.primaryLanguage;
                     } else {
                         languages = that.primaryLanguage + "," + that.secondaryLanguages.join(",");
@@ -58,35 +59,39 @@ Vue.component('language-modal', {
                     // Set language of all current stories to primary language (as long as language isn't already set.
                     if (data["stories"]) {
                         for (var i = 0; i < data["stories"].length; i++) {
-                            if (!data["stories"][i]["language"] || data["stories"][i]["language"] == "") {
+                            if (!data["stories"][i]["language"] || data["stories"][i]["language"] === "") {
                                 data["stories"][i]["language"] = that.primaryLanguage;
                             }
                         }
                     }
 
-                    var json_raw = unescape(encodeURIComponent(JSON.stringify(data, undefined, '\t')));
+                    var json_raw = unescape(encodeURIComponent(JSON.stringify(data, undefined, "\t")));
 
                     page.cmd("fileWrite", [data_inner_path, btoa(json_raw)], (res) => {
-                        if (res == "ok") {
+                        if (res === "ok") {
                             // Get user info again
-                            page.cmd("siteSign", {"inner_path": content_inner_path}, (res) => {
-                                //that.$emit('get-user-info');
-                                that.$emit('setUserLanguages', languages);
-                                page.cmd("sitePublish", {"inner_path": content_inner_path, "sign": false});
-                                Router.navigate('help');
+                            page.cmd("siteSign", { "inner_path": content_inner_path }, () => {
+                                // that.$emit('get-user-info');
+                                that.$emit("setUserLanguages", languages);
+                                page.cmd("sitePublish", { "inner_path": content_inner_path, "sign": false });
+                                Router.navigate("help");
                             });
                         } else {
                             page.cmd("wrapperNotification", ["error", "File write error: #{res}"]);
                         }
                     });
-                    that.close();
-                    // TODO: Navigate to a certain page after signup?
                 }
+
+                that.close();
             });
         },
         toggleLanguage: function(language) {
-            if (language.code == this.primaryLanguage) return;
+            if (language.code === this.primaryLanguage) {
+                return;
+            }
+
             var index = this.secondaryLanguages.indexOf(language.code);
+
             if (index > -1) {
                 this.secondaryLanguages.splice(index, 1);
             } else {
@@ -94,7 +99,7 @@ Vue.component('language-modal', {
             }
         },
         isLanguageChecked: function(language) {
-            return this.secondaryLanguages.includes(language.code) || language.code == this.primaryLanguage;
+            return this.secondaryLanguages.includes(language.code) || language.code === this.primaryLanguage;
         }
     },
     template: `

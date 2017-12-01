@@ -1,28 +1,30 @@
-var Vue = require("vue/dist/vue.min.js");
+// var Vue = require("vue/dist/vue.min.js");
 var MediumEditor = require("medium-editor/dist/js/medium-editor");
 var MediumEditorAutolist = require("../medium-editor-plugins/inline-markdown");
 // Medium Editor Tables has problems with requirejs
-//var MediumEditorTable = require("medium-editor-tables/dist/js/medium-editor-tables");
+// var MediumEditorTable = require("medium-editor-tables/dist/js/medium-editor-tables");
 var Router = require("../router.js");
-var moment = require('moment');
+var moment = require("moment");
 var { sanitizeStringForUrl, sanitizeStringForUrl_SQL, html_substr } = require('../util.js');
 
 var ResponseFullscreen = {
-	props: ["userInfo", 'responseContent'],
+	props: ["userInfo", "responseContent"],
 	data: function() {
 		return {
 			response: null,
 			referenceResponse: null,
 			subResponses: null,
-			responseEditor: null
-		}
+			responseEditor: null,
+            reponsePublishBtnDisabled: false
+		};
 	},
 	beforeMount: function() {
-		this.$emit('navbar-shadow-on');
+		this.$emit("navbar-shadow-on");
 		var that = this;
+
 		page.getResponse(Router.currentParams["userauthaddress"], Router.currentParams["id"], (response) => {
 			that.response = response;
-			if (response.reference_type == "r") {
+			if (response.reference_type === "r") {
 				page.getResponse(response.reference_auth_address, response.reference_id, (response) => {
 					that.referenceResponse = response;
 				});
@@ -34,7 +36,7 @@ var ResponseFullscreen = {
 	},
 	mounted: function() {
         var autolist = new MediumEditorAutolist();
-		this.responseEditor = new MediumEditor('.editableResponse', {
+		this.responseEditor = new MediumEditor(".editableResponse", {
 			placeholder: {
 				text: "Write a response...",
 				hideOnClick: false
@@ -45,15 +47,15 @@ var ResponseFullscreen = {
 			buttonLabels: "fontawesome",
 			anchor: {
 		        customClassOption: null,
-		        customClassOptionText: 'Button',
+		        customClassOptionText: "Button",
 		        linkValidation: false,
-		        placeholderText: 'Paste or type a link',
+		        placeholderText: "Paste or type a link",
 		        targetCheckbox: false,
-		        targetCheckboxText: 'Open in new window'
+		        targetCheckboxText: "Open in new window"
 		    },
 		    autoLink: true,
             extensions: {
-                'autolist': autolist
+                "autolist": autolist
             },
     	    keyboardCommands: {
     		    commands: [
@@ -171,9 +173,6 @@ var ResponseFullscreen = {
                     }
                 ]
             }
-		    /*extensions: {
-		    	table: new MediumEditorTable()
-		    }*/
 		});
 	},
 	methods: {
@@ -182,30 +181,38 @@ var ResponseFullscreen = {
 		},
 		postResponse: function() {
 			var that = this;
-			page.postResponse(this.getAuthAddress, this.response.response_id, 'r', this.responseEditor.getContent(), function() {
+
+            if (this.responseEditor.getContent() === "") { // TODO: Doesn't work all of the time
+                page.cmd("wrapperNotification", ["error", "You cannot post an empty response."]);
+                return;
+            }
+
+            this.reponsePublishBtnDisabled = true;
+			page.postResponse(this.getAuthAddress, this.response.response_id, "r", this.responseEditor.getContent(), function() {
 				that.responseEditor.resetContent();
 				//Router.navigate(that.getAuthAddress + '/response/' + that.response.response_id);
 				page.getResponses(Router.currentParams["userauthaddress"], that.response.response_id, "r", (responses) => {
 					that.subResponses = responses;
+                    that.reponsePublishBtnDisabled = false;
 				});
 			});
 		},
 		responseFullscreen: function() {
-			Router.navigate(this.getAuthAddress + '/response/' + this.response.response_id + '/response');
+			Router.navigate(this.getAuthAddress + "/response/" + this.response.response_id + "/response");
 		}
 	},
 	computed: {
 		getStoryAuthAddress: function() {
-			return this.response.story.directory.replace(/users\//, '').replace(/\//g, '');
+			return this.response.story.directory.replace(/users\//, '').replace(/\//g, "");
 		},
 		getAuthAddress: function() {
-			return this.response.directory.replace(/users\//, '').replace(/\//g, '');
+			return this.response.directory.replace(/users\//, '').replace(/\//g, "");
 		},
 		datePosted: function() {
 			return moment(this.response.date_added).fromNow();
 		},
 		getReferenceResponseAuthAddress: function() {
-			return this.referenceResponse.directory.replace(/users\//, '').replace(/\//g, '');
+			return this.referenceResponse.directory.replace(/users\//, "").replace(/\//g, "");
 		}
 	},
 	template: `
@@ -232,7 +239,7 @@ var ResponseFullscreen = {
 							<div class="box" style="margin-top: 10px; margin-bottom: 25px;" v-show="userInfo && response">
 								<p><strong>{{ userInfo ? userInfo.keyvalue.name : "" }}</strong></p>
 								<div class="editableResponse custom-content" style="outline: none; margin-top: 10px; margin-bottom: 10px;"></div>
-								<a v-on:click.prevent="postResponse()" class="button is-primary is-small is-outlined">Publish</a>
+								<a v-on:click.prevent="postResponse()" class="button is-primary is-small is-outlined" :disabled="reponsePublishBtnDisabled">Publish</a>
 								<a v-on:click.prevent="responseFullscreen()" class="button is-info is-small is-outlined">Fullscreen</a>
 							</div>
 							<response v-for="response in subResponses" :key="response.response_id" v-bind:response="response" v-bind:show-name="true" v-bind:show-reference="false"></response>

@@ -13,20 +13,21 @@ var Newstory = {
 	data: function() {
 		return {
 			editor: null,
-			title: '',
-			status: 'Unsaved changes',
-			mobileTags: '',
-			mobileDescription: '',
-			mobileLanguage: ''
-		}
+			title: "",
+			status: "Unsaved changes",
+			mobileTags: "",
+			mobileDescription: "",
+			mobileLanguage: ""
+		};
 	},
 	beforeMount: function() {
-		this.$emit('navbar-shadow-off');
+		this.$emit("navbar-shadow-off");
 	},
 	mounted: function() {
 		var autolist = new MediumEditorAutolist();
 		var zerograph_links = new MediumEditorZeroGraphLinks();
-		this.editor = new MediumEditor('.editable', {
+
+		this.editor = new MediumEditor(".editable", {
 			imageDragging: true,
 			placeholder: {
 				text: "Tell your story...",
@@ -48,8 +49,8 @@ var Newstory = {
 		    },
 		    autoLink: true,
 		    extensions: {
-		        'autolist': autolist,
-		        'zerographlinks': zerograph_links
+		        "autolist": autolist,
+		        "zerographlinks": zerograph_links
 		    },
 		    keyboardCommands: {
 			    commands: [
@@ -167,111 +168,62 @@ var Newstory = {
 	                }
 	            ]
 	        }
-		    /*extensions: {
-		    	table: new MediumEditorTable()
-		    }*/
 		});
 	},
 	methods: {
 		publish: function(tags, description, language) {
 			var that = this;
-			if (language == '') language = null;
+
+			if (this.editor.getContent() === "" || this.title === "") { // TODO: Doesn't work all of the time
+				page.cmd("wrapperNotification", ["error", "You cannot post an empty story."]);
+				return;
+			}
+
+			if (language === "") {
+				language = null;
+			}
 			page.postStory(this.title, description, this.editor.getContent(), tags, language, function(slug) {
-				//cache_clear();
-				Router.navigate(that.userInfo.auth_address + '/' + slug);
+				Router.navigate(that.userInfo.auth_address + "/" + slug);
 			});
 		},
 		save: function(tags, description, language) {
-			if (language == '') language = null;
+			if (language === "") {
+				language = null;
+			}
 			page.unimplemented();
 		},
 		uploadImage: function() {
 			if (!window.File || !window.FileReader || !window.FileList || !window.Blob) {
-				alert('The File APIs are not fully supported in this browser.');
+				alert("The File APIs are not fully supported in this browser.");
 				return;
 			}
 
 			var that = this;
-			var imageUpload = document.getElementById('imageUpload');
+			var imageUpload = document.getElementById("imageUpload");
 			var files = imageUpload.files;
-			if (!files) return;
+
+			if (!files) {
+				return;
+			}
 
 			for (let fX in files) {
 				let fY = files[fX];
-				//console.log(fX, fY);
 
-				if (!fY || typeof fY !== 'object' || !fY.type.match('(image)\/(png|jpg|jpeg|gif)|(audio)\/(mp3|ogg)|(video)\/(ogg|mp4)')) // |audio|video      || !fY.name.match(/\.IMAGETYPE$/gm)
+				if (!fY || typeof fY !== "object" || !fY.type.match("(image)\/(png|jpg|jpeg|gif)|(audio)\/(mp3|ogg)|(video)\/(ogg|mp4)")) // |audio|video      || !fY.name.match(/\.IMAGETYPE$/gm)
 					continue;
 
 				let reader = new FileReader();
 				reader.onload = function(event) {
-						console.log("Reading ", fY, "with event ", event);
+						//console.log("Reading ", fY, "with event ", event);
 
-						var f_data = btoa(event.target.result);
+						let f_data = btoa(event.target.result);
 
-						var data_inner_path = "data/users/" + page.site_info.auth_address + "/data.json";
-						var content_inner_path = "data/users/" + page.site_info.auth_address + "/content.json";
+						page.uploadImage(fY, f_data, false, (output_url) => {
+							imageUpload.value = null;
 
-						// Verify that user has correct "optional" and "ignore" values
-						page.checkOptional(false, function() {
-							page.cmd("fileGet", { "inner_path": data_inner_path, "required": false }, (data) => {
-								if (!data) {
-									//page.cmd("wrapperNotification");
-									return; // ERROR
-								}
-
-								data = JSON.parse(data);
-
-								if (!data["images"]) {
-									data["images"] = [];
-								}
-
-								data["images"].push({
-									"file_name": fY.name,
-									"date_added": Date.now()
-								});
-
-								var f_path = "data/users/" + page.site_info.auth_address + "/" + fY.name;
-
-								var json_raw = unescape(encodeURIComponent(JSON.stringify(data, undefined, '\t')));
-
-								// Write image to disk
-								page.cmd("fileWrite", [f_path, f_data], (res) => {
-									if (res == "ok") {
-										imageUpload.value = null;
-
-										// Pin file so it is excluded from the automatized optional file cleanup
-										page.cmd("optionalFilePin", {"inner_path": f_path});
-
-										/* if (imageUpload.value) {
-											imageUpload.parentNode.replaceChild(imageUpload.cloneNode(true), imageUpload)
-										}*/
-
-										// Write data to disk
-										page.cmd("fileWrite", [data_inner_path, btoa(json_raw)], (res) => {
-											if (res == "ok") {
-												var output_url = "/" + page.site_info.address + "/" + f_path;
-												// Add to Medium-editor
-												that.editor.execAction('insertHtml', {
-													value: '<div class="img"><img src="' + output_url + '"></div>'
-												});
-
-												// NOTE: Disabled signing and publishing because publishing the story will do this.
-												// Sign and Publish file
-												/*page.cmd('siteSign', {"inner_path": content_inner_path}, (res) => {
-												    //if (f != null && typeof f == 'function') f();
-												    page.cmd('sitePublish', {"inner_path": content_inner_path, "sign": false});
-												});*/
-											} else {
-												page.cmd("wrapperNotification", ["error", "File write error: " + JSON.stringify(res)]);
-											}
-										});
-									} else {
-										page.cmd("wrapperNotification", [
-                                                "error", "Image-File write error: " + JSON.stringify(res)
-										]);
-									}
-								});
+							// Add to Medium-editor
+							that.editor.execAction("insertHtml", {
+							    value: '<div class="img"><img src="' + output_url + '"></div>'
 							});
 						});
 						
@@ -310,24 +262,24 @@ var Newstory = {
 		`
 }
 
-Vue.component('editor-nav', {
-	props: ['value', 'userInfo', 'storyLanguage'],
+Vue.component("editor-nav", {
+	props: ["value", "userInfo", "storyLanguage"],
 	data: function() {
 		return {
-			tags: '',
-			description: '',
-			language: ''
+			tags: "",
+			description: "",
+			language: ""
 		}
 	},
 	mounted: function() {
-		this.$parent.$on('setDefaults', this.setDefaults);
+		this.$parent.$on("setDefaults", this.setDefaults);
 	},
 	methods: {
 		publish: function() {
-			this.$emit('publish', this.tags, this.description, this.language);
+			this.$emit("publish", this.tags, this.description, this.language);
 		},
 		save: function() {
-			this.$emit('save', this.tags, this.description, this.language);
+			this.$emit("save", this.tags, this.description, this.language);
 		},
 		setDefaults: function(tags, description) {
 			this.tags = tags;
@@ -336,13 +288,20 @@ Vue.component('editor-nav', {
 	},
 	computed: {
 		getUserDefaultLanguage: function() {
-			if (!this.userInfo || !this.userInfo.keyvalue) return "";
+			if (!this.userInfo || !this.userInfo.keyvalue) {
+				return "";
+			}
+
 			return this.userInfo.keyvalue.languages.split(",")[0];
 		},
 		getLanguages: function() {
-			if (!this.userInfo || !this.userInfo.keyvalue) return [];
+			if (!this.userInfo || !this.userInfo.keyvalue) {
+				return [];
+			}
+			
 			var userLanguages = this.userInfo.keyvalue.languages.split(",");
 			var returnLanguages = [];
+
 			for (var i = 0; i < userLanguages.length; i++) {
 				returnLanguages.push({
 					code: userLanguages[i],
