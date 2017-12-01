@@ -216,9 +216,9 @@ var Newstory = {
 				reader.onload = function(event) {
 						//console.log("Reading ", fY, "with event ", event);
 
-						var f_data = btoa(event.target.result);
+						let f_data = btoa(event.target.result);
 
-						page.uploadImage(fY, f_data, false, () => {
+						page.uploadImage(fY, f_data, false, (output_url) => {
 							imageUpload.value = null;
 
 							// Add to Medium-editor

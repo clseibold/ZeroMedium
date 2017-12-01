@@ -875,7 +875,7 @@ class ZeroApp extends ZeroFrame {
                 var json_raw = unescape(encodeURIComponent(JSON.stringify(data, undefined, "\t")));
 
                 // Write image to disk
-                page.cmd("fileWrite", [f_path, f_data], (res) => {
+                page.cmd("fileWrite", [f_path, file_data], (res) => {
                     if (res === "ok") {
                         // Pin file so it is excluded from the automatized optional file cleanup
                         page.cmd("optionalFilePin", { "inner_path": f_path });
