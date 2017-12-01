@@ -69,7 +69,7 @@
       var b_match_2 = (/__.+__[\s.,?!()\[\]{}]/).exec(list_start);
       var s_match = (/~.+~[\s.,?!()\[\]{}]/).exec(list_start);
       var s_match_2 = (/~~.+~~[\s.,?!()\[\]{}]/).exec(list_start);
-      var link_match = (/\[(\S.*)\]\((\S+)\)[\s.,?!()\[\]{}]/).exec(list_start)
+      var link_match = (/\[(\S.*)\]\((\S+)\)[\s.,?!()\[\]{}]/).exec(list_start);
 
       if (b_match) {
         doEdit(b_match, "bold", 2);

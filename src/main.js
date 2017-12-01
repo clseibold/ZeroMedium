@@ -837,7 +837,7 @@ class ZeroApp extends ZeroFrame {
         });
     }
 
-    uploadImage(file_data, doSignAndPublish = false, f = null) {
+    uploadImage(file, file_data, doSignAndPublish = false, f = null) {
         var data_inner_path = "data/users/" + page.site_info.auth_address + "/data.json";
         var content_inner_path = "data/users/" + page.site_info.auth_address + "/content.json";
 
@@ -861,7 +861,7 @@ class ZeroApp extends ZeroFrame {
                 // Ascii is defined as being between 0 and 127 (x7F is 127 in hex)
                 // [^] matches anything that is NOT within the brackets, therefore
                 // [^\x00-\x7F] will match anything that is NOT ascii
-                var orig_filename_list = fY.name.split(".");
+                var orig_filename_list = file.name.split(".");
                 var filename = orig_filename_list[0].replace(/\s/g, "_").replace(/[^\x00-\x7F]/g, "") + "-" + date_added + "." + orig_filename_list[1];
                 console.log(filename);
 

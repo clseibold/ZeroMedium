@@ -218,7 +218,7 @@ var Newstory = {
 
 						var f_data = btoa(event.target.result);
 
-						page.uploadImage(f_data, false, () => {
+						page.uploadImage(fY, f_data, false, () => {
 							imageUpload.value = null;
 
 							// Add to Medium-editor
