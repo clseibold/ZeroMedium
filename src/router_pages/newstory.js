@@ -235,11 +235,20 @@ var Newstory = {
 									data["images"] = [];
 								}
 
+								var date_added = Date.now();
+
 								data["images"].push({
 									"file_name": fY.name,
-									"date_added": Date.now()
+									"date_added": date_added
 								});
 
+								// .replace(/[^\x00-\x7F]/g, "") removes non-ascii characters
+								// Ascii is defined as being between 0 and 127 (x7F is 127 in hex)
+								// [^] matches anything that is NOT within the brackets, therefore
+								// [^\x00-\x7F] will match anything that is NOT ascii
+								var orig_filename_list = fY.name.split(".");
+								var filename = orig_filename_list[0].replace(/\s/g, "_").replace(/[^\x00-\x7F]/g, "") + "-" + date_added + "." + orig_filename_list[1];
+								console.log(filename);
 								var f_path = "data/users/" + page.site_info.auth_address + "/" + fY.name;
 
 								var json_raw = unescape(encodeURIComponent(JSON.stringify(data, undefined, "\t")));
