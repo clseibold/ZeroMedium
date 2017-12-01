@@ -108,6 +108,9 @@ var Home = {
             <section class="section">
                 <div class="columns is-centered">
                     <div class="column is-three-quarters-tablet is-three-quarters-desktop">
+                        <div style="margin-bottom: 1.5em;">
+                            <strong>Current Version:</strong> <a href="?/12gAes6NzDS9E2q6Q1UXrpUdbPS6nvuBPu/version-info" v-on:click.prevent="goto('12gAes6NzDS9E2q6Q1UXrpUdbPS6nvuBPu/version-info')">17-11b</a>
+                        </div>
                         <home-user-interests v-if="userInfo && isLoggedIn && userInfo.keyvalue.interests" :user-info="userInfo"></home-user-interests>
                         <p class="title is-4" style="border-bottom: 1px solid #AAAAAA; padding-bottom: 10px;">Today's Top Stories</p>
                         <div v-if="topStories.length > 0 && recentStories.length > 0">
