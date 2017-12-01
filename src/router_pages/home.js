@@ -118,6 +118,8 @@ var Home = {
                     <div class="column is-three-quarters-tablet is-three-quarters-desktop">
                         <div style="margin-bottom: 1.5em;">
                             <strong>Current Version:</strong> <a href="?/12gAes6NzDS9E2q6Q1UXrpUdbPS6nvuBPu/version-info" v-on:click.prevent="goto('12gAes6NzDS9E2q6Q1UXrpUdbPS6nvuBPu/version-info')">17.12a</a>
+                            <br>
+                            <small>To report a bug, click on the 'Report Bug' link in the navbar. You will be redirected to the Git Center Repo. Create an issue with the tags: current beta version and "bug".</small>
                         </div>
                         <home-user-interests v-if="userInfo && isLoggedIn && userInfo.keyvalue.interests" :user-info="userInfo"></home-user-interests>
                         <p class="title is-4" style="border-bottom: 1px solid #AAAAAA; padding-bottom: 10px;">Today's Top Stories</p>
