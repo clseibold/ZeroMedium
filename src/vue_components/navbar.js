@@ -43,7 +43,7 @@ Vue.component('custom-nav', {
             <nav class="navbar is-transparent" v-bind:class="{ 'has-shadow': shadow }">
                 <div class="container">
                     <div class="navbar-brand">
-                        <a class="navbar-item" href="./?/" style="font-weight: bold;" v-on:click.prevent="goto('')">ZeroMedium</a>
+                        <a class="navbar-item" href="./?/" style="font-weight: bold;" v-on:click.prevent="goto('')">ZeroMedium BETA</a>
                         <a class="navbar-item is-hidden-desktop" v-if="isLoggedIn" style="margin-left: auto;" :href="'./?/' + (userInfo ? userInfo.auth_address : '')" v-on:click.prevent="goto(userInfo ? userInfo.auth_address : '')">{{ userInfo ? userInfo.keyvalue.name : "" }}</a>
                         <a class="navbar-item is-hidden-desktop" v-on:click.prevent="showSigninModal()" v-else style="margin-left: auto;">Sign in / Sign up</a>
                         <div class="navbar-burger burger" v-bind:class="{ 'is-active': menuShown }" style="margin-right: 70px; margin-left: 0 !important;" v-on:click.prevent="toggleMenu()">
@@ -55,6 +55,7 @@ Vue.component('custom-nav', {
                     <div class="navbar-menu" v-bind:class="{ 'is-active': menuShown }">
                         <div class="navbar-start is-hidden-touch">
                             <a class="navbar-item" href="./?/me/newstory" v-on:click.prevent="goto('me/newstory')">Write a story</a>
+                            <a class="navbar-item" href="/1BEPbMfV8QtaZCD2cPNbabfDKnmhTAZRPx">Report Bug</a>
                         </div>
                         <div class="navbar-end">
                             <div class="navbar-item has-dropdown is-hoverable" v-if="isLoggedIn">
