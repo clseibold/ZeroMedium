@@ -401,7 +401,7 @@ class ZeroApp extends ZeroFrame {
             var storySlug = sanitizeStringForUrl(title);
 
             for (var story of data["stories"]) {
-                if (story.slug == storySlug) {
+                if (story.slug == storySlug && story.story_id != story_id) {
                     storySlug += "-" + storyDate;
                     break;
                 }
