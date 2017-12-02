@@ -61,10 +61,12 @@ Vue.component("signin-modal", {
         newUserData: function(name = null, about = null, primaryLanguage = null, secondaryLanguages = null, interests = null) {
             var interestsString = "";
 
-            for (i = 0; i < interests.length; i++) {
-                interestsString += interests[i];
-                if (i < interests.length - 1) {
-                    interestsString += ",";
+            if (interests.length !== 0) {
+                for (i = 0; i < interests.length; i++) {
+                    interestsString += interests[i];
+                    if (i < interests.length - 1) {
+                        interestsString += ",";
+                    }
                 }
             }
 

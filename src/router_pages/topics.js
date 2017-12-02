@@ -25,6 +25,11 @@ var Topics = {
 			Router.navigate(to);
 		},
 		loadInterests: function(userInfo) {
+			if (userInfo.keyvalue.interests === "") {
+				this.interests = [];
+				console.log(this.interests);
+				return;
+			}
 			this.interests = userInfo.keyvalue.interests.split(",");
 		},
 		getTopics: function() {
