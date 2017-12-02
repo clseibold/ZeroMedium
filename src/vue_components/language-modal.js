@@ -39,6 +39,11 @@ Vue.component("language-modal", {
         finish: function() {
             var that = this;
 
+            if (this.primaryLanguage == "") {
+                page.cmd("wrapperNotification", ["error", "Please select a primary language."]);
+                return;
+            }
+
             this.usersFileExists((exists, data, data_inner_path, content_inner_path) => {
                 if (exists) {
                     // Make sure primaryLanguage isn't in secondaryLanguages array
