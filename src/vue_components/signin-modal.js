@@ -61,10 +61,12 @@ Vue.component("signin-modal", {
         newUserData: function(name = null, about = null, primaryLanguage = null, secondaryLanguages = null, interests = null) {
             var interestsString = "";
 
-            for (i = 0; i < interests.length; i++) {
-                interestsString += interests[i];
-                if (i < interests.length - 1) {
-                    interestsString += ",";
+            if (interests.length !== 0) {
+                for (i = 0; i < interests.length; i++) {
+                    interestsString += interests[i];
+                    if (i < interests.length - 1) {
+                        interestsString += ",";
+                    }
                 }
             }
 
@@ -110,6 +112,11 @@ Vue.component("signin-modal", {
                 // Username blacklist
                 var name = this.name.toLowerCase();
 
+                if (name === "") {
+                    page.cmd("wrapperNotification", ["error", "Please enter a username."]);
+                    return;
+                }
+
                 if (name === "admin" || name === "Admin" || name === "account" || name === "blog"
                     || name === "api" || name === "cache" || name === "changelog" || name === "enterprise"
                     || name === "gist" || name === "help" || name === "jobs" || name === "lists" || name === "login"
@@ -129,6 +136,11 @@ Vue.component("signin-modal", {
                         page.cmd("wrapperNotification", ["error", "Username already taken!"]);
                         return;
                     }
+                }
+
+                if (this.primaryLanguage == "") {
+                    page.cmd("wrapperNotification", ["error", "Please select a primary language."]);
+                    return;
                 }
             }
             this.currentSlide++;
