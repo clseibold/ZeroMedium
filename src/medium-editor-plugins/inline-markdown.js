@@ -63,13 +63,13 @@
         });
       };
 
-      var i_match = (/\*.+\*[\s.,?!()\[\]{}]/).exec(list_start);
-      var i_match_2 = (/_.+_[\s.,?!()\[\]{}]/).exec(list_start);
-      var b_match = (/\*\*.+\*\*[\s.,?!()\[\]{}]/).exec(list_start);
-      var b_match_2 = (/__.+__[\s.,?!()\[\]{}]/).exec(list_start);
-      var s_match = (/~.+~[\s.,?!()\[\]{}]/).exec(list_start);
-      var s_match_2 = (/~~.+~~[\s.,?!()\[\]{}]/).exec(list_start);
-      var link_match = (/\[(\S.*)\]\((\S+)\)[\s.,?!()\[\]{}]/).exec(list_start);
+      var i_match = (/\*\S+\*[\s.,?!()\[\]{}]/).exec(list_start);
+      var i_match_2 = (/_\S+_[\s.,?!()\[\]{}]/).exec(list_start);
+      var b_match = (/\*\*\S+\*\*[\s.,?!()\[\]{}]/).exec(list_start);
+      var b_match_2 = (/__\S+__[\s.,?!()\[\]{}]/).exec(list_start);
+      var s_match = (/~\S+~[\s.,?!()\[\]{}]/).exec(list_start);
+      var s_match_2 = (/~~\S+~~[\s.,?!()\[\]{}]/).exec(list_start);
+      var link_match = (/\[(\S(.*\S)?)\]\((\S+)\)[\s.,?!()\[\]{}]/).exec(list_start);
 
       if (b_match) {
         doEdit(b_match, "bold", 2);
