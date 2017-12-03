@@ -197,11 +197,20 @@ class ZeroApp extends ZeroFrame {
     }
 
     getTopics(f = null) {
-        page.cmd("dbQuery", ["SELECT * FROM topics"], (topics) => {
-            if (f != null && typeof f === "function") {
-                f(topics);
-            }
-        });
+        if (app.userInfo && app.userInfo.languages !== "") {
+            var primarylang = app.userInfo.langauges.split(",")[0].toLowerCase();
+            page.cmd("dbQuery", ["SELECT * FROM topics_" + primarylang], (topics) => {
+                if (f != null && typeof f === "function") {
+                    f(topics);
+                }
+            });
+        } else {
+            page.cmd("dbQuery", ["SELECT * FROM topics"], (topics) => {
+                if (f != null && typeof f === "function") {
+                    f(topics);
+                }
+            });
+        }
     }
 
     getUserProfileInfo(auth_address, getStoryList, getResponsesList, f = null) {
