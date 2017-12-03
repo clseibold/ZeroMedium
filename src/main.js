@@ -1,4 +1,4 @@
-version = "17.12a.1"
+version = "17.12a.2"
 
 // Zeroframe
 var ZeroFrame = require("./ZeroFrame.js");
