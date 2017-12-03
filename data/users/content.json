@@ -1,0 +1,27 @@
+{
+ "address": "18GAQeWN4B7Uum6rvJL2zh9oe4VfcnTM18",
+ "files": {},
+ "ignore": ".*",
+ "inner_path": "data/users/content.json",
+ "modified": 1512261424,
+ "signs": {
+  "18GAQeWN4B7Uum6rvJL2zh9oe4VfcnTM18": "HLD39bgzRhAvP/f/jaOVwrMqXUIyKIzrg35kVCWL/D/mUy/A2Hlw+kxU71VnqkUyMCVJHQ1k+lfFgLeBrNUN7To="
+ },
+ "user_contents": {
+  "cert_signers": {
+   "cryptoid.bit": ["18143WPue3rQykNaopx5KJKzYmaYhCjqhv"],
+   "kaffie.bit": ["1KH5BdNnqxh2KRWMMT8wUXzUgz4vVQ4S8p"],
+   "peak.id": ["1PEAKf9wJLTEEFAsQpLeLioWfY1f8pvFhD"],
+   "zeroid.bit": ["1iD5ZQJMNXu43w1qLB8sfdHVKppVMduGz"]
+  },
+  "permission_rules": {
+   ".*": {
+    "files_allowed": "data.json",
+    "files_allowed_optional": ".+\\.(png|jpg|jpeg|gif|mp3|flac|ogg|mp4|webm)(.piecemap.msgpack)?",
+    "max_size": 400000
+   },
+   "bitmsg/.*@zeroid.bit": {"max_size": 450000}
+  },
+  "permissions": {"bad@zeroid.bit": false}
+ }
+}
