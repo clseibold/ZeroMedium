@@ -232,7 +232,7 @@ class ZeroApp extends ZeroFrame {
 
     getTopicsInLang(lang = "en", f = null) {
         var addToQuery = "";
-        if (lang !== "en") {
+        if (lang !== "en" && lang !== "EN") {
             addToQuery = "_" + lang.toLowerCase();
         }
         page.cmd("dbQuery", ["SELECT * FROM topics" + addToQuery], (topics) => {
