@@ -4,7 +4,7 @@
     "version": 2,
     "maps": {
         "topics.json": {
-            "to_table": ["topics"]
+            "to_table": ["topics", "topics_es", "topics_zh"]
         },
         "users/.+/data.json": {
             "to_table": ["stories", "responses", "claps", "images"],
