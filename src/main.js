@@ -38,7 +38,7 @@ var app = new Vue({
                 <div class="container">
                     <div class="has-text-centered">
                         <em>&copy; Copyright 2017 Christian Seibold. BSD License.</em><br>
-                        Current Version: {{ version }}<br>
+                        Current Version: <a :href="'./?/12gAes6NzDS9E2q6Q1UXrpUdbPS6nvuBPu/' + getVersionLink()" v-on:click.prevent="goto('12gAes6NzDS9E2q6Q1UXrpUdbPS6nvuBPu/' + getVersionLink())">{{ version }}</a><br>
                         <a href="/1BEPbMfV8QtaZCD2cPNbabfDKnmhTAZRPx">Git Center Repo</a>
                     </div>
                 </div>
@@ -55,6 +55,14 @@ var app = new Vue({
         responseContent: "" // Used to transfer content from small response box to fullscreen route
     },
     methods: {
+        getVersionLink: function() {
+            var version_split = version.split(".");
+            var version_main = version_split[0] + "-" + version_split[1];
+            return "version-" + version_main.replace(/ /g, "");
+        },
+        goto: function(to) {
+            Router.navigate(to);
+        },
         navbarShadowOn: function() {
             this.navbarShadow = true;
         },
