@@ -230,6 +230,18 @@ class ZeroApp extends ZeroFrame {
         }
     }
 
+    getTopicsInLang(lang = "en", f = null) {
+        var addToQuery = "";
+        if (lang !== "en") {
+            addToQuery = "_" + lang.toLowerCase();
+        }
+        page.cmd("dbQuery", ["SELECT * FROM topics" + addToQuery], (topics) => {
+            if (f != null && typeof f === "function") {
+                f(topics);
+            }
+        });
+    }
+
     getUserProfileInfo(auth_address, getStoryList, getResponsesList, f = null) {
         var userProfileInfo = {};
 
