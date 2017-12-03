@@ -74,6 +74,7 @@ var ProfileStory = {
 					m_image = re_image.exec(newBody);
 					m_audio = re_audio.exec(newBody);
 					m_video = re_video.exec(newBody);
+					console.log(m_video);
 					if (m_image) {
 						// Get image's src, width, and height
 						var [ imgSrc, imgWidth_int, imgHeight_int ] = getInfo(m_image);
@@ -139,7 +140,7 @@ var ProfileStory = {
 						newBody = newBody.slice(0, m_audio.index) + placeholderHtml + newBody.slice(m_audio.index).replace(m_audio[0], '');
 						console.log(newBody);
 					} else if (m_video) {
-						var [ src, width, height ] = getInfo(m_audio);
+						var [ src, width, height ] = getInfo(m_video);
 
 						let placeholderHtml = "";
 

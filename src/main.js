@@ -892,7 +892,7 @@ class ZeroApp extends ZeroFrame {
                 // [^] matches anything that is NOT within the brackets, therefore
                 // [^\x00-\x7F] will match anything that is NOT ascii
                 var orig_filename_list = file.name.split(".");
-                var filename = orig_filename_list[0].replace(/\s/g, "_").replace(/[^\x00-\x7F]/g, "") + "-" + date_added + "." + orig_filename_list[orig_filename_list.length - 1];
+                var filename = orig_filename_list[0].replace(/\s/g, "_").replace(/[^\x00-\x7F]/g, "").replace(/\'/, "").replace(/\"/, "") + "-" + date_added + "." + orig_filename_list[orig_filename_list.length - 1];
 
                 console.log(file.type);
 
@@ -954,7 +954,7 @@ class ZeroApp extends ZeroFrame {
     uploadBigFile(file, f = null) {
         var date_added = Date.now();
         var orig_filename_list = file.name.split(".");
-        var filename = orig_filename_list[0].replace(/\s/g, "_").replace(/[^\x00-\x7F]/g, "") + "-" + date_added + "." + orig_filename_list[orig_filename_list.length - 1];
+        var filename = orig_filename_list[0].replace(/\s/g, "_").replace(/[^\x00-\x7F]/g, "").replace(/\'/, "").replace(/\"/, "") + "-" + date_added + "." + orig_filename_list[orig_filename_list.length - 1];
 
         var f_path = "data/users/" + page.site_info.auth_address + "/" + filename;
 
