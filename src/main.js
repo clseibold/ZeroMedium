@@ -916,7 +916,7 @@ class ZeroApp extends ZeroFrame {
                             imageUpload.parentNode.replaceChild(imageUpload.cloneNode(true), imageUpload)
                         }*/
 
-                        // Write data to disk
+                        // Add file to data.json
                         page.cmd("fileWrite", [data_inner_path, btoa(json_raw)], (res) => {
                             if (res === "ok") {
                                 var output_url = "/" + page.site_info.address + "/" + f_path;
@@ -948,6 +948,30 @@ class ZeroApp extends ZeroFrame {
                     }
                 });
             });
+        });
+    }
+
+    uploadBigFile(file, f = null) {
+        var date_added = Date.now();
+        var orig_filename_list = file.name.split(".");
+        var filename = orig_filename_list[0].replace(/\s/g, "_").replace(/[^\x00-\x7F]/g, "") + "-" + date_added + "." + orig_filename_list[orig_filename_list.length - 1];
+
+        var f_path = "data/users/" + page.site_info.auth_address + "/" + filename;
+
+        page.cmd("bigfileUploadInit", [f_path, file.size], (init_res) => {
+            var formdata = new FormData();
+            formdata.append(file.name, file);
+
+            var req = new XMLHttpRequest();
+
+            req.upload.addEventListener("progress", console.log);
+            req.upload.addEventListener("loadend", () => {
+                page.cmd("wrapperNotification", ["info", "Upload finished!"]);
+                if (f !== null && typeof f === "function") f(f_path);
+            });
+            req.withCredentials = true;
+            req.open("POST", init_res.url);
+            req.send(formdata);
         });
     }
 }

@@ -219,29 +219,33 @@ var Newstory = {
 						let f_data = btoa(event.target.result);
 						let file_type = fY.type;
 
-						page.uploadImage(fY, f_data, false, (output_url) => {
-							imageUpload.value = null;
-
-							// Add to Medium-editor
-							if (file_type.split("/")[0] === "image") {
+						// Add to Medium-editor
+						if (file_type.split("/")[0] === "image") {
+							page.uploadImage(fY, f_data, false, (output_url) => {
+								imageUpload.value = null;
 								that.editor.execAction("insertHtml", {
 								    value: '<div><img src="' + output_url + '"></div>'
 								});
-							} else if (file_type.split("/")[0] === "audio") {
+							});
+						} else if (file_type.split("/")[0] === "audio") {
+							page.uploadBigFile(fY, (output_url) => {
+								imageUpload.value = null;
 								that.editor.execAction("insertHtml", {
 								    value: '<div><audio src="' + output_url + '" controls></audio></div>' // TODO: Remove or rename img class?
 								});
-							} else if (file_type.split("/")[0] === "video") {
+							});
+						} else if (file_type.split("/")[0] === "video") {
+							page.uploadBigFile(fY, (output_url) => {
+								imageUpload.value = null;
 								that.editor.execAction("insertHtml", {
 								    value: '<div><video src="' + output_url + '" controls></video></div>'
 								});
-							} else {
-								that.editor.execAction("insertHtml", {
-								    value: ' <a class="file" href="' + output_url + '" download>Download File</a> '
-								});
-							}
-						});
-						
+							});
+						} else {
+							that.editor.execAction("insertHtml", {
+							    value: ' <a class="file" href="' + output_url + '" download>Download File</a> '
+							});
+						}
 					};
 				reader.readAsBinaryString(fY);
 			}
