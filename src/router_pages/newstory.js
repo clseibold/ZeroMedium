@@ -192,7 +192,7 @@ var Newstory = {
 			}
 			page.unimplemented();
 		},
-		uploadImage: function() {
+		uploadFile: function() {
 			if (!window.File || !window.FileReader || !window.FileList || !window.Blob) {
 				alert("The File APIs are not fully supported in this browser.");
 				return;
@@ -209,22 +209,37 @@ var Newstory = {
 			for (let fX in files) {
 				let fY = files[fX];
 
-				if (!fY || typeof fY !== "object" || !fY.type.match("(image)\/(png|jpg|jpeg|gif)|(audio)\/(mp3|ogg)|(video)\/(ogg|mp4)")) // |audio|video      || !fY.name.match(/\.IMAGETYPE$/gm)
+				if (!fY || typeof fY !== "object" || !fY.type.match("(image)\/(png|jpg|jpeg|gif)|(audio)\/(mp3|ogg)|(video)\/(ogg|mp4)")) { // |audio|video      || !fY.name.match(/\.IMAGETYPE$/gm)
+					page.cmd("wrapperNotification", ["error", "That file type is not supported."]);
 					continue;
+				}
 
 				let reader = new FileReader();
 				reader.onload = function(event) {
-						//console.log("Reading ", fY, "with event ", event);
-
 						let f_data = btoa(event.target.result);
+						let file_type = fY.type;
 
 						page.uploadImage(fY, f_data, false, (output_url) => {
 							imageUpload.value = null;
 
 							// Add to Medium-editor
-							that.editor.execAction("insertHtml", {
-							    value: '<div class="img"><img src="' + output_url + '"></div>'
-							});
+							if (file_type.split("/")[0] === "image") {
+								that.editor.execAction("insertHtml", {
+								    value: '<div><img src="' + output_url + '"></div>'
+								});
+							} else if (file_type.split("/")[0] === "audio") {
+								that.editor.execAction("insertHtml", {
+								    value: '<div><audio src="' + output_url + '" controls></audio></div>' // TODO: Remove or rename img class?
+								});
+							} else if (file_type.split("/")[0] === "video") {
+								that.editor.execAction("insertHtml", {
+								    value: '<div><video src="' + output_url + '" controls></video></div>'
+								});
+							} else {
+								that.editor.execAction("insertHtml", {
+								    value: ' <a class="file" href="' + output_url + '" download>Download File</a> '
+								});
+							}
 						});
 						
 					};
@@ -243,12 +258,12 @@ var Newstory = {
 						<small>Note: Make sure the editor is in focus <em>before</em> selecting a photo to upload.</small>
 						<div class="file is-info" style="margin-bottom: 30px; margin-top: 5px;">
 							<label class="file-label">
-								<input class="file-input" type="file" accept="image/*" id="imageUpload" v-on:change="uploadImage()">
+								<input class="file-input" type="file" accept="image/*,audio/*,video/*" id="imageUpload" v-on:change="uploadFile()">
 								<span class="file-cta">
 									<span class="file-icon">
 										<i class="fa fa-upload"></i>
 									</span>
-									<span class="file-label">Upload an Image...</span>
+									<span class="file-label">Upload a File...</span>
 								</span>
 							</label>
 						</div>

@@ -184,6 +184,34 @@ class ZeroApp extends ZeroFrame {
         }
     }
 
+    showAudio(elem, location, width, height) {
+        var inner_path = location.replace(/(http:\/\/)?127.0.0.1:43110\//, '').replace(/(https:\/\/)?127.0.0.1:43110\//, '').replace(/18GAQeWN4B7Uum6rvJL2zh9oe4VfcnTM18\//, '').replace(/1CVmbCKWtbskK2GAZLM6gnMuiL6Je25Yds\//, '').replace(/ZeroMedium.bit\//, '');
+
+        if (height === 0 && width === 0) {
+            elem.parentElement.innerHTML = "<audio src='" + location + "' controls></audio>";
+        } else if (height === 0) {
+            elem.parentElement.innerHTML = "<audio src='" + location + "' width='" + width + "' controls></audio>";    
+        } else if (width === 0) {
+            elem.parentElement.innerHTML = "<audio src='" + location + "' height='" + height + "' controls></audio>";
+        } else {
+            elem.parentElement.innerHTML = "<audio src='" + location + "' width='" + width + "' height='" + height + "' controls></audio>";
+        }
+    }
+
+    showVideo(elem, location, width, height) {
+        var inner_path = location.replace(/(http:\/\/)?127.0.0.1:43110\//, '').replace(/(https:\/\/)?127.0.0.1:43110\//, '').replace(/18GAQeWN4B7Uum6rvJL2zh9oe4VfcnTM18\//, '').replace(/1CVmbCKWtbskK2GAZLM6gnMuiL6Je25Yds\//, '').replace(/ZeroMedium.bit\//, '');
+
+        if (height === 0 && width === 0) {
+            elem.parentElement.innerHTML = "<video src='" + location + "' controls></video>";
+        } else if (height === 0) {
+            elem.parentElement.innerHTML = "<video src='" + location + "' width='" + width + "' controls></video>";    
+        } else if (width === 0) {
+            elem.parentElement.innerHTML = "<video src='" + location + "' height='" + height + "' controls></video>";
+        } else {
+            elem.parentElement.innerHTML = "<video src='" + location + "' width='" + width + "' height='" + height + "' controls></video>";
+        }
+    }
+
     getTopics(f = null) {
         page.cmd("dbQuery", ["SELECT * FROM topics"], (topics) => {
             if (f != null && typeof f === "function") {
@@ -280,10 +308,12 @@ class ZeroApp extends ZeroFrame {
 
     sanitizeHtml(text) {
         return sanitizeHtml(text, {
-            allowedTags: ["b", "i", "em", "strong", "u", "a", "h1", "h2", "h3", "h4", "h5", "h6", "p", "br", "div", "blockquote", "code", "strike", "ul", "li", "ol", "nl", "hr", "table", "thead", "caption", "tbody", "tr", "th", "td", "pre", "span", "img"],
+            allowedTags: ["b", "i", "em", "strong", "u", "a", "h1", "h2", "h3", "h4", "h5", "h6", "p", "br", "div", "blockquote", "code", "strike", "ul", "li", "ol", "nl", "hr", "table", "thead", "caption", "tbody", "tr", "th", "td", "pre", "span", "img", "audio", "video"],
             allowedAttributes: {
                 "a": [ "href", "name", "target", "align" ],
                 "img": [ "src", "align", "width", "height"],
+                "audio": [ "src", "align", "width", "height", "controls"],
+                "video": [ "src", "align", "width", "height", "controls"],
                 "div": [ "align" ],
                 "p": [ "align" ],
                 "h1": [ "align" ],
@@ -302,7 +332,9 @@ class ZeroApp extends ZeroFrame {
                 "table": [ "align" ]
             },
             allowedSchemesByTag: {
-              img: [ "data" ]
+              img: [ "data" ],
+              audio: [ "data" ],
+              video: [ "data" ]
             }
         });
     }
@@ -806,7 +838,7 @@ class ZeroApp extends ZeroFrame {
             if (!data) return;
             data = JSON.parse(data);
 
-            var curoptional = ".+\\.(png|jpg|jpeg|gif|mp3|ogg|mp4)";
+            var curoptional = ".+\\.(png|jpg|jpeg|gif|mp3|flac|ogg|mp4)";
             var changed = false;
             if (!data.hasOwnProperty("optional") || data.optional !== curoptional){
                 data.optional = curoptional
@@ -816,7 +848,7 @@ class ZeroApp extends ZeroFrame {
             var json_raw = unescape(encodeURIComponent(JSON.stringify(data, undefined, "\t")));
 
             if (changed) {
-                // Write (and Sign and Publish is doSignPublish=true)
+                // Write (and Sign and Publish is doSignPublish)
                 page.cmd("fileWrite", [content_inner_path, btoa(json_raw)], (res) => {
                     if (res === "ok") {
                         if (f != null && typeof f === "function") f();
@@ -826,9 +858,7 @@ class ZeroApp extends ZeroFrame {
                             });
                         }
                     } else {
-                        page.cmd("wrapperNotification", [
-                            "error", "File write error: " + JSON.stringify(res)
-                        ]);
+                        page.cmd("wrapperNotification", ["error", "File write error: " + JSON.stringify(res)]);
                     }
                 });
             } else {
@@ -851,8 +881,8 @@ class ZeroApp extends ZeroFrame {
 
                 data = JSON.parse(data);
 
-                if (!data["images"]) {
-                    data["images"] = [];
+                if (!data["files"]) {
+                    data["files"] = [];
                 }
 
                 var date_added = Date.now();
@@ -862,11 +892,13 @@ class ZeroApp extends ZeroFrame {
                 // [^] matches anything that is NOT within the brackets, therefore
                 // [^\x00-\x7F] will match anything that is NOT ascii
                 var orig_filename_list = file.name.split(".");
-                var filename = orig_filename_list[0].replace(/\s/g, "_").replace(/[^\x00-\x7F]/g, "") + "-" + date_added + "." + orig_filename_list[1];
-                console.log(filename);
+                var filename = orig_filename_list[0].replace(/\s/g, "_").replace(/[^\x00-\x7F]/g, "") + "-" + date_added + "." + orig_filename_list[orig_filename_list.length - 1];
 
-                data["images"].push({
+                console.log(file.type);
+
+                data["files"].push({
                     "file_name": filename,
+                    "type": file.type,
                     "date_added": date_added
                 });
 
