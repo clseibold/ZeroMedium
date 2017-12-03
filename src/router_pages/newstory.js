@@ -209,7 +209,7 @@ var Newstory = {
 			for (let fX in files) {
 				let fY = files[fX];
 
-				if (!fY || typeof fY !== "object" || !fY.type.match("(image)\/(png|jpg|jpeg|gif)|(audio)\/(mp3|flac|ogg)|(video)\/(ogg|mp4)")) { // |audio|video      || !fY.name.match(/\.IMAGETYPE$/gm)
+				if (!fY || typeof fY !== "object" || !fY.type.match("(image)\/(png|jpg|jpeg|gif)|(audio)\/(mp3|flac|ogg)|(video)\/(ogg|mp4|webm)")) { // |audio|video      || !fY.name.match(/\.IMAGETYPE$/gm)
 					page.cmd("wrapperNotification", ["error", "That file type is not supported."]);
 					continue;
 				}
