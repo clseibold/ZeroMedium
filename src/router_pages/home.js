@@ -120,7 +120,7 @@ var Home = {
                             <strong>Current Version:</strong> <a href="?/12gAes6NzDS9E2q6Q1UXrpUdbPS6nvuBPu/version-info" v-on:click.prevent="goto('12gAes6NzDS9E2q6Q1UXrpUdbPS6nvuBPu/version-info')">{{ version }} beta</a>
                             <br>
                             <small>
-                                To report a bug, click on the 'Report Bug' link in the navbar. You will be redirected to the Git Center Repo. Create an issue with the tags: "{{ version }} beta" and "bug".<br>
+                                To report a bug, click on the 'Report Bug' link in the navbar. You will be redirected to the Git Center Repo. Create an issue with the tags: "{{ version }} beta" and "bug".<br><br>
                                 <em>Note:</em> When the next release comes into BETA, all user content (with exception to user profile info) will be deleted.
                             </small>
                         </div>
