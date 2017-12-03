@@ -642,159 +642,159 @@
 	"topics_zh": [
 		{
 			"id": 1,
-			"name": "Staff Picks",
-			"slug": "staff-picks",
+			"name": "推荐内容",
+			"slug": "推荐内容",
 			"tags": ""
 		},
 		{
 			"id": 2,
-			"name": "Programming",
-			"slug": "programming",
-			"tags": "programming,developer,javascript,python,c,c++,rust,html,css,sass,scss,java,php,node,nodejs,go,golang,functional,object-oriented,oo,oop,declarative,imperative,procedural,fortran,haskell,dev,zeronet dev center,dev center,webpack,,nodejs,gulp"
+			"name": "编程",
+			"slug": "编程",
+			"tags": "编程,开发者,javascript,python,c,c++,rust,html,css,sass,scss,java,php,node,nodejs,go,golang,functional,object-oriented,oo,oop,declarative,imperative,procedural,fortran,haskell,dev,zeronet dev center,dev center,webpack,,nodejs,gulp"
 		},
 		{
 			"id": 3,
-			"name": "Technology",
-			"slug": "technology",
-			"tags": "programming,windows,linux,mac,macos,operating system,os,computer,phone,smart phone,zeronet,distributed,internet,robot,robots"
+			"name": "科技",
+			"slug": "科技",
+			"tags": "编程,windows,linux,mac,macos,操作系统,os,计算机,手机,智能手机,zeronet,分布式,互联网,机器人"
 		},
 		{
 			"id": 4,
-			"name": "Politics",
-			"slug": "politics",
-			"tags": "politics,communism,capitalism"
+			"name": "政治",
+			"slug": "政治",
+			"tags": "政治,共产主义,资本主义"
 		},
 		{
 			"id": 5,
-			"name": "Creativity",
-			"slug": "creativity",
-			"tags": "creativity,art"
+			"name": "创意",
+			"slug": "创意",
+			"tags": "创意,艺术"
 		},
 		{
 			"id": 6,
-			"name": "Culture",
-			"slug": "culture",
-			"tags": "culture"
+			"name": "文化",
+			"slug": "文化",
+			"tags": "文化"
 		},
 		{
 			"id": 7,
-			"name": "Art",
-			"slug": "art",
-			"tags": "art,poem,poetry"
+			"name": "艺术",
+			"slug": "艺术",
+			"tags": "文化,诗歌,诗集"
 		},
 		{
 			"id": 8,
-			"name": "Film",
-			"slug": "film",
-			"tags": "film,movie"
+			"name": "影视",
+			"slug": "影视",
+			"tags": "影视,电影"
 		},
 		{
 			"id": 9,
-			"name": "Food",
-			"slug": "food",
-			"tags": "food"
+			"name": "美食",
+			"slug": "美食",
+			"tags": "美食"
 		},
 		{
 			"id": 10,
-			"name": "Humor",
-			"slug": "humor",
-			"tags": "humor"
+			"name": "幽默",
+			"slug": "幽默",
+			"tags": "幽默"
 		},
 		{
 			"id": 11,
-			"name": "Lit",
-			"slug": "lit",
-			"tags": "lit,literature,books,contemporary,classic,story,poem,poetry"
+			"name": "文学",
+			"slug": "文学",
+			"tags": "文学,图书,当代,经典,故事,诗歌,诗集"
 		},
 		{
 			"id": 12,
-			"name": "Music",
-			"slug": "music",
-			"tags": "music,pop,country,rnb,soul,classical,rap"
+			"name": "音乐",
+			"slug": "音乐",
+			"tags": "音乐,流行,乡村,r&b,灵魂,经典,绕舌"
 		},
 		{
 			"id": 13,
-			"name": "Photography",
-			"slug": "photography",
-			"tags": "photography,photo,foto"
+			"name": "摄影",
+			"slug": "摄影",
+			"tags": "摄影,照片"
 		},
 		{
 			"id": 14,
-			"name": "Social media",
-			"slug": "social-media",
-			"tags": "social-media,social media,zerome,facebook,twitter,zerotalk,zerovoat"
+			"name": "社交媒体",
+			"slug": "社交媒体",
+			"tags": "社交媒体,zerome,facebook,twitter,zerotalk,zerovoat"
 		},
 		{
 			"id": 15,
-			"name": "Sports",
-			"slug": "sports",
-			"tags": "sports,football,soccer,baseball,american football,golf,competition,nfl,nba,super bowl"
+			"name": "体育",
+			"slug": "体育",
+			"tags": "体育,足球,英式足球,棒球,美式足球,高尔夫,比赛,NFL,NBA,超级橄榄球赛"
 		},
 		{
 			"id": 16,
-			"name": "Business",
-			"slug": "business",
-			"tags": "business,company,non-profit,for-profit,profit,for profit"
+			"name": "商业",
+			"slug": "商业",
+			"tags": "商业,公司,非盈利,盈利"
 		},
 		{
 			"id": 17,
-			"name": "Economy",
-			"slug": "economy",
-			"tags": "economy,global economy,money,stock,stock exchange,bitcoin,namecoin,litecoin,crypto,cryptocurrency"
+			"name": "经济",
+			"slug": "经济",
+			"tags": "经济,全球经济,金钱,股票,股票交易,比特币,域名币,莱特币,加密,数字加密货币"
 		},
 		{
 			"id": 18,
-			"name": "Entrepreneurship",
-			"slug": "entrepreneurship",
-			"tags": "entrepreneurship,company"
+			"name": "企业家",
+			"slug": "企业家",
+			"tags": "企业家,公司"
 		},
 		{
 			"id": 19,
-			"name": "Freelancing",
-			"slug": "freelancing",
-			"tags": "freelancing"
+			"name": "自由工作者",
+			"slug": "自由工作者",
+			"tags": "自由工作者"
 		},
 		{
 			"id": 20,
-			"name": "Marketing",
-			"slug": "marketing",
-			"tags": "marketing"
+			"name": "市场营销",
+			"slug": "市场营销",
+			"tags": "市场营销"
 		},
 		{
 			"id": 21,
-			"name": "Productivity",
-			"slug": "productivity",
-			"tags": "productivity"
+			"name": "生产力",
+			"slug": "生产力",
+			"tags": "生产力"
 		},
 		{
 			"id": 22,
-			"name": "Work",
-			"slug": "work",
-			"tags": "work"
+			"name": "工作",
+			"slug": "工作",
+			"tags": "工作"
 		},
 		{
 			"id": 23,
-			"name": "Artificial Intelligence",
-			"slug": "artificial-intelligence",
-			"tags": "artificial intelligence,ai"
+			"name": "人工智能",
+			"slug": "人工智能",
+			"tags": "人工智能,AI"
 		},
 		{
 			"id": 24,
-			"name": "Cybersecurity",
-			"slug": "cybersecurity",
-			"tags": "cybersecurity,ssl,tls,bitcoin,zerome,crypto,cryptocurrency"
+			"name": "网络安全",
+			"slug": "网络安全",
+			"tags": "网络安全,ssl,tls,bitcoin,zerome,加密,数字加密货币"
 		},
 		{
 			"id": 25,
-			"name": "Data science",
-			"slug": "data-science",
-			"tags": "data science,data,data structure,struct,object"
+			"name": "数据科学",
+			"slug": "数据科学",
+			"tags": "数据科学,数据,数据结构,结构,目标"
 		},
 		{
 			"id": 26,
-			"name": "Digital design",
-			"slug": "digital-design",
-			"tags": "digital design"
+			"name": "数字设计",
+			"slug": "数字设计",
+			"tags": "数字设计"
 		},
 		{
 			"id": 27,
@@ -810,153 +810,153 @@
 		},
 		{
 			"id": 29,
-			"name": "Math",
-			"slug": "math",
-			"tags": "math,maths,mathematics,algebra,calculus,geometry,linear algebra"
+			"name": "数学",
+			"slug": "数学",
+			"tags": "数学,代数,微积分,几何,线性代数"
 		},
 		{
 			"id": 30,
-			"name": "Neuroscience",
-			"slug": "neuroscience",
-			"tags": "neuroscience"
+			"name": "神经学",
+			"slug": "神经学",
+			"tags": "神经学"
 		},
 		{
 			"id": 31,
-			"name": "Science",
-			"slug": "science",
-			"tags": "science,neuroscience"
+			"name": "科学",
+			"slug": "科学",
+			"tags": "科学,神经学"
 		},
 		{
 			"id": 32,
-			"name": "Software engineering",
-			"slug": "software-engineering",
-			"tags": "software engineering,software,programming,software design"
+			"name": "软件工程",
+			"slug": "软件工程",
+			"tags": "软件工程,软件,编程,软件设计"
 		},
 		{
 			"id": 33,
-			"name": "Space",
-			"slug": "space",
-			"tags": "space,planet,star,sun,solar system"
+			"name": "太空",
+			"slug": "太空",
+			"tags": "太空,行星,恒星,太阳,太阳系"
 		},
 		{
 			"id": 34,
-			"name": "Family",
-			"slug": "family",
-			"tags": "family"
+			"name": "家庭",
+			"slug": "家庭",
+			"tags": "家庭"
 		},
 		{
 			"id": 35,
-			"name": "Health",
-			"slug": "health",
-			"tags": "health,doctor,hospital,diet"
+			"name": "健康",
+			"slug": "健康",
+			"tags": "健康,医生,医院,节食"
 		},
 		{
 			"id": 36,
-			"name": "Mental Health",
-			"slug": "mental-health",
-			"tags": "mental health,pychological health"
+			"name": "心理健康",
+			"slug": "心理健康",
+			"tags": "精神健康,心理健康"
 		},
 		{
 			"id": 37,
-			"name": "Psychology",
-			"slug": "psychology",
-			"tags": "psychology"
+			"name": "心理学",
+			"slug": "心理学",
+			"tags": "心理学"
 		},
 		{
 			"id": 38,
-			"name": "Relationships",
-			"slug": "relationships",
-			"tags": "relationships,boyfriend,girlfriend"
+			"name": "恋爱",
+			"slug": "恋爱",
+			"tags": "恋爱,男朋友,女朋友"
 		},
 		{
 			"id": 39,
-			"name": "Self",
-			"slug": "self",
-			"tags": "self"
+			"name": "自我",
+			"slug": "自我",
+			"tags": "自我"
 		},
 		{
 			"id": 40,
-			"name": "Sexuality",
-			"slug": "sexuality",
-			"tags": "sexuality,gay,lesbian,straight,bi,bisexual,homosexual,heterosexual"
+			"name": "性",
+			"slug": "性",
+			"tags": "性,男同,女同,异姓恋,双性恋"
 		},
 		{
 			"id": 41,
-			"name": "Spirituality",
-			"slug": "spirituality",
-			"tags": "spirituality,religion"
+			"name": "信仰",
+			"slug": "信仰",
+			"tags": "信仰,宗教"
 		},
 		{
 			"id": 42,
-			"name": "Travel",
-			"slug": "travel",
-			"tags": "travel"
+			"name": "旅行",
+			"slug": "旅行",
+			"tags": "旅行"
 		},
 		{
 			"id": 43,
-			"name": "Wellness",
-			"slug": "wellness",
-			"tags": "wellness,happy,lifestyle"
+			"name": "健康",
+			"slug": "健康",
+			"tags": "健康,幸福,生活方式"
 		},
 		{
 			"id": 44,
-			"name": "Basic income",
-			"slug": "basic-income",
-			"tags": "basic income"
+			"name": "基本收入",
+			"slug": "基本收入",
+			"tags": "基本收入"
 		},
 		{
 			"id": 45,
-			"name": "Education",
-			"slug": "education",
-			"tags": "education,school,college,uni,university"
+			"name": "教育",
+			"slug": "教育",
+			"tags": "教育,学校,大学"
 		},
 		{
 			"id": 46,
-			"name": "Environment",
-			"slug": "environment",
-			"tags": "environment"
+			"name": "环境",
+			"slug": "环境",
+			"tags": "环境"
 		},
 		{
 			"id": 47,
-			"name": "Equality",
-			"slug": "equality",
-			"tags": "equality,state,country"
+			"name": "平等",
+			"slug": "平等",
+			"tags": "平等,环境,州,国家"
 		},
 		{
 			"id": 48,
-			"name": "Future",
-			"slug": "future",
-			"tags": "future"
+			"name": "未来",
+			"slug": "未来",
+			"tags": "未来"
 		},
 		{
 			"id": 49,
-			"name": "History",
-			"slug": "history",
-			"tags": "history"
+			"name": "历史",
+			"slug": "历史",
+			"tags": "历史"
 		},
 		{
 			"id": 50,
-			"name": "Media",
-			"slug": "media",
-			"tags": "media,tv,film,social media,show,news"
+			"name": "媒体",
+			"slug": "媒体",
+			"tags": "媒体,电视,电影,社会媒体,演出,新闻"
 		},
 		{
 			"id": 51,
-			"name": "Philosophy",
-			"slug": "philosophy",
-			"tags": "philosophy"
+			"name": "哲学",
+			"slug": "哲学",
+			"tags": "哲学"
 		},
 		{
 			"id": 52,
-			"name": "World",
-			"slug": "world",
-			"tags": "world"
+			"name": "世界",
+			"slug": "世界",
+			"tags": "世界"
 		},
 		{
 			"id": 53,
-			"name": "Video games",
-			"slug": "video-games",
-			"tags": "video game,computer game,pc game,mac game,linux game,steam,curse"
+			"name": "视频游戏",
+			"slug": "视频游戏",
+			"tags": "视频游戏,pc game,mac game,linux game,steam"
 		}
 	]
 }
