@@ -1,13 +1,14 @@
 var Vue = require("vue/dist/vue.min.js");
 var Router = require("../router.js");
-var moment = require('moment');
+// var moment = require("moment");
 var { cache_add, cache_replace, cache_remove, cache_get, cache_getOrAdd, cache_exists, cache_clear } = require("../cache.js");
 
 var Home = {
-    props: ['userInfo'],
+    props: ["userInfo"],
     beforeMount: function() {
         this.$emit("navbar-shadow-off");
         var that = this;
+
         if (cache_exists("home_topics")) {
             this.topics = cache_get("home_topics");
         } else {
@@ -20,16 +21,21 @@ var Home = {
     },
     computed: {
         isLoggedIn: function() {
-            if (!this.userInfo || this.userInfo == null) return false;
+            if (!this.userInfo || this.userInfo == null) {
+                return false;
+            }
             return this.userInfo.cert_user_id != null;
         }
     },
     methods: {
         getStories: function() {
             var that = this;
+
             that.recentStories = [];
             that.topStories = [];
+
             var now = Date.now();
+
             if (cache_exists("home_recentStories") && cache_exists("home_topStories")) {
                 that.recentStories = cache_get("home_recentStories");
                 that.topStories = cache_get("home_topStories");
@@ -48,11 +54,12 @@ var Home = {
                 story["responses"] = responses;
                 story["claps"] = claps;
 
-                //return (now - story.date_added) < 8.64e+7;
+                // return (now - story.date_added) < 8.64e+7;
                 return true;
             }, (stories) => {
                 // Limit to 5 stories for putting into recent stories
                 var newRecentStories = [];
+                
                 for (i = 0; newRecentStories.length < 5 && i < stories.length; i++) {
                     newRecentStories.push(stories[i]);
                 }
@@ -65,6 +72,7 @@ var Home = {
                 });
 
                 var newTopStories = [];
+
                 for (i = 0; newTopStories.length < 5 && i < stories.length; i++) {
                     newTopStories.push(stories[i]);
                 }
@@ -73,7 +81,7 @@ var Home = {
             });
         },
         showSigninModal: function() {
-            //this.signin_modal_visible = !this.signin_modal_visible;
+            // this.signin_modal_visible = !this.signin_modal_visible;
             this.$emit('show-signin-modal');
         },
         topicClick: function(slug) {
@@ -123,7 +131,7 @@ var Home = {
         `
 };
 
-Vue.component('home-hero', {
+Vue.component("home-hero", {
     methods: {
         showSigninModal: function() {
             this.$emit("show-signin-modal");
@@ -146,8 +154,8 @@ Vue.component('home-hero', {
         `
 });
 
-Vue.component('home-user-interests', {
-    props: ['userInfo'],
+Vue.component("home-user-interests", {
+    props: ["userInfo"],
     computed: {
         getInterests: function() {
             return this.userInfo.keyvalue.interests.split(",");
@@ -158,7 +166,7 @@ Vue.component('home-user-interests', {
             Router.navigate(to);
         },
         getInterestSlug: function(name) {
-            return name.toLowerCase().replace(/ /, '-');
+            return name.toLowerCase().replace(/ /, "-");
         }
     },
     template: `

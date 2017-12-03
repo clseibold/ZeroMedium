@@ -1,11 +1,10 @@
-var Vue = require("vue/dist/vue.min.js");
-var Router = require("../router.js");
+// var Vue = require("vue/dist/vue.min.js");
+// var Router = require("../router.js");
 
 var Help = {
-	props: ['userInfo'],
+	props: ["userInfo"],
 	beforeMount: function() {
-		this.$emit('navbar-shadow-on');
-		var that = this;
+		this.$emit("navbar-shadow-on");
 	},
 	template: `
 		<div>

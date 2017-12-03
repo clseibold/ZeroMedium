@@ -6,7 +6,7 @@ var MediumEditorAutolist = require("../medium-editor-plugins/inline-markdown");
 var Router = require("../router.js");
 
 var ResponseFullscreenEditor = {
-	props: ["userInfo", 'responseContent'],
+	props: ["userInfo", "responseContent"],
 	data: function() {
 		return {
 			story: null, // Change to reference?
@@ -14,15 +14,16 @@ var ResponseFullscreenEditor = {
 			referenceAuthor: "",
 			referenceProfileInfo: null,
 			editor: null,
-			title: '',
-			status: 'Unsaved changes',
-			mobileTags: '',
-			mobileDescription: ''
-		}
+			title: "",
+			status: "Unsaved changes",
+			mobileTags: "",
+			mobileDescription: ""
+		};
 	},
 	beforeMount: function() {
-		this.$emit('navbar-shadow-off');
+		this.$emit("navbar-shadow-off");
 		var that = this;
+
 		if (Router.currentParams["slug"]) {
 			// Respond to story
 			page.getUserProfileInfo(Router.currentParams["userauthaddress"], false, false, (profileInfo) => {
@@ -45,26 +46,27 @@ var ResponseFullscreenEditor = {
 	},
 	mounted: function() {
 		var autolist = new MediumEditorAutolist();
-		this.editor = new MediumEditor('.editable', {
+
+		this.editor = new MediumEditor(".editable", {
 			placeholder: {
 				text: "Write a response...",
 				hideOnClick: false
 			},
 			toolbar: {
-				buttons: ['bold', 'italic', 'underline', 'anchor', 'h2', 'h3', 'unorderedlist', 'orderedlist', 'quote'] // Got rid of 'quote'
+				buttons: ["bold", "italic", "underline", "anchor", "h2", "h3", "unorderedlist", "orderedlist", "quote"]
 			},
 			buttonLabels: "fontawesome",
 			anchor: {
 		        customClassOption: null,
-		        customClassOptionText: 'Button',
+		        customClassOptionText: "Button",
 		        linkValidation: false,
-		        placeholderText: 'Paste or type a link',
+		        placeholderText: "Paste or type a link",
 		        targetCheckbox: false,
-		        targetCheckboxText: 'Open in new window'
+		        targetCheckboxText: "Open in new window"
 		    },
 		    autoLink: true,
 		    extensions: {
-		        'autolist': autolist
+		        "autolist": autolist
 		    },
     	    keyboardCommands: {
     		    commands: [
@@ -187,7 +189,7 @@ var ResponseFullscreenEditor = {
 		    }*/
 		});
 
-		if (this.responseContent && this.responseContent != "") {
+		if (this.responseContent && this.responseContent !== "") {
 			this.editor.setContent(this.responseContent);	
 		}
 	},
@@ -197,15 +199,21 @@ var ResponseFullscreenEditor = {
 		},
 		publish: function(tags, description) {
 			var that = this;
+
+			if (this.editor.getContent() === "") { // TODO: Doesn't work all of the time
+				page.cmd("wrapperNotification", ["error", "You cannot post an empty response."]);
+				return;
+			}
+
 			if (this.story) {
-				page.postResponse(this.referenceProfileInfo.auth_address, this.story.story_id, 's', this.editor.getContent(), function() {
+				page.postResponse(this.referenceProfileInfo.auth_address, this.story.story_id, "s", this.editor.getContent(), function() {
 					that.editor.resetContent();
-					Router.navigate(that.referenceProfileInfo.auth_address + '/' + that.story.slug);
+					Router.navigate(that.referenceProfileInfo.auth_address + "/" + that.story.slug);
 				});
 			} else if (this.response) {
-				page.postResponse(this.referenceProfileInfo.auth_address, this.response.response_id, 'r', this.editor.getContent(), function() {
+				page.postResponse(this.referenceProfileInfo.auth_address, this.response.response_id, "r", this.editor.getContent(), function() {
 					that.editor.resetContent();
-					Router.navigate(that.referenceProfileInfo.auth_address + '/response/' + that.response.response_id);
+					Router.navigate(that.referenceProfileInfo.auth_address + "/response/" + that.response.response_id);
 				});
 			}
 		},
@@ -238,14 +246,14 @@ var ResponseFullscreenEditor = {
 		`
 };
 
-Vue.component('response-editor-nav', {
-	props: ['value'],
+Vue.component("response-editor-nav", {
+	props: ["value"],
 	methods: {
 		publish: function() {
-			this.$emit('publish');
+			this.$emit("publish");
 		},
 		save: function() {
-			this.$emit('save');
+			this.$emit("save");
 		}
 	},
 	template: `

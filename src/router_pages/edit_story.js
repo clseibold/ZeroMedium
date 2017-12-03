@@ -1,8 +1,8 @@
-var Vue = require("vue/dist/vue.min.js");
+// var Vue = require("vue/dist/vue.min.js");
 var MediumEditor = require("medium-editor/dist/js/medium-editor");
 var MediumEditorAutolist = require("../medium-editor-plugins/inline-markdown");
 // Medium Editor Tables has problems with requirejs
-//var MediumEditorTable = require("medium-editor-tables/dist/js/medium-editor-tables");
+// var MediumEditorTable = require("medium-editor-tables/dist/js/medium-editor-tables");
 var Router = require("../router.js");
 var { sanitizeStringForUrl } = require("../util.js");
 var { cache_add, cache_replace, cache_remove, cache_get, cache_getOrAdd, cache_exists, cache_clear } = require("../cache.js");
@@ -13,22 +13,22 @@ var EditStory = {
 		return {
 			profileInfo: null,
 			story: null,
-			title: '',
-			storyLanguage: '',
-			status: 'Unsaved changes'
-		}
+			title: "",
+			storyLanguage: "",
+			status: "Unsaved changes"
+		};
 	},
 	beforeMount: function() {
-		this.$emit('navbar-shadow-on');
+		this.$emit("navbar-shadow-on");
 		if (this.userInfo) {
 			this.getStory(this.userInfo);
 		} else {
-			this.$parent.$on('setUserInfo', this.getStory);
+			this.$parent.$on("setUserInfo", this.getStory);
 		}
 	},
 	methods: {
 		getStory: function(userInfo) {
-			/*page.getUserProfileInfo(userInfo.auth_address, false, (profileInfo) => {
+			/* page.getUserProfileInfo(userInfo.auth_address, false, (profileInfo) => {
 				that.profileInfo = profileInfo;
 				page.getStory(userInfo.auth_address, Router.currentParams["slug"], (story) => {
 					that.story = story;
@@ -38,150 +38,151 @@ var EditStory = {
 				});
 			});*/
 			var that = this;
+
 			page.getStory(userInfo.auth_address, Router.currentParams["slug"], (story) => {
 				that.title = story.title;
 				that.storyLanguage = story.language;
 				that.story = story;
-				console.log(story.language)
-				that.$emit('setDefaults', story.tags, story.description);
+				that.$emit("setDefaults", story.tags, story.description);
 				that.createEditor();
 			});
 		},
 		createEditor: function() {
 			var autolist = new MediumEditorAutolist();
-			this.editor = new MediumEditor('.editable', {
+
+			this.editor = new MediumEditor(".editable", {
 				imageDragging: true,
 				placeholder: {
 					text: "Tell your story...",
 					hideOnClick: true
 				},
 				toolbar: {
-					buttons: ['bold', 'italic', 'underline', 'anchor', 'h2', 'h3', 'unorderedlist', 'orderedlist', 'quote'] // Got rid of 'quote'
+					buttons: ["bold", "italic", "underline", "anchor", "h2", "h3", "unorderedlist", "orderedlist", "quote"]
 				},
 				buttonLabels: "fontawesome",
 				anchor: {
 			        /* These are the default options for anchor form,
 			           if nothing is passed this is what it used */
 			        customClassOption: null,
-			        customClassOptionText: 'Button',
+			        customClassOptionText: "Button",
 			        linkValidation: false,
-			        placeholderText: 'Paste or type a link',
+			        placeholderText: "Paste or type a link",
 			        targetCheckbox: false,
-			        targetCheckboxText: 'Open in new window'
+			        targetCheckboxText: "Open in new window"
 			    },
 			    autoLink: true,
 			    extensions: {
-			        'autolist': autolist
+			        "autolist": autolist
 			    },
 	    	    keyboardCommands: {
 	    		    commands: [
 	                    {
-	                        command: 'bold',
+	                        command: "bold",
 	                        key: 'B',
 	                        meta: true,
 	                        shift: false,
 	                        alt: false
 	                    },
 	                    {
-	                        command: 'italic',
+	                        command: "italic",
 	                        key: 'I',
 	                        meta: true,
 	                        shift: false,
 	                        alt: false
 	                    },
 	                    {
-	                        command: 'underline',
+	                        command: "underline",
 	                        key: 'U',
 	                        meta: true,
 	                        shift: false,
 	                        alt: false
 	                    },
 	                    {
-	                    	command: 'append-h2',
+	                    	command: "append-h2",
 	                    	key: '2',
 	                    	meta: true,
 	                    	shift: false,
 	                    	alt: false
 	                    },
 	                    {
-	                    	command: 'append-h3',
+	                    	command: "append-h3",
 	                    	key: '3',
 	                    	meta: true,
 	                    	shift: false,
 	                    	alt: false
 	                    },
 	                    {
-	                    	command: 'append-blockquote',
+	                    	command: "append-blockquote",
 	                    	key: 'Q',
 	                    	meta: true,
 	                    	shift: false,
 	                    	alt: false
 	                    },
 	                    {
-	                    	command: 'strikeThrough', // TODO: change this to something else?
+	                    	command: "strikeThrough", // TODO: change this to something else?
 	                    	key: 'S',
 	                    	meta: true,
 	                    	shift: false,
 	                    	alt: false
 	                    },
 	                    {
-	                    	command: 'superscript',
+	                    	command: "superscript",
 	                    	key: '6',
 	                    	meta: true,
 	                    	shift: true,
 	                    	alt: false
 	                    },
 	                    {
-	                    	command: 'subscript',
+	                    	command: "subscript",
 	                    	key: '6',
 	                    	meta: true,
 	                    	shift: false,
 	                    	alt: false
 	                    },
 	                    {
-	                    	command: 'insertUnorderedList',
+	                    	command: "insertUnorderedList",
 	                    	key: '8',
 	                    	meta: true,
 	                    	shift: true,
 	                    	alt: false
 	                    },
 	                    {
-	                    	command: 'insertOrderedList',
+	                    	command: "insertOrderedList",
 	                    	key: '8',
 	                    	meta: true,
 	                    	shift: false,
 	                    	alt: false
 	                    },
 	                    {
-	                    	command: 'insertHorizontalRule',
+	                    	command: "insertHorizontalRule",
 	                    	key: 'H',
 	                    	meta: true,
 	                    	shift: false,
 	                    	alt: false
 	                    },
 	                    {
-	                    	command: 'justifyCenter',
+	                    	command: "justifyCenter",
 	                    	key: 'E',
 	                    	meta: true,
 	                    	shift: false,
 	                    	alt: false
 	                    },
 	                    {
-	                    	command: 'justifyRight',
+	                    	command: "justifyRight",
 	                    	key: 'R',
 	                    	meta: true,
 	                    	shift: false,
 	                    	alt: false
 	                    },
 	                    {
-	                    	command: 'justifyLeft',
+	                    	command: "justifyLeft",
 	                    	key: 'L',
 	                    	meta: true,
 	                    	shift: false,
 	                    	alt: false
 	                    },
 	                    {
-	                    	command: 'justifyFull',
+	                    	command: "justifyFull",
 	                    	key: 'J',
 	                    	meta: true,
 	                    	shift: false,
@@ -189,23 +190,59 @@ var EditStory = {
 	                    }
 	                ]
 	            }
-			    /*extensions: {
-			    	table: new MediumEditorTable()
-			    }*/
 			});
 			this.editor.setContent(this.story.body);
 		},
 		publish: function(tags, description, language) {
 			var that = this;
-			if (language == '') language = null;
+			if (language == "") language = null;
 			page.editStory(this.story.story_id, this.title, description, this.editor.getContent(), tags, language, function(storySlug) {
 				//cache_clear();
 				Router.navigate(that.userInfo.auth_address + '/' + storySlug);
 			});
 		},
 		save: function(tags, description, language) {
-			if (language == '') language = null;
+			if (language == "") language = null;
 			page.unimplemented();
+		},
+		uploadImage: function() {
+			if (!window.File || !window.FileReader || !window.FileList || !window.Blob) {
+				alert("The File APIs are not fully supported in this browser.");
+				return;
+			}
+
+			var that = this;
+			var imageUpload = document.getElementById("imageUpload");
+			var files = imageUpload.files;
+
+			if (!files) {
+				return;
+			}
+
+			for (let fX in files) {
+				let fY = files[fX];
+
+				if (!fY || typeof fY !== "object" || !fY.type.match("(image)\/(png|jpg|jpeg|gif)|(audio)\/(mp3|ogg)|(video)\/(ogg|mp4)")) // |audio|video      || !fY.name.match(/\.IMAGETYPE$/gm)
+					continue;
+
+				let reader = new FileReader();
+				reader.onload = function(event) {
+						//console.log("Reading ", fY, "with event ", event);
+
+						let f_data = btoa(event.target.result);
+
+						page.uploadImage(fY, f_data, false, (output_url) => {
+							imageUpload.value = null;
+
+							// Add to Medium-editor
+							that.editor.execAction("insertHtml", {
+							    value: '<div class="img"><img src="' + output_url + '"></div>'
+							});
+						});
+						
+					};
+				reader.readAsBinaryString(fY);
+			}
 		}
 	},
 	template: `
@@ -217,6 +254,18 @@ var EditStory = {
 			<section class="section">
 				<div class="columns is-centered">
 					<div class="column is-three-quarters-tablet is-half-desktop">
+						<small>Note: Make sure the editor is in focus <em>before</em> selecting a photo to upload.</small>
+						<div class="file is-info" style="margin-bottom: 30px; margin-top: 5px;">
+							<label class="file-label">
+								<input class="file-input" type="file" accept="image/*" id="imageUpload" v-on:change="uploadImage()">
+								<span class="file-cta">
+									<span class="file-icon">
+										<i class="fa fa-upload"></i>
+									</span>
+									<span class="file-label">Upload an Image...</span>
+								</span>
+							</label>
+						</div>
 						<input class="input title" type="text" placeholder="Title" style="border: none; border-left: 1px solid #CCCCCC; background: inherit; box-shadow: none;" v-model="title">
 						<!--<textarea class="textarea" style="border: none; background: inherit; box-shadow: none;" placeholder="Tell your story..."></textarea>-->
 						<div class="editable custom-content" placeholder="Tell your story..."></div>
