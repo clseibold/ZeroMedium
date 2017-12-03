@@ -100,9 +100,25 @@ var app = new Vue({
                     that.$on("setUserLanguages", (languages) => {
                         that.keyvalue.languages = languages;
                         that.$emit("setUserInfo", that.userInfo);
+                        cache_remove("home_topics");
+                        if (Router.currentRoute == "") {
+                            that.$refs.view.getTopics();
+                        }
+                        /*page.getTopics((topics) => {
+                            console.log(topics);
+                            cache_add("home_topics", topics);
+                        });*/
                     });
                 } else {
                     that.$emit("setUserInfo", that.userInfo);
+                    cache_remove("home_topics");
+                    if (Router.currentRoute == "") {
+                        that.$refs.view.getTopics();
+                    }
+                    /*page.getTopics((topics) => {
+                        console.log(topics);
+                        cache_add("home_topics", topics);
+                    });*/
                 }
             });
         },
@@ -197,8 +213,9 @@ class ZeroApp extends ZeroFrame {
     }
 
     getTopics(f = null) {
-        if (app.userInfo && app.userInfo.languages !== "") {
-            var primarylang = app.userInfo.langauges.split(",")[0].toLowerCase();
+        if (app.userInfo && app.userInfo.keyvalue && app.userInfo.keyvalue.languages !== "") {
+            var primarylang = app.userInfo.keyvalue.languages.split(",")[0].toLowerCase();
+            console.log(primarylang);
             page.cmd("dbQuery", ["SELECT * FROM topics_" + primarylang], (topics) => {
                 if (f != null && typeof f === "function") {
                     f(topics);
