@@ -838,7 +838,7 @@ class ZeroApp extends ZeroFrame {
             if (!data) return;
             data = JSON.parse(data);
 
-            var curoptional = ".+\\.(png|jpg|jpeg|gif|mp3|flac|ogg|mp4)";
+            var curoptional = ".+\\.(png|jpg|jpeg|gif|mp3|flac|ogg|mp4|webm)";
             var changed = false;
             if (!data.hasOwnProperty("optional") || data.optional !== curoptional){
                 data.optional = curoptional
