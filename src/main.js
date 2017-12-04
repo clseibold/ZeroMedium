@@ -1,4 +1,5 @@
 version = "17.12a.1"
+allLanguages = ["EN", "ES", "ZH"]; // TODO: use in signin-modal?
 
 // Zeroframe
 var ZeroFrame = require("./ZeroFrame.js");
@@ -236,6 +237,20 @@ class ZeroApp extends ZeroFrame {
             addToQuery = "_" + lang.toLowerCase();
         }
         page.cmd("dbQuery", ["SELECT * FROM topics" + addToQuery], (topics) => {
+            if (f != null && typeof f === "function") {
+                f(topics);
+            }
+        });
+    }
+
+    getTopicInLang(topic_id, lang = "en", f = null) {
+        var addToQuery = "";
+        if (lang !== "en" && lang !== "EN") {
+            addToQuery = "_" + lang.toLowerCase();
+        }
+        console.log(addToQuery);
+        page.cmd("dbQuery", ["SELECT * FROM topics" + addToQuery + " WHERE topic_id=" + topic_id + " LIMIT 1"], (topics) => {
+            console.log(topics);
             if (f != null && typeof f === "function") {
                 f(topics);
             }

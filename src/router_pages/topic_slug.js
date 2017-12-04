@@ -15,6 +15,13 @@ var TopicSlug = {
 		this.$emit("navbar-shadow-on");
 		var that = this;
 
+		var languages = [];
+		if (this.userInfo && this.userInfo.keyvalue && this.userInfo.keyvalue.languages) {
+			languages = this.userInfo.keyvalue.languages.split(",").slice(1);
+		} else {
+			languages = allLanguages.filter((lang) => lang != "EN");
+		}
+
 		page.getTopics((topics) => {
             that.topics = topics;
             for (var i = 0; i < topics.length; i++) {
