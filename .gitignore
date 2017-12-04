@@ -3,5 +3,6 @@ node_modules/
 /css/
 /index.html
 
-/data/
+/data/users/
+/data/zeromedium.db
 /content.json

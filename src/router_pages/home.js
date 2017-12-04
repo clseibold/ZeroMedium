@@ -8,15 +8,7 @@ var Home = {
     beforeMount: function() {
         this.$emit("navbar-shadow-off");
         var that = this;
-
-        if (cache_exists("home_topics")) {
-            this.topics = cache_get("home_topics");
-        } else {
-            page.getTopics((topics) => {
-                that.topics = topics;
-                cache_add("home_topics", topics);
-            });
-        }
+        this.getTopics();
         this.getStories();
     },
     computed: {
@@ -28,6 +20,17 @@ var Home = {
         }
     },
     methods: {
+        getTopics: function() {
+            var that = this;
+            if (cache_exists("home_topics")) {
+                this.topics = cache_get("home_topics");
+            } else {
+                page.getTopics((topics) => {
+                    that.topics = topics;
+                    cache_add("home_topics", topics);
+                });
+            }
+        },
         getStories: function() {
             var that = this;
 
