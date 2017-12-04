@@ -1,4 +1,4 @@
-version = "17.12a.2"
+version = "17.12b"
 allLanguages = ["EN", "ES", "ZH"]; // TODO: use in signin-modal?
 
 // Zeroframe
