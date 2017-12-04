@@ -35,7 +35,7 @@
                 ["json_id", "INTEGER REFERENCES json (json_id)"]
             ],
             "indexes": ["CREATE UNIQUE INDEX tag_key ON topics (json_id, topic_id)"],
-            "schema_changed": 13
+            "schema_changed": 14
         },
         "topics_es": {
             "cols": [
@@ -46,7 +46,7 @@
                 ["json_id", "INTEGER REFERENCES json (json_id)"]
             ],
             "indexes": ["CREATE UNIQUE INDEX tag_es_key ON topics_es (json_id, topic_id)"],
-            "schema_changed": 13
+            "schema_changed": 14
         },
         "topics_zh": {
             "cols": [
@@ -57,7 +57,7 @@
                 ["json_id", "INTEGER REFERENCES json (json_id)"]
             ],
             "indexes": ["CREATE UNIQUE INDEX tag_zh_key ON topics_zh (json_id, topic_id)"],
-            "schema_changed": 13
+            "schema_changed": 14
         },
         "stories": {
             "cols": [
