@@ -1034,20 +1034,22 @@ class ZeroApp extends ZeroFrame {
 
         var f_path = "data/users/" + page.site_info.auth_address + "/" + filename;
 
-        page.cmd("bigfileUploadInit", [f_path, file.size], (init_res) => {
-            var formdata = new FormData();
-            formdata.append(file.name, file);
+        page.checkOptional(false, () => {
+            page.cmd("bigfileUploadInit", [f_path, file.size], (init_res) => {
+                var formdata = new FormData();
+                formdata.append(file.name, file);
 
-            var req = new XMLHttpRequest();
+                var req = new XMLHttpRequest();
 
-            req.upload.addEventListener("progress", console.log);
-            req.upload.addEventListener("loadend", () => {
-                page.cmd("wrapperNotification", ["info", "Upload finished!"]);
-                if (f !== null && typeof f === "function") f(f_path);
+                req.upload.addEventListener("progress", console.log);
+                req.upload.addEventListener("loadend", () => {
+                    page.cmd("wrapperNotification", ["info", "Upload finished!"]);
+                    if (f !== null && typeof f === "function") f(f_path);
+                });
+                req.withCredentials = true;
+                req.open("POST", init_res.url);
+                req.send(formdata);
             });
-            req.withCredentials = true;
-            req.open("POST", init_res.url);
-            req.send(formdata);
         });
     }
 }
