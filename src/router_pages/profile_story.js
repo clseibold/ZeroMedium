@@ -74,7 +74,7 @@ var ProfileStory = {
 					m_image = re_image.exec(newBody);
 					m_audio = re_audio.exec(newBody);
 					m_video = re_video.exec(newBody);
-					console.log(m_video);
+
 					if (m_image) {
 						// Get image's src, width, and height
 						var [ imgSrc, imgWidth_int, imgHeight_int ] = getInfo(m_image);
@@ -96,6 +96,7 @@ var ProfileStory = {
 						
 						page.cmd("optionalFileInfo", { "inner_path": inner_path.slice(1) }, (row) => {
 							let imgContainer = document.getElementById(imgSrc);
+
 							if (!row) {
 								imgContainer.innerHTML = "Cannot Find Image Info";
 							} else if (row.is_downloaded) {
@@ -126,6 +127,7 @@ var ProfileStory = {
 
 						page.cmd("optionalFileInfo", { "inner_path": inner_path.slice(1) }, (row) => {
 							let container = document.getElementById(src);
+
 							if (!row) {
 								container.innerHTML = "Cannot Find Audio Info";
 							} else if (row.is_downloaded) {
@@ -136,9 +138,7 @@ var ProfileStory = {
 						});
 
 						// Replace the image tag with the placeholder html
-						console.log(newBody);
 						newBody = newBody.slice(0, m_audio.index) + placeholderHtml + newBody.slice(m_audio.index).replace(m_audio[0], '');
-						console.log(newBody);
 					} else if (m_video) {
 						var [ src, width, height ] = getInfo(m_video);
 
@@ -158,6 +158,7 @@ var ProfileStory = {
 
 						page.cmd("optionalFileInfo", { "inner_path": inner_path.slice(1) }, (row) => {
 							let container = document.getElementById(src);
+
 							if (!row) {
 								container.innerHTML = "Cannot Find Video Info";
 							} else if (row.is_downloaded) {
