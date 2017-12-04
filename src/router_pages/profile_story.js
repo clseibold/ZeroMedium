@@ -98,7 +98,8 @@ var ProfileStory = {
 							let imgContainer = document.getElementById(imgSrc);
 
 							if (!row) {
-								imgContainer.innerHTML = "Cannot Find Image Info";
+								console.log("Cannot Find Image Info.");
+								imgContainer.innerHTML = "Show Image";
 							} else if (row.is_downloaded) {
 								imgContainer.click();
 							} else {
@@ -129,7 +130,8 @@ var ProfileStory = {
 							let container = document.getElementById(src);
 
 							if (!row) {
-								container.innerHTML = "Cannot Find Audio Info";
+								console.log("Cannot Find Audio Info");
+								container.innerHTML = "Show Audio";
 							} else if (row.is_downloaded) {
 								container.click();
 							} else {
@@ -160,7 +162,8 @@ var ProfileStory = {
 							let container = document.getElementById(src);
 
 							if (!row) {
-								container.innerHTML = "Cannot Find Video Info";
+								console.log("Cannot Find Video Info");
+								container.innerHTML = "Show Video";
 							} else if (row.is_downloaded) {
 								container.click();
 							} else {
