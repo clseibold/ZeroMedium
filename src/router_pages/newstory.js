@@ -199,8 +199,8 @@ var Newstory = {
 			}
 
 			var that = this;
-			var imageUpload = document.getElementById("imageUpload");
-			var files = imageUpload.files;
+			var fileUpload = document.getElementById("fileUpload");
+			var files = fileUpload.files;
 
 			if (!files) {
 				return;
@@ -210,7 +210,7 @@ var Newstory = {
 				let fY = files[fX];
 
 				if (!fY || typeof fY !== "object" || !fY.type.match("(image)\/(png|jpg|jpeg|gif)|(audio)\/(mp3|flac|ogg)|(video)\/(ogg|mp4|webm)")) { // |audio|video      || !fY.name.match(/\.IMAGETYPE$/gm)
-					page.cmd("wrapperNotification", ["error", "That file type is not supported."]);
+					//page.cmd("wrapperNotification", ["error", "That file type is not supported."]);
 					continue;
 				}
 
@@ -222,21 +222,21 @@ var Newstory = {
 						// Add to Medium-editor
 						if (file_type.split("/")[0] === "image") {
 							page.uploadImage(fY, f_data, false, (output_url) => {
-								imageUpload.value = null;
+								fileUpload.value = null;
 								that.editor.execAction("insertHtml", {
 								    value: '<div><img src="' + output_url + '"></div>'
 								});
 							});
 						} else if (file_type.split("/")[0] === "audio") {
 							page.uploadBigFile(fY, (output_url) => {
-								imageUpload.value = null;
+								fileUpload.value = null;
 								that.editor.execAction("insertHtml", {
 								    value: '<div><audio src="' + output_url + '" controls></audio></div>' // TODO: Remove or rename img class?
 								});
 							});
 						} else if (file_type.split("/")[0] === "video") {
 							page.uploadBigFile(fY, (output_url) => {
-								imageUpload.value = null;
+								fileUpload.value = null;
 								that.editor.execAction("insertHtml", {
 								    value: '<div><video src="' + output_url + '" controls></video></div>'
 								});
@@ -259,10 +259,10 @@ var Newstory = {
 			<section class="section">
 				<div class="columns is-centered">
 					<div class="column is-three-quarters-tablet is-half-desktop">
-						<small>Note: Make sure the editor is in focus <em>before</em> selecting a photo to upload.</small>
+						<small>Note: Make sure the editor is in focus <em>before</em> selecting a photo, audio, or video to upload.</small>
 						<div class="file is-info" style="margin-bottom: 30px; margin-top: 5px;">
 							<label class="file-label">
-								<input class="file-input" type="file" accept="image/*,audio/*,video/*" id="imageUpload" v-on:change="uploadFile()">
+								<input class="file-input" type="file" accept="image/*,audio/*,video/*" id="fileUpload" v-on:change="uploadFile()">
 								<span class="file-cta">
 									<span class="file-icon">
 										<i class="fa fa-upload"></i>
