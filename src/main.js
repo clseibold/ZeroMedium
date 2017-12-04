@@ -1,4 +1,5 @@
 version = "17.12a.2"
+allLanguages = ["EN", "ES", "ZH"]; // TODO: use in signin-modal?
 
 // Zeroframe
 var ZeroFrame = require("./ZeroFrame.js");
@@ -108,9 +109,25 @@ var app = new Vue({
                     that.$on("setUserLanguages", (languages) => {
                         that.keyvalue.languages = languages;
                         that.$emit("setUserInfo", that.userInfo);
+                        cache_remove("home_topics");
+                        if (Router.currentRoute == "") {
+                            that.$refs.view.getTopics();
+                        }
+                        /*page.getTopics((topics) => {
+                            console.log(topics);
+                            cache_add("home_topics", topics);
+                        });*/
                     });
                 } else {
                     that.$emit("setUserInfo", that.userInfo);
+                    cache_remove("home_topics");
+                    if (Router.currentRoute == "") {
+                        that.$refs.view.getTopics();
+                    }
+                    /*page.getTopics((topics) => {
+                        console.log(topics);
+                        cache_add("home_topics", topics);
+                    });*/
                 }
             });
         },
@@ -205,7 +222,43 @@ class ZeroApp extends ZeroFrame {
     }
 
     getTopics(f = null) {
-        page.cmd("dbQuery", ["SELECT * FROM topics"], (topics) => {
+        if (app.userInfo && app.userInfo.keyvalue && app.userInfo.keyvalue.languages !== "") {
+            var primarylang = app.userInfo.keyvalue.languages.split(",")[0].toLowerCase();
+            console.log(primarylang);
+            page.cmd("dbQuery", ["SELECT * FROM topics_" + primarylang], (topics) => {
+                if (f != null && typeof f === "function") {
+                    f(topics);
+                }
+            });
+        } else {
+            page.cmd("dbQuery", ["SELECT * FROM topics"], (topics) => {
+                if (f != null && typeof f === "function") {
+                    f(topics);
+                }
+            });
+        }
+    }
+
+    getTopicsInLang(lang = "en", f = null) {
+        var addToQuery = "";
+        if (lang !== "en" && lang !== "EN") {
+            addToQuery = "_" + lang.toLowerCase();
+        }
+        page.cmd("dbQuery", ["SELECT * FROM topics" + addToQuery], (topics) => {
+            if (f != null && typeof f === "function") {
+                f(topics);
+            }
+        });
+    }
+
+    getTopicInLang(topic_id, lang = "en", f = null) {
+        var addToQuery = "";
+        if (lang !== "en" && lang !== "EN") {
+            addToQuery = "_" + lang.toLowerCase();
+        }
+        console.log(addToQuery);
+        page.cmd("dbQuery", ["SELECT * FROM topics" + addToQuery + " WHERE topic_id=" + topic_id + " LIMIT 1"], (topics) => {
+            console.log(topics);
             if (f != null && typeof f === "function") {
                 f(topics);
             }
