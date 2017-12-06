@@ -19,7 +19,9 @@ class Story extends Model {
             // LEFT JOIN json
             "directory": "",
             "cert_user_id": "",
-            "json_id": null
+            "json_id": null,
+            // LEFT JOIN keyvalue
+            "value": null
         });
     }
 
@@ -39,7 +41,8 @@ class Story extends Model {
 
     static getFromTag(tagSlug) {
         return Story.all().leftJoinJson().leftJoinUsing("keyvalue", "json_id")
-            .where("REPLACE(tags, \" \", \"-\")", "LIKE", "T" + tagSlug + "%")
+            .where("REPLACE(tags, \" \", \"-\")", "LIKE", "%" + tagSlug + "%")
+            .andWhere("key", "name")
             .orderBy("date_added", "DESC").log("<Story: getFromTag> ").get(page);
     }
 
