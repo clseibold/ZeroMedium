@@ -641,7 +641,7 @@ class ZeroApp extends ZeroFrame {
 
     getStoriesFromTag(tagSlug, f = null) {
         //page.cmd("dbQuery", ['SELECT * FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND REPLACE(tags, " ", "-") LIKE "%' + tagSlug + '%" ORDER BY date_added DESC'], f); // AND includes tag name generated from tag slug
-        return Models.Story.getFromTag(tagSlug)
+        return Models.Story.getAllFromTag(tagSlug)
             .then(f);
     }
 
@@ -766,20 +766,31 @@ class ZeroApp extends ZeroFrame {
     }
 
     getResponses(reference_auth_address, reference_id, reference_type, f) {
-        page.cmd("dbQuery", ['SELECT * FROM responses LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE reference_auth_address="' + reference_auth_address + '" AND reference_id=' + reference_id + ' AND reference_type="' + reference_type + '" AND key="name" ORDER BY date_added DESC'], f);
+        //page.cmd("dbQuery", ['SELECT * FROM responses LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE reference_auth_address="' + reference_auth_address + '" AND reference_id=' + reference_id + ' AND reference_type="' + reference_type + '" AND key="name" ORDER BY date_added DESC'], f);
+        return Models.Response.getAllFromStory(reference_auth_address, reference_id, reference_type)
+            .then(f);
     }
 
     getResponse(auth_address, response_id, f) {
-        page.cmd("dbQuery", ['SELECT * FROM responses LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND directory="users/' + auth_address + '" AND response_id=' + response_id + " LIMIT 1"], (responses) => {
-            var response = responses[0];
+        //page.cmd("dbQuery", ['SELECT * FROM responses LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND directory="users/' + auth_address + '" AND response_id=' + response_id + " LIMIT 1"], (responses) => {
+        var response;
 
-            page.cmd("dbQuery", ['SELECT * FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND directory="users/' + response.reference_auth_address + '" AND story_id=' + response.reference_id + " LIMIT 1"], (stories) => {
+        Models.Response.get(auth_address, response_id)
+            .then((responses) => {
+                response = responses[0];
+
+                return Models.Story.getFromId(response.reference_auth_address, response.reference_id);
+                /*page.cmd("dbQuery", ['SELECT * FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND directory="users/' + response.reference_auth_address + '" AND story_id=' + response.reference_id + " LIMIT 1"], (stories) => {
+                    response["story"] = stories[0];
+                    if (f != null && typeof f === "function") {
+                        f(response);
+                    }
+                });*/
+            }).then((stories) => {
                 response["story"] = stories[0];
-                if (f != null && typeof f === "function") {
-                    f(response);
-                }
-            });
-        });
+
+                return response;
+            }).then(f);
     }
 
     // Reference Types:
