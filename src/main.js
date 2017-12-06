@@ -595,7 +595,7 @@ class ZeroApp extends ZeroFrame {
 
     getStory(auth_address, slug, f = null) {
         // TODO: If two stories have the same title, go with the oldest (ORDER BY ___)
-        page.cmd("dbQuery", ['SELECT story_id, title, slug, description, body, tags, language, date_updated, date_added, value FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE directory="users/' + auth_address + '" AND slug="' + slug + '" AND key="name"'], (stories) => {
+        /*page.cmd("dbQuery", ['SELECT story_id, title, slug, description, body, tags, language, date_updated, date_added, value FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE directory="users/' + auth_address + '" AND slug="' + slug + '" AND key="name"'], (stories) => {
             if (!stories || stories.length == 0) {
                 f(null);
                 return;
@@ -603,13 +603,15 @@ class ZeroApp extends ZeroFrame {
             if (f != null && typeof f === "function") {
                 f(stories[0]);
             }
-        });
+        });*/
+        return Models.Story.get(auth_address, slug)
+            .then(f);
     }
 
     // Used to get story that a response is on (for showing the response on an author's profile)
     // This will only get the stories id, title, and slug
     getStoryMinimal(auth_address, story_id, f = null) {
-        page.cmd("dbQuery", ['SELECT story_id, title, slug, language, directory, value FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND story_id=' + story_id + ' AND directory="users/' + auth_address + '"'], (stories) => {
+        /*page.cmd("dbQuery", ['SELECT story_id, title, slug, language, directory, value FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND story_id=' + story_id + ' AND directory="users/' + auth_address + '"'], (stories) => {
             if (!stories || stories.length == 0) {
                 f(null);
                 return;
@@ -617,7 +619,9 @@ class ZeroApp extends ZeroFrame {
             if (f != null && typeof f === "function") {
                 f(stories[0]);
             }
-        });
+        });*/
+        return Models.Story.getMinimal(auth_address, story_id)
+            .then(f);
     }
 
     // languages - array of languages
@@ -636,7 +640,9 @@ class ZeroApp extends ZeroFrame {
     }
 
     getStoriesFromTag(tagSlug, f = null) {
-        page.cmd("dbQuery", ['SELECT * FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND REPLACE(tags, " ", "-") LIKE "%' + tagSlug + '%" ORDER BY date_added DESC'], f); // AND includes tag name generated from tag slug
+        //page.cmd("dbQuery", ['SELECT * FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND REPLACE(tags, " ", "-") LIKE "%' + tagSlug + '%" ORDER BY date_added DESC'], f); // AND includes tag name generated from tag slug
+        return Models.Story.getFromTag(tagSlug)
+            .then(f);
     }
 
     // Make getExtra true to get claps and responses on the story (TODO: does not include the responses on the responses)
@@ -1051,7 +1057,7 @@ class ZeroApp extends ZeroFrame {
 
 page = new ZeroApp();
 
-ZeroGraph = require("./ZeroGraph.js")(page, "info");
+var Models = require("./models.js");
 
 // Router Pages
 var Home = require("./router_pages/home.js");
