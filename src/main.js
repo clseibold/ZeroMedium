@@ -252,7 +252,6 @@ class ZeroApp extends ZeroFrame {
     getTopics(f = null) {
         if (app.userInfo && app.userInfo.keyvalue && app.userInfo.keyvalue.languages !== "") {
             var primarylang = app.userInfo.keyvalue.languages.split(",")[0].toLowerCase();
-            console.log(primarylang);
             page.cmd("dbQuery", ["SELECT * FROM topics_" + primarylang], (topics) => {
                 if (f != null && typeof f === "function") {
                     f(topics);
@@ -773,23 +772,15 @@ class ZeroApp extends ZeroFrame {
 
     getResponse(auth_address, response_id, f) {
         //page.cmd("dbQuery", ['SELECT * FROM responses LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND directory="users/' + auth_address + '" AND response_id=' + response_id + " LIMIT 1"], (responses) => {
-        var response;
-
         Models.Response.get(auth_address, response_id)
             .then((responses) => {
-                response = responses[0];
+                var response = responses[0];
 
-                return Models.Story.getFromId(response.reference_auth_address, response.reference_id);
-                /*page.cmd("dbQuery", ['SELECT * FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND directory="users/' + response.reference_auth_address + '" AND story_id=' + response.reference_id + " LIMIT 1"], (stories) => {
-                    response["story"] = stories[0];
-                    if (f != null && typeof f === "function") {
-                        f(response);
-                    }
-                });*/
-            }).then((stories) => {
-                response["story"] = stories[0];
-
-                return response;
+                return Models.Story.getFromId(response.reference_auth_address, response.reference_id)
+                    .then((stories) => {
+                        response["story"] = stories[0];
+                        return response;
+                    });
             }).then(f);
     }
 
