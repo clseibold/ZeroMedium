@@ -6,23 +6,23 @@ class Story extends Model {
     constructor() {
         // Note: You can leave off columns if you don't
         // want them stored in the model.
-        super({
-            "story_id": null,
-            "title": "",
-            "slug": "",
-            "description": "",
-            "body": "",
-            "tags": "",
-            "language": "",
-            "date_updated": null,
-            "date_added": null,
+        super([
+            "story_id",
+            "title",
+            "slug",
+            "description",
+            "body",
+            "tags",
+            "language",
+            "date_updated",
+            "date_added",
             // LEFT JOIN json
-            "directory": "",
-            "cert_user_id": "",
-            "json_id": null,
+            "directory",
+            "cert_user_id",
+            "json_id",
             // LEFT JOIN keyvalue
-            "value": null
-        });
+            "value"
+        ]);
     }
 
     static get(auth_address, slug) {
