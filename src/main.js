@@ -39,7 +39,7 @@ var app = new Vue({
                 <div class="container">
                     <div class="has-text-centered">
                         <em>&copy; Copyright 2017 Christian Seibold. BSD License.</em><br>
-                        Current Version: <a :href="'./?/12gAes6NzDS9E2q6Q1UXrpUdbPS6nvuBPu/' + getVersionLink()" v-on:click.prevent="goto('12gAes6NzDS9E2q6Q1UXrpUdbPS6nvuBPu/' + getVersionLink())">{{ version }}</a><br>
+                        Current Version: <a :href="'./?/12gAes6NzDS9E2q6Q1UXrpUdbPS6nvuBPu/' + getVersionLink()" v-on:click.prevent="goto('12gAes6NzDS9E2q6Q1UXrpUdbPS6nvuBPu/' + getVersionLink())">{{ version }} beta</a><br>
                         <a href="/1BEPbMfV8QtaZCD2cPNbabfDKnmhTAZRPx">Git Center Repo</a>
                     </div>
                 </div>
