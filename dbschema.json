@@ -50,8 +50,8 @@
                 ["date_added", "INTEGER"],
                 ["json_id", "INTEGER REFERENCES json (json_id)"]
             ],
-            "indexes": ["CREATE UNIQUE INDEX story_key ON stories (json_id, story_id)"],
-            "schema_changed": 17
+            "indexes": ["CREATE UNIQUE INDEX story_key ON stories (json_id, story_id)", "CREATE INDEX story_slug_idx ON stories (slug)", "CREATE INDEX story_date_added_idx ON stories (date_added DESC)"],
+            "schema_changed": 18
         },
         "responses": {
             "cols": [
@@ -64,8 +64,8 @@
                 ["date_added", "INTEGER"],
                 ["json_id", "INTEGER REFERENCES json (json_id)"]
             ],
-            "indexes": ["CREATE UNIQUE INDEX response_key ON responses (json_id, response_id)"],
-            "schema_changed": 11
+            "indexes": ["CREATE UNIQUE INDEX response_key ON responses (json_id, response_id)",  "CREATE INDEX response_reference_idx ON responses (reference_id, reference_auth_address, reference_type)","CREATE INDEX response_date_added_idx ON responses (date_added DESC)"],
+            "schema_changed": 12
         },
         "claps": {
             "cols": [
@@ -78,8 +78,8 @@
                 ["date_added", "INTEGER"],
                 ["json_id", "INTEGER REFERENCES json (json_id)"]
             ],
-            "indexes": ["CREATE UNIQUE INDEX clap_key ON claps (json_id, clap_id)"],
-            "schema_changed": 11
+            "indexes": ["CREATE UNIQUE INDEX clap_key ON claps (json_id, clap_id)", "CREATE INDEX clap_reference_idx ON claps (reference_id, reference_auth_address, reference_type)", "CREATE INDEX clap_date_added_idx ON claps (date_added DESC)"],
+            "schema_changed": 12
         },
         "images": {
             "cols": [

@@ -3,7 +3,7 @@
 # ZeroMedium
 Medium for ZeroNet
 
-*Current Stable Version*: 17.12a.2
+*Current Stable Version*: 17.12a.3
 
 * run `gulp` to combine and move over javascript files to `js` folder, to copy over html files to root, and to compile sass into css and put into `css` folder.
 * The `src` folder should be ignored by ZeroNet.
