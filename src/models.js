@@ -2,6 +2,7 @@
 var { Model, DbQuery } = require('./ZeroQuery/db.js');
 class Story extends Model {
     static get tableName() { return "stories"; }
+    static get zeroFrame() { return page; }
 
     constructor() {
         // Note: You can leave off columns if you don't
@@ -26,40 +27,41 @@ class Story extends Model {
     }
 
     static get(auth_address, slug) {
-        return Story.select("story_id", "title", "slug", "description", "body", "tags", "language", "date_updated", "date_added", "value")
+        return Story.fields("story_id", "title", "slug", "description", "body", "tags", "language", "date_updated", "date_added", "value")
             .leftJoinJson().leftJoinUsing("keyvalue", "json_id")
             .where("directory", "users/" + auth_address)
-            .andWhere("slug", slug).andWhere("key", "name")
+            .where("slug", slug).where("key", "name")
             .log("<Story: get> ").get(page);
     }
 
     static getFromId(auth_address, story_id) {
-        return Story.select("story_id", "title", "slug", "description", "body", "tags", "language", "date_updated", "date_added", "value")
+        return Story.fields("story_id", "title", "slug", "description", "body", "tags", "language", "date_updated", "date_added", "value")
             .leftJoinJson().leftJoinUsing("keyvalue", "json_id")
             .where("directory", "users/" + auth_address)
-            .andWhere("story_id", id).andWhere("key", "name")
+            .where("story_id", id).where("key", "name")
             .log("<Story: getFromId> ").get(page);
     }
 
     static getMinimal(auth_address, story_id) {
-        return Story.select("story_id", "title", "slug", "language", "directory", "value")
+        return Story.fields("story_id", "title", "slug", "language", "directory", "value")
             .leftJoinJson().leftJoinUsing("keyvalue", "json_id")
             .where("directory", "users/" + auth_address)
-            .andWhere("story_id", story_id).andWhere("key", "name")
+            .where("story_id", story_id).where("key", "name")
             .log("<Story: getMinimal> ").get(page);
     }
 
     static getAllFromTag(tagSlug) {
         return Story.all().leftJoinJson().leftJoinUsing("keyvalue", "json_id")
             .where("REPLACE(tags, \" \", \"-\")", "LIKE", "%" + tagSlug + "%")
-            .andWhere("key", "name")
-            .orderBy("date_added", "DESC")
+            .where("key", "name")
+            .order("date_added", "DESC")
             .log("<Story: getFromTag> ").get(page);
     }
 }
 
 class Response extends Model {
     static get tableName() { return "responses"; }
+    static get zeroFrame() { return page; }
 
     constructor() {
         super([
@@ -82,8 +84,8 @@ class Response extends Model {
     static get(auth_address, response_id) {
         return Response.all().leftJoinJson().leftJoinUsing("keyvalue", "json_id")
             .where("directory", "users/" + auth_address)
-            .andWhere("response_id", response_id)
-            .andWhere("key", "name").limit(1)
+            .where("response_id", response_id)
+            .where("key", "name").limit(1)
             .log("<Response: get> ").get(page);
     }
 
@@ -92,8 +94,8 @@ class Response extends Model {
     static getAllFromStory(reference_auth_address, reference_id, reference_type) {
         return Response.all().leftJoinJson().leftJoinUsing("keyvalue", "json_id")
             .where("reference_auth_address", reference_auth_address)
-            .andWhere("reference_id", reference_id).andWhere("reference_type", reference_type)
-            .andWhere("key", "name").orderBy("date_added", "DESC")
+            .where("reference_id", reference_id).where("reference_type", reference_type)
+            .where("key", "name").order("date_added", "DESC")
             .log("<Response: getFromStory> ").get(page);
     }
 }

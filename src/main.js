@@ -726,7 +726,33 @@ class ZeroApp extends ZeroFrame {
         var data_inner_path = "data/users/" + app.userInfo.auth_address + "/data.json";
         var content_inner_path = "data/users/" + app.userInfo.auth_address + "/content.json";
 
-        page.cmd("fileGet", { "inner_path": data_inner_path, "required": false }, (data) => {
+        var response = new Models.Response();
+        response.response_id = app.userInfo.keyvalue["next_response_id"] || 1;
+        response.body = page.sanitizeHtml(body);
+        response.reference_id = reference_id;
+        response.reference_auth_address = reference_auth_address;
+        response.reference_type = reference_type;
+        response.date_added = Date.now();
+        response.save(page, data_inner_path, (data) => {
+            if (!app.userInfo.keyvalue["next_response_id"] || app.userInfo.keyvalue["next_response_id"] == null) app.userInfo.keyvalue["next_response_id"] = 1;
+            app.userInfo.keyvalue["next_response_id"]++;
+            data["next_response_id"] = app.userInfo.keyvalue["next_response_id"];
+        }).then((success) => {
+                if (success) {
+                    if (f != null && typeof f === "function") f();
+                    return response.sign(page, content_inner_path, false);
+                }
+
+                return false;
+            }).then((success) => {
+                if (success) {
+                    return response.publish(page, content_inner_path);
+                }
+
+                return false;
+            });
+
+        /*page.cmd("fileGet", { "inner_path": data_inner_path, "required": false }, (data) => {
             if (!data) {
                 // TODO: Show registration modal.
                 return;
@@ -761,7 +787,7 @@ class ZeroApp extends ZeroFrame {
                     });
                 }
             });
-        });
+        });*/
     }
 
     getResponses(reference_auth_address, reference_id, reference_type, f) {
