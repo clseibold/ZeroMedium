@@ -227,7 +227,7 @@ var ResponseFullscreen = {
 								<small>{{ response.story.value }}</small>
 							</div>
 							<div style="margin-left: 20px; margin-bottom: 20px;" v-if="referenceResponse">
-								Responded to <a :href="'./?/' + getReferenceResponseAuthAddress + '/response/' + referenceResponse.response_id" v-on:click.prevent="goto(getReferenceResponseAuthAddress  + '/response/' + referenceResponse.response_id)">Response by {{ referenceResponse.value }}</a>
+								Responded to <a :href="'./?/' + getReferenceResponseAuthAddress + '/response/' + referenceResponse.response_id">Response by {{ referenceResponse.value }}</a>
 							</div>
 
 							<div class="custom-content" style="margin-bottom: 5px;" v-html="page.sanitizeHtml(response.body)"></div>

@@ -4,10 +4,10 @@
     "version": 2,
     "maps": {
         "topics.json": {
-            "to_table": ["topics"]
+            "to_table": ["topics", "topics_es", "topics_zh"]
         },
         "users/.+/data.json": {
-            "to_table": ["stories", "responses", "claps", "images"],
+            "to_table": ["stories", "responses", "claps", "files"],
             "to_keyvalue": [ "next_story_id", "next_response_id", "next_clap_id", "name", "about", "interests", "languages" ]
         },
         "users/.+/content.json": {
@@ -35,7 +35,29 @@
                 ["json_id", "INTEGER REFERENCES json (json_id)"]
             ],
             "indexes": ["CREATE UNIQUE INDEX tag_key ON topics (json_id, topic_id)"],
-            "schema_changed": 13
+            "schema_changed": 14
+        },
+        "topics_es": {
+            "cols": [
+                ["topic_id", "INTEGER PRIMARY KEY"],
+                ["name", "TEXT"],
+                ["slug", "TEXT"],
+                ["tags", "TEXT"],
+                ["json_id", "INTEGER REFERENCES json (json_id)"]
+            ],
+            "indexes": ["CREATE UNIQUE INDEX tag_es_key ON topics_es (json_id, topic_id)"],
+            "schema_changed": 14
+        },
+        "topics_zh": {
+            "cols": [
+                ["topic_id", "INTEGER PRIMARY KEY"],
+                ["name", "TEXT"],
+                ["slug", "TEXT"],
+                ["tags", "TEXT"],
+                ["json_id", "INTEGER REFERENCES json (json_id)"]
+            ],
+            "indexes": ["CREATE UNIQUE INDEX tag_zh_key ON topics_zh (json_id, topic_id)"],
+            "schema_changed": 14
         },
         "stories": {
             "cols": [
@@ -50,8 +72,8 @@
                 ["date_added", "INTEGER"],
                 ["json_id", "INTEGER REFERENCES json (json_id)"]
             ],
-            "indexes": ["CREATE UNIQUE INDEX story_key ON stories (json_id, story_id)"],
-            "schema_changed": 17
+            "indexes": ["CREATE UNIQUE INDEX story_key ON stories (json_id, story_id)", "CREATE INDEX story_slug_idx ON stories (slug)", "CREATE INDEX story_date_added_idx ON stories (date_added DESC)"],
+            "schema_changed": 18
         },
         "responses": {
             "cols": [
@@ -64,8 +86,8 @@
                 ["date_added", "INTEGER"],
                 ["json_id", "INTEGER REFERENCES json (json_id)"]
             ],
-            "indexes": ["CREATE UNIQUE INDEX response_key ON responses (json_id, response_id)"],
-            "schema_changed": 11
+            "indexes": ["CREATE UNIQUE INDEX response_key ON responses (json_id, response_id)",  "CREATE INDEX response_reference_idx ON responses (reference_id, reference_auth_address, reference_type)","CREATE INDEX response_date_added_idx ON responses (date_added DESC)"],
+            "schema_changed": 12
         },
         "claps": {
             "cols": [
@@ -78,18 +100,19 @@
                 ["date_added", "INTEGER"],
                 ["json_id", "INTEGER REFERENCES json (json_id)"]
             ],
-            "indexes": ["CREATE UNIQUE INDEX clap_key ON claps (json_id, clap_id)"],
-            "schema_changed": 11
+            "indexes": ["CREATE UNIQUE INDEX clap_key ON claps (json_id, clap_id)", "CREATE INDEX clap_reference_idx ON claps (reference_id, reference_auth_address, reference_type)", "CREATE INDEX clap_date_added_idx ON claps (date_added DESC)"],
+            "schema_changed": 12
         },
-        "images": {
+        "files": {
             "cols": [
                 ["image_id", "INTEGER PRIMARY KEY AUTOINCREMENT"],
                 ["file_name", "TEXT"],
+                ["file_type", "TEXT"],
                 ["date_added", "INTEGER"],
                 ["json_id", "INTEGER REFERENCES json (json_id)"]
             ],
-            "indexes": ["CREATE UNIQUE INDEX image_key ON images (json_id, image_id)"],
-            "schema_changed": 1
+            "indexes": ["CREATE UNIQUE INDEX file_key ON files (json_id, image_id)"],
+            "schema_changed": 2
         }
     }
 }

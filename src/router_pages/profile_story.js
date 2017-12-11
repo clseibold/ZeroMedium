@@ -31,41 +31,53 @@ var ProfileStory = {
 				that.storyAuthor = story.value;
 				
 				var newBody = page.sanitizeHtml(story.body);
-				var re = /<img .*? \/>/ig;
-				var m;
+				var re_image = /<img .*? \/>/ig;
+				var m_image;
+				var re_audio = /<audio .*?><\/audio>/ig;
+				var m_audio;
+				var re_video = /<video .*?><\/video>/ig;
+				var m_video;
+
+				var getInfo = (m) => {
+					let re_src = /src=('|")(.*?)('|")/ig;
+					let re_width = /width=('|")(.*?)('|")/ig;
+					let re_height = /height=('|")(.*?)('|")/ig;
+					
+					let src = re_src.exec(m[0])[2];
+					let width = re_width.exec(m[0]);
+
+					if (width) {
+						width = width[2];
+					}
+					let height = re_height.exec(m[0]);
+					
+					if (height) {
+						height = height[2];
+					}
+
+					let width_int = 0;
+					
+					if (width) {
+						width_int = parseInt(width);
+					}
+					let height_int = 0;
+					
+					if (height) {
+						height_int = parseInt(height);
+					}
+
+					return [ src, width, height ];
+				}
 
 				// Get all images in the story's body
 				do {
-					m = re.exec(newBody);
-					if (m) {
+					m_image = re_image.exec(newBody);
+					m_audio = re_audio.exec(newBody);
+					m_video = re_video.exec(newBody);
+
+					if (m_image) {
 						// Get image's src, width, and height
-						let re_src = /src=('|")(.*?)('|")/ig;
-						let re_width = /width=('|")(.*?)('|")/ig;
-						let re_height = /height=('|")(.*?)('|")/ig;
-						
-						let imgSrc = re_src.exec(m[0])[2];
-						let imgWidth = re_width.exec(m[0]);
-
-						if (imgWidth) {
-							imgWidth = imgWidth[2];
-						}
-						let imgHeight = re_height.exec(m[0]);
-						
-						if (imgHeight) {
-							imgHeight = imgHeight[2];
-						}
-
-						let imgWidth_int = 0;
-						
-						if (imgWidth) {
-							imgWidth_int = parseInt(imgWidth);
-						}
-						let imgHeight_int = 0;
-						
-						if (imgHeight) {
-							imgHeight_int = parseInt(imgHeight);
-						}
-						// Another Change!
+						var [ imgSrc, imgWidth_int, imgHeight_int ] = getInfo(m_image);
 
 						// Create the string for the placeholder box html
 						let placeholderHtml = "";
@@ -84,8 +96,10 @@ var ProfileStory = {
 						
 						page.cmd("optionalFileInfo", { "inner_path": inner_path.slice(1) }, (row) => {
 							let imgContainer = document.getElementById(imgSrc);
+
 							if (!row) {
-								imgContainer.innerHTML = "Cannot Find Image Info";
+								console.log("Cannot Find Image Info.");
+								imgContainer.innerHTML = "Show Image";
 							} else if (row.is_downloaded) {
 								imgContainer.click();
 							} else {
@@ -94,9 +108,73 @@ var ProfileStory = {
 						});
 
 						// Replace the image tag with the placeholder html
-						newBody = newBody.slice(0, m.index) + placeholderHtml + newBody.slice(m.index).replace(m[0], '');
+						newBody = newBody.slice(0, m_image.index) + placeholderHtml + newBody.slice(m_image.index).replace(m_image[0], '');
+					} else if (m_audio) {
+						var [ src, width, height ] = getInfo(m_audio);
+
+						let placeholderHtml = "";
+
+						if (width === 0 && height === 0) {
+							placeholderHtml = `<div id="${src}" onclick="page.showAudio(this, '${src}', ${width}, ${height}); return false;" style="text-align: center; width: 100%; height: 30px; background-color: #555555; color: white; cursor: pointer;">Show Audio</div>`;
+						} else if (height === 0) {
+							placeholderHtml = `<div id="${src}" onclick="page.showAudio(this, '${src}', ${width}, ${height}); return false;" style="text-align: center; width: ${width}px; height: 30px; background-color: #555555; color: white; cursor: pointer;">Show Audio/div>`;
+						} else if (width === 0) {
+							placeholderHtml = `<div id="${src}" onclick="page.showAudio(this, '${src}', ${width}, ${height}); return false;" style="text-align: center; width: 100%; height: ${height}px; background-color: #555555; color: white; cursor: pointer;">Show Audio</div>`;
+						} else {
+							placeholderHtml = `<div id="${src}" onclick="page.showAudio(this, '${src}', ${width}, ${height}); return false;" style="text-align: center; width: ${width}px; height: ${height}px; background-color: #555555; color: white; cursor: pointer;">Show Audio</div>`;
+						}
+
+						let inner_path = src.replace(/(http:\/\/)?127.0.0.1:43110\//, '').replace(/(https:\/\/)?127.0.0.1:43110\//, '').replace(/18GAQeWN4B7Uum6rvJL2zh9oe4VfcnTM18\//, '').replace(/1CVmbCKWtbskK2GAZLM6gnMuiL6Je25Yds\//, '').replace(/ZeroMedium.bit\//, '');
+
+						page.cmd("optionalFileInfo", { "inner_path": inner_path.slice(1) }, (row) => {
+							let container = document.getElementById(src);
+
+							if (!row) {
+								console.log("Cannot Find Audio Info");
+								container.innerHTML = "Show Audio";
+							} else if (row.is_downloaded) {
+								container.click();
+							} else {
+								container.innerHTML = "Show Audio (peers: " + row.peer + ", size: " + row.size / 1000 + "KB)";
+							}
+						});
+
+						// Replace the image tag with the placeholder html
+						newBody = newBody.slice(0, m_audio.index) + placeholderHtml + newBody.slice(m_audio.index).replace(m_audio[0], '');
+					} else if (m_video) {
+						var [ src, width, height ] = getInfo(m_video);
+
+						let placeholderHtml = "";
+
+						if (width === 0 && height === 0) {
+							placeholderHtml = `<div id="${src}" onclick="page.showVideo(this, '${src}', ${width}, ${height}); return false;" style="text-align: center; width: 100%; height: 30px; background-color: #555555; color: white; cursor: pointer;">Show Video</div>`;
+						} else if (height === 0) {
+							placeholderHtml = `<div id="${src}" onclick="page.showVideo(this, '${src}', ${width}, ${height}); return false;" style="text-align: center; width: ${width}px; height: 30px; background-color: #555555; color: white; cursor: pointer;">Show Video/div>`;
+						} else if (width === 0) {
+							placeholderHtml = `<div id="${src}" onclick="page.showVideo(this, '${src}', ${width}, ${height}); return false;" style="text-align: center; width: 100%; height: ${height}px; background-color: #555555; color: white; cursor: pointer;">Show Video</div>`;
+						} else {
+							placeholderHtml = `<div id="${src}" onclick="page.showVideo(this, '${src}', ${width}, ${height}); return false;" style="text-align: center; width: ${width}px; height: ${height}px; background-color: #555555; color: white; cursor: pointer;">Show Video</div>`;
+						}
+
+						let inner_path = src.replace(/(http:\/\/)?127.0.0.1:43110\//, '').replace(/(https:\/\/)?127.0.0.1:43110\//, '').replace(/18GAQeWN4B7Uum6rvJL2zh9oe4VfcnTM18\//, '').replace(/1CVmbCKWtbskK2GAZLM6gnMuiL6Je25Yds\//, '').replace(/ZeroMedium.bit\//, '');
+
+						page.cmd("optionalFileInfo", { "inner_path": inner_path.slice(1) }, (row) => {
+							let container = document.getElementById(src);
+
+							if (!row) {
+								console.log("Cannot Find Video Info");
+								container.innerHTML = "Show Video";
+							} else if (row.is_downloaded) {
+								container.click();
+							} else {
+								container.innerHTML = "Show Video (peers: " + row.peer + ", size: " + row.size / 1000 + "KB)";
+							}
+						});
+
+						// Replace the image tag with the placeholder html
+						newBody = newBody.slice(0, m_video.index) + placeholderHtml + newBody.slice(m_video.index).replace(m_video[0], '');
 					}
-				} while (m);
+				} while (m_image || m_audio || m_video);
 
 				that.sanitizedBody = newBody;
 

@@ -1,4 +1,5 @@
-version = "17.12a.2"
+version = "17.12b"
+allLanguages = ["EN", "ES", "ZH"]; // TODO: use in signin-modal?
 
 // Zeroframe
 var ZeroFrame = require("./ZeroFrame.js");
@@ -38,7 +39,7 @@ var app = new Vue({
                 <div class="container">
                     <div class="has-text-centered">
                         <em>&copy; Copyright 2017 Christian Seibold. BSD License.</em><br>
-                        Current Version: {{ version }}<br>
+                        Current Version: <a :href="'./?/12gAes6NzDS9E2q6Q1UXrpUdbPS6nvuBPu/' + getVersionLink()" v-on:click.prevent="goto('12gAes6NzDS9E2q6Q1UXrpUdbPS6nvuBPu/' + getVersionLink())">{{ version }}</a><br>
                         <a href="/1BEPbMfV8QtaZCD2cPNbabfDKnmhTAZRPx">Git Center Repo</a>
                     </div>
                 </div>
@@ -55,6 +56,14 @@ var app = new Vue({
         responseContent: "" // Used to transfer content from small response box to fullscreen route
     },
     methods: {
+        getVersionLink: function() {
+            var version_split = version.split(".");
+            var version_main = version_split[0] + "-" + version_split[1];
+            return "version-" + version_main.replace(/ /g, "");
+        },
+        goto: function(to) {
+            Router.navigate(to);
+        },
         navbarShadowOn: function() {
             this.navbarShadow = true;
         },
@@ -100,9 +109,25 @@ var app = new Vue({
                     that.$on("setUserLanguages", (languages) => {
                         that.keyvalue.languages = languages;
                         that.$emit("setUserInfo", that.userInfo);
+                        cache_remove("home_topics");
+                        if (Router.currentRoute == "") {
+                            that.$refs.view.getTopics();
+                        }
+                        /*page.getTopics((topics) => {
+                            console.log(topics);
+                            cache_add("home_topics", topics);
+                        });*/
                     });
                 } else {
                     that.$emit("setUserInfo", that.userInfo);
+                    cache_remove("home_topics");
+                    if (Router.currentRoute == "") {
+                        that.$refs.view.getTopics();
+                    }
+                    /*page.getTopics((topics) => {
+                        console.log(topics);
+                        cache_add("home_topics", topics);
+                    });*/
                 }
             });
         },
@@ -196,8 +221,75 @@ class ZeroApp extends ZeroFrame {
         }
     }
 
+    showAudio(elem, location, width, height) {
+        var inner_path = location.replace(/(http:\/\/)?127.0.0.1:43110\//, '').replace(/(https:\/\/)?127.0.0.1:43110\//, '').replace(/18GAQeWN4B7Uum6rvJL2zh9oe4VfcnTM18\//, '').replace(/1CVmbCKWtbskK2GAZLM6gnMuiL6Je25Yds\//, '').replace(/ZeroMedium.bit\//, '');
+
+        if (height === 0 && width === 0) {
+            elem.parentElement.innerHTML = "<audio src='" + location + "' controls></audio>";
+        } else if (height === 0) {
+            elem.parentElement.innerHTML = "<audio src='" + location + "' width='" + width + "' controls></audio>";    
+        } else if (width === 0) {
+            elem.parentElement.innerHTML = "<audio src='" + location + "' height='" + height + "' controls></audio>";
+        } else {
+            elem.parentElement.innerHTML = "<audio src='" + location + "' width='" + width + "' height='" + height + "' controls></audio>";
+        }
+    }
+
+    showVideo(elem, location, width, height) {
+        var inner_path = location.replace(/(http:\/\/)?127.0.0.1:43110\//, '').replace(/(https:\/\/)?127.0.0.1:43110\//, '').replace(/18GAQeWN4B7Uum6rvJL2zh9oe4VfcnTM18\//, '').replace(/1CVmbCKWtbskK2GAZLM6gnMuiL6Je25Yds\//, '').replace(/ZeroMedium.bit\//, '');
+
+        if (height === 0 && width === 0) {
+            elem.parentElement.innerHTML = "<video src='" + location + "' controls></video>";
+        } else if (height === 0) {
+            elem.parentElement.innerHTML = "<video src='" + location + "' width='" + width + "' controls></video>";    
+        } else if (width === 0) {
+            elem.parentElement.innerHTML = "<video src='" + location + "' height='" + height + "' controls></video>";
+        } else {
+            elem.parentElement.innerHTML = "<video src='" + location + "' width='" + width + "' height='" + height + "' controls></video>";
+        }
+    }
+
     getTopics(f = null) {
-        page.cmd("dbQuery", ["SELECT * FROM topics"], (topics) => {
+        if (app.userInfo && app.userInfo.keyvalue && app.userInfo.keyvalue.languages !== "") {
+            var primarylang = app.userInfo.keyvalue.languages.split(",")[0].toLowerCase();
+            var addToQuery = "";
+            if (primarylang !== "en" && primarylang !== "EN") {
+                addToQuery = "_" + primarylang;
+            }
+            page.cmd("dbQuery", ["SELECT * FROM topics" + addToQuery], (topics) => {
+                if (f != null && typeof f === "function") {
+                    f(topics);
+                }
+            });
+        } else {
+            page.cmd("dbQuery", ["SELECT * FROM topics"], (topics) => {
+                if (f != null && typeof f === "function") {
+                    f(topics);
+                }
+            });
+        }
+    }
+
+    getTopicsInLang(lang = "en", f = null) {
+        var addToQuery = "";
+        if (lang !== "en" && lang !== "EN") {
+            addToQuery = "_" + lang.toLowerCase();
+        }
+        page.cmd("dbQuery", ["SELECT * FROM topics" + addToQuery], (topics) => {
+            if (f != null && typeof f === "function") {
+                f(topics);
+            }
+        });
+    }
+
+    getTopicInLang(topic_id, lang = "en", f = null) {
+        var addToQuery = "";
+        if (lang !== "en" && lang !== "EN") {
+            addToQuery = "_" + lang.toLowerCase();
+        }
+        console.log(addToQuery);
+        page.cmd("dbQuery", ["SELECT * FROM topics" + addToQuery + " WHERE topic_id=" + topic_id + " LIMIT 1"], (topics) => {
+            console.log(topics);
             if (f != null && typeof f === "function") {
                 f(topics);
             }
@@ -292,10 +384,12 @@ class ZeroApp extends ZeroFrame {
 
     sanitizeHtml(text) {
         return sanitizeHtml(text, {
-            allowedTags: ["b", "i", "em", "strong", "u", "a", "h1", "h2", "h3", "h4", "h5", "h6", "p", "br", "div", "blockquote", "code", "strike", "ul", "li", "ol", "nl", "hr", "table", "thead", "caption", "tbody", "tr", "th", "td", "pre", "span", "img"],
+            allowedTags: ["b", "i", "em", "strong", "u", "a", "h1", "h2", "h3", "h4", "h5", "h6", "p", "br", "div", "blockquote", "code", "strike", "ul", "li", "ol", "nl", "hr", "table", "thead", "caption", "tbody", "tr", "th", "td", "pre", "span", "img", "audio", "video"],
             allowedAttributes: {
                 "a": [ "href", "name", "target", "align" ],
                 "img": [ "src", "align", "width", "height"],
+                "audio": [ "src", "align", "width", "height", "controls"],
+                "video": [ "src", "align", "width", "height", "controls"],
                 "div": [ "align" ],
                 "p": [ "align" ],
                 "h1": [ "align" ],
@@ -314,7 +408,9 @@ class ZeroApp extends ZeroFrame {
                 "table": [ "align" ]
             },
             allowedSchemesByTag: {
-              img: [ "data" ]
+              img: [ "data" ],
+              audio: [ "data" ],
+              video: [ "data" ]
             }
         });
     }
@@ -818,7 +914,7 @@ class ZeroApp extends ZeroFrame {
             if (!data) return;
             data = JSON.parse(data);
 
-            var curoptional = ".+\\.(png|jpg|jpeg|gif|mp3|ogg|mp4)";
+            var curoptional = ".+\\.(png|jpg|jpeg|gif|mp3|flac|ogg|mp4|webm)";
             var changed = false;
             if (!data.hasOwnProperty("optional") || data.optional !== curoptional){
                 data.optional = curoptional
@@ -828,7 +924,7 @@ class ZeroApp extends ZeroFrame {
             var json_raw = unescape(encodeURIComponent(JSON.stringify(data, undefined, "\t")));
 
             if (changed) {
-                // Write (and Sign and Publish is doSignPublish=true)
+                // Write (and Sign and Publish is doSignPublish)
                 page.cmd("fileWrite", [content_inner_path, btoa(json_raw)], (res) => {
                     if (res === "ok") {
                         if (f != null && typeof f === "function") f();
@@ -838,9 +934,7 @@ class ZeroApp extends ZeroFrame {
                             });
                         }
                     } else {
-                        page.cmd("wrapperNotification", [
-                            "error", "File write error: " + JSON.stringify(res)
-                        ]);
+                        page.cmd("wrapperNotification", ["error", "File write error: " + JSON.stringify(res)]);
                     }
                 });
             } else {
@@ -863,8 +957,8 @@ class ZeroApp extends ZeroFrame {
 
                 data = JSON.parse(data);
 
-                if (!data["images"]) {
-                    data["images"] = [];
+                if (!data["files"]) {
+                    data["files"] = [];
                 }
 
                 var date_added = Date.now();
@@ -874,11 +968,13 @@ class ZeroApp extends ZeroFrame {
                 // [^] matches anything that is NOT within the brackets, therefore
                 // [^\x00-\x7F] will match anything that is NOT ascii
                 var orig_filename_list = file.name.split(".");
-                var filename = orig_filename_list[0].replace(/\s/g, "_").replace(/[^\x00-\x7F]/g, "") + "-" + date_added + "." + orig_filename_list[1];
-                console.log(filename);
+                var filename = orig_filename_list[0].replace(/\s/g, "_").replace(/[^\x00-\x7F]/g, "").replace(/\'/g, "").replace(/\"/g, "") + "-" + date_added + "." + orig_filename_list[orig_filename_list.length - 1];
 
-                data["images"].push({
+                console.log(file.type);
+
+                data["files"].push({
                     "file_name": filename,
+                    "type": file.type,
                     "date_added": date_added
                 });
 
@@ -896,7 +992,7 @@ class ZeroApp extends ZeroFrame {
                             imageUpload.parentNode.replaceChild(imageUpload.cloneNode(true), imageUpload)
                         }*/
 
-                        // Write data to disk
+                        // Add file to data.json
                         page.cmd("fileWrite", [data_inner_path, btoa(json_raw)], (res) => {
                             if (res === "ok") {
                                 var output_url = "/" + page.site_info.address + "/" + f_path;
@@ -927,6 +1023,32 @@ class ZeroApp extends ZeroFrame {
                         page.cmd("wrapperNotification", ["error", "Image-File write error: " + JSON.stringify(res)]);
                     }
                 });
+            });
+        });
+    }
+
+    uploadBigFile(file, f = null) {
+        var date_added = Date.now();
+        var orig_filename_list = file.name.split(".");
+        var filename = orig_filename_list[0].replace(/\s/g, "_").replace(/[^\x00-\x7F]/g, "").replace(/\'/g, "").replace(/\"/g, "") + "-" + date_added + "." + orig_filename_list[orig_filename_list.length - 1];
+
+        var f_path = "data/users/" + page.site_info.auth_address + "/" + filename;
+
+        page.checkOptional(false, () => {
+            page.cmd("bigfileUploadInit", [f_path, file.size], (init_res) => {
+                var formdata = new FormData();
+                formdata.append(file.name, file);
+
+                var req = new XMLHttpRequest();
+
+                req.upload.addEventListener("progress", console.log);
+                req.upload.addEventListener("loadend", () => {
+                    page.cmd("wrapperNotification", ["info", "Upload finished!"]);
+                    if (f !== null && typeof f === "function") f(f_path);
+                });
+                req.withCredentials = true;
+                req.open("POST", init_res.url);
+                req.send(formdata);
             });
         });
     }
