@@ -77,14 +77,14 @@ var Router = {
 				this.currentParams = routeParams;
 				// Call 'before' hook
 				if (this.hookFunctions && this.hookFunctions["before"]) { // TODO: Move this into navigate function?
-					if (!this.hookFunctions["before"].call(object, this.routes[i].path, routeParams)) {
+					if (!this.hookFunctions["before"].call(object, this.routes[i].path, routeParams, this.searchQuery)) {
 						page.cmd("wrapperPushState", [{ "route": this.currentRoute }, null, this.root + this.clearSlashes(this.currentRoute)]);
 						return this;
 					}
 				}
 				// Call route-specific 'before' hook
 				if (this.routes[i].hooks && this.routes[i].hooks["before"]) {
-					if (!this.routes[i].hooks["before"].call(object, routeParams)) {
+					if (!this.routes[i].hooks["before"].call(object, routeParams, this.searchQuery)) {
 						page.cmd("wrapperPushState", [{ "route": this.currentRoute }, null, this.root + this.clearSlashes(this.currentRoute)]);
 						return this;
 					}
@@ -94,14 +94,14 @@ var Router = {
 				if (this.setView) { // Used for Vue-ZeroFrame-Router-Plugin NOTE: May Change
 					this.setView(i, this.routes[i].object);
 				}
-				this.routes[i].controller.call(object, routeParams);
+				this.routes[i].controller.call(object, routeParams, this.searchQuery);
 				// Call route-specific 'after' hook
 				if (this.routes[i].hooks) {
-					this.routes[i].hooks["after"].call(object, routeParams);
+					this.routes[i].hooks["after"].call(object, routeParams, this.searchQuery);
 				}
 				if (this.hookFunctions) {
 					if (this.hookFunctions["after"]) {
-						this.hookFunctions["after"].call(object, this.currentRoute, routeParams);
+						this.hookFunctions["after"].call(object, this.currentRoute, routeParams, this.searchQuery);
 					}
 				}
 				return this;
