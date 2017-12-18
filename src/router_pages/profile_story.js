@@ -421,7 +421,7 @@ var ProfileStory = {
 				<div class="columns is-centered">
 					<div class="column is-three-quarters-tablet is-half-desktop">
 						<div v-if="profileInfo && story">
-							<p class="title is-3">{{ story.title ? story.title : "[NO TITLE]" }}</p>
+							<p class="title is-3">{{ story.title !== "" ? story.title : "[NO TITLE]" }}</p>
 							<p class="subtitle is-5">By <a :href="'./?/' + profileInfo.auth_address" v-on:click.prevent="goto(profileInfo.auth_address)">{{ storyAuthor }}</a> - {{ datePosted(story.date_added) }}</p>
 							<div id="storyBody" class="custom-content" v-html="sanitizedBody"></div>
 							<div class="tags" style="margin-top: 10px;" v-if="story.tags != ''">
