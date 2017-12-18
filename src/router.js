@@ -2,6 +2,7 @@ var Router = {
 	routes: [],
 	currentRoute: "",
 	currentParams: {},
+	searchQuery: {},
 	root: "/",
 	notFoundFunction: null,
 	hookFunctions: {}, // hooks that are called for each route, functions for 'before' and 'after'.
@@ -11,8 +12,21 @@ var Router = {
 	},
 	getURL: function() { // get's current query string/hash & clears slashes from beginning and end, Note: only for initial load
 		var url = '';
-		url = window.location.search.replace(/&wrapper_nonce=([A-Za-z0-9]+)/, "").replace(/\?wrapper_nonce=([A-Za-z0-9]+)/, "").replace(/\?\//, ''); // TODO: Fix this to replace the root instead of just a slash
+		url = window.location.search.replace(/&wrapper_nonce=([A-Za-z0-9]+)/, "").replace(/\?wrapper_nonce=([A-Za-z0-9]+)/, "").replace(/\?\//, '').replace(/&.*/, ''); // TODO: Fix this to replace the root instead of just a slash
 		return this.clearSlashes(url);
+	},
+	getSearchQuery: function() {
+		var url = "";
+		url = window.location.search.replace(/&wrapper_nonce=([A-Za-z0-9]+)/, "").replace(/\?wrapper_nonce=([A-Za-z0-9]+)/, "").replace(/\?\//, '');
+		var re = (/&([^&=]+)(=?)([^&]*)/g);
+		var m;
+
+		do {
+			m = re.exec(url);
+			if (m) {
+				this.searchQuery[m[1]] = m[3];
+			}
+		} while (m);
 	},
 	clearSlashes: function(path) {
 		return path.toString().replace(/\/$/, '').replace(/^\//, '');
@@ -44,7 +58,10 @@ var Router = {
 	check: function(hash) {
 		var reg, keys, match, routeParams;
 		for (var i = 0, max = this.routes.length; i < max; i++ ) {
-			routeParams = {}
+			this.getSearchQuery();
+			routeParams = {
+				searchQuery: this.searchQuery
+			};
 			keys = this.routes[i].path.match(/:([^\/]+)/g);
 			match = hash.match(new RegExp(this.routes[i].path.replace(/:([^\/]+)/g, "([^\/]*)").replace(/\*/g, '(?:.*)') + '(?:\/|$)'));
 			if (match) {
