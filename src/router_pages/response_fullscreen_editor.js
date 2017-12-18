@@ -230,7 +230,7 @@ var ResponseFullscreenEditor = {
 				<div class="columns is-centered">
 					<div class="column is-three-quarters-tablet is-half-desktop">
 						<div style="margin-left: 20px; margin-bottom: 20px;" v-if="story">
-							Responding to <a :href="'./?/' + referenceProfileInfo.auth_address + '/' + story.slug" v-on:click.prevent="goto(referenceProfileInfo.auth_address  + '/' + story.slug)">{{ story.title ? story.title : "[NO TITLE]" }}</a><br>
+							Responding to <a :href="'./?/' + referenceProfileInfo.auth_address + '/' + story.slug" v-on:click.prevent="goto(referenceProfileInfo.auth_address  + '/' + story.slug)">{{ story.title !== "" ? story.title : "[NO TITLE]" }}</a><br>
 							<small>{{ referenceAuthor }}</small>
 						</div>
 						<div style="margin-left: 20px; margin-bottom: 20px;" v-if="response">
