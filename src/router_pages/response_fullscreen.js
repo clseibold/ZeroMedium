@@ -223,11 +223,11 @@ var ResponseFullscreen = {
 						<div v-if="response">
 							<p style="margin-bottom: 5px;"><strong><a :href="'./?/' + getAuthAddress" v-on:click.prevent="goto(getAuthAddress)">{{ response.value }}</a></strong></p>
 							<div style="margin-left: 20px; margin-bottom: 20px;" v-if="response.story">
-								Responded to <a :href="'./?/' + getStoryAuthAddress + '/' + response.story.slug" v-on:click.prevent="goto(getStoryAuthAddress  + '/' + response.story.slug)">{{ response.story.title }}</a><br>
+								Responded to <a :href="'./?/' + getStoryAuthAddress + '/' + response.story.slug" v-on:click.prevent="goto(getStoryAuthAddress  + '/' + response.story.slug)">{{ response.story.title.trim() !== "" ? response.story.title : "[NO TITLE]" }}</a><br>
 								<small>{{ response.story.value }}</small>
 							</div>
 							<div style="margin-left: 20px; margin-bottom: 20px;" v-if="referenceResponse">
-								Responded to <a :href="'./?/' + getReferenceResponseAuthAddress + '/response/' + referenceResponse.response_id" v-on:click.prevent="goto(getReferenceResponseAuthAddress  + '/response/' + referenceResponse.response_id)">Response by {{ referenceResponse.value }}</a>
+								Responded to <a :href="'./?/' + getReferenceResponseAuthAddress + '/response/' + referenceResponse.response_id">Response by {{ referenceResponse.value }}</a>
 							</div>
 
 							<div class="custom-content" style="margin-bottom: 5px;" v-html="page.sanitizeHtml(response.body)"></div>

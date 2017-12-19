@@ -14,9 +14,6 @@ Vue.component("signin-modal", {
 
         var that = this;
 
-        page.getTopics((topics) => {
-            that.topics = topics;
-        });
         page.getUsers((users) => {
             that.existingUsers = users;
         });
@@ -77,10 +74,15 @@ Vue.component("signin-modal", {
                 secondaryLanguages.splice(index, 1);
             }
 
+            var languages = primaryLanguage;
+            if (secondaryLanguages.length != 0) {
+                languages += "," + secondaryLanguages.join(",");
+            }
+
             return {
                 name: name,
                 about: about,
-                languages: primaryLanguage + "," + secondaryLanguages.join(","),
+                languages: languages,
                 interests: interestsString
             };
         },
@@ -142,6 +144,13 @@ Vue.component("signin-modal", {
                     page.cmd("wrapperNotification", ["error", "Please select a primary language."]);
                     return;
                 }
+
+                var that = this;
+
+                // Get Topics for use on Interests slide.
+                page.getTopicsInLang(this.primaryLanguage, (topics) => {
+                    that.topics = topics;
+                });
             }
             this.currentSlide++;
             this.slideTitle = " - ";

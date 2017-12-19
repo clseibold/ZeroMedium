@@ -1,5 +1,6 @@
 var Vue = require("vue/dist/vue.min.js");
 var Router = require("../router.js");
+var { cache_add, cache_replace, cache_remove, cache_get, cache_getOrAdd, cache_exists, cache_clear } = require("../cache.js");
 
 Vue.component('custom-nav', {
     props: ['userInfo', 'shadow'],
@@ -34,8 +35,16 @@ Vue.component('custom-nav', {
             Router.navigate(to);
         },
         signout: function() {
+            var that = this;
+
             page.signout(function() {
-                Router.navigate('');
+                that.menuShown = false;
+                cache_remove("home_topics");
+                if (Router.currentRoute == "") {
+                    that.$parent.$refs.view.getTopics();
+                } else {
+                    Router.navigate("");
+                }
             });
         }
     },

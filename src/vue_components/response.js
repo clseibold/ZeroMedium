@@ -83,7 +83,7 @@ Vue.component("response", {
 			<slot></slot>
 			<p v-if="showName" style="margin-bottom: 5px;"><strong><a :href="'./?/' + getAuthAddress" v-on:click.prevent="goto(getAuthAddress)">{{ response.value }}</a></strong></p>
 			<div style="margin-left: 20px; margin-bottom: 20px;" v-if="showReference && story">
-				Responded to <a :href="'./?/' + getStoryAuthAddress(story) + '/' + story.slug" v-on:click.prevent="goto(getStoryAuthAddress(story)  + '/' + story.slug)">{{ story.title }}</a><br>
+				Responded to <a :href="'./?/' + getStoryAuthAddress(story) + '/' + story.slug" v-on:click.prevent="goto(getStoryAuthAddress(story)  + '/' + story.slug)">{{ story.title.trim() !== "" ? story.title : "[NO TITLE]" }}</a><br>
 				<small>{{ story.value }}</small>
 			</div>
 			<div style="margin-left: 20px; margin-bottom: 20px;" v-if="showReference && referenceResponse">
