@@ -252,15 +252,12 @@ class ZeroApp extends ZeroFrame {
     getTopics(f = null) {
         if (app.userInfo && app.userInfo.keyvalue && app.userInfo.keyvalue.languages !== "") {
             var primarylang = app.userInfo.keyvalue.languages.split(",")[0].toLowerCase();
-<<<<<<< HEAD
-            page.cmd("dbQuery", ["SELECT * FROM topics_" + primarylang], (topics) => {
-=======
+
             var addToQuery = "";
             if (primarylang !== "en" && primarylang !== "EN") {
                 addToQuery = "_" + primarylang;
             }
             page.cmd("dbQuery", ["SELECT * FROM topics" + addToQuery], (topics) => {
->>>>>>> release-17.12b
                 if (f != null && typeof f === "function") {
                     f(topics);
                 }
