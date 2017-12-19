@@ -34,6 +34,7 @@ var app = new Vue({
             <component ref="view" v-bind:is="currentView" v-on:show-signin-modal="showSigninModal()" v-on:navbar-shadow-on="navbarShadowOn()" v-on:navbar-shadow-off="navbarShadowOff()" v-on:get-user-info="getUserInfo()" v-bind:user-info="userInfo" v-bind:response-content="responseContent" v-on:set-response-content="setResponseContent"></component>
             <signin-modal v-model="signin_modal_active" v-on:get-user-info="getUserInfo()" v-if="signin_modal_active" v-bind:user-info="userInfo"></signin-modal>
             <language-modal v-model="language_modal_active" v-on:get-user-info="getUserInfo()" v-if="language_modal_active" v-bind:user-info="userInfo"></language-modal>
+            <route-link to="search">I'm Dumb!</route-link>
 
             <footer class="footer">
                 <div class="container">
@@ -1114,7 +1115,7 @@ var Profile = require("./router_pages/profile.js");
 var ResponseFullscreen = require("./router_pages/response_fullscreen.js");
 var ProfileStory = require("./router_pages/profile_story.js");
 
-VueZeroFrameRouter.VueZeroFrameRouter_Init(Router, app, [
+VueZeroFrameRouter.VueZeroFrameRouter_Init(app, [
     { route: "help", component: Help },
     { route: "search", component: Search },
 	{ route: "topics", component: Topics },

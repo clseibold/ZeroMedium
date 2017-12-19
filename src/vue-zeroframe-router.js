@@ -1,5 +1,7 @@
 //export default MyPlugin;
 
+var Router = require("./router.js");
+
 const VueRouteLink =  {
 	props: ["to"],
 	template: '<a v-bind:href="getHref" v-on:click.prevent="goto" v-bind:class="{ \'is-active\': active }"><slot></slot></a>',
@@ -55,7 +57,7 @@ const VueZeroFrameRouter = {
 	}
 };
 
-function VueZeroFrameRouter_Init(Router, vueInstance, routes) {
+function VueZeroFrameRouter_Init(vueInstance, routes) {
 	VueZeroFrameRouter.routes = routes;
 	for (var i = 0; i < routes.length; i++) {
 		Router.add(routes[i].route, !routes[i].component.init ? function() {} : routes[i].component.init, {
