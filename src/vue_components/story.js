@@ -25,7 +25,7 @@ Vue.component('story', {
 	},
 	template: `
 		<div class="box">
-			<p class="title is-5" style="margin-bottom: 0;"><a :href="'./?/' + getStoryUrl" v-on:click.prevent="goto(getStoryUrl)">{{ story.title }}</a></p>
+			<p class="title is-5" style="margin-bottom: 0;"><a :href="'./?/' + getStoryUrl" v-on:click.prevent="goto(getStoryUrl)">{{ story.title.trim() !== "" ? story.title : "[NO TITLE]" }}</a></p>
 			<small style="margin-bottom: 10px;" v-if="showName">By <a :href="'./?/' + getStoryAuthAddress" v-on:click.prevent="goto(getStoryAuthAddress)">{{ story.value }}</a></small>
 			<p style="margin-bottom: 5px;">{{ story.description }}</p>
 			<small>

@@ -74,10 +74,15 @@ Vue.component("signin-modal", {
                 secondaryLanguages.splice(index, 1);
             }
 
+            var languages = primaryLanguage;
+            if (secondaryLanguages.length != 0) {
+                languages += "," + secondaryLanguages.join(",");
+            }
+
             return {
                 name: name,
                 about: about,
-                languages: primaryLanguage + "," + secondaryLanguages.join(","),
+                languages: languages,
                 interests: interestsString
             };
         },

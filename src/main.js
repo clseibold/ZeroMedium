@@ -1,4 +1,4 @@
-version = "17.12a.3"
+version = "17.12b"
 allLanguages = ["EN", "ES", "ZH"]; // TODO: use in signin-modal?
 
 // Zeroframe
@@ -252,7 +252,15 @@ class ZeroApp extends ZeroFrame {
     getTopics(f = null) {
         if (app.userInfo && app.userInfo.keyvalue && app.userInfo.keyvalue.languages !== "") {
             var primarylang = app.userInfo.keyvalue.languages.split(",")[0].toLowerCase();
+<<<<<<< HEAD
             page.cmd("dbQuery", ["SELECT * FROM topics_" + primarylang], (topics) => {
+=======
+            var addToQuery = "";
+            if (primarylang !== "en" && primarylang !== "EN") {
+                addToQuery = "_" + primarylang;
+            }
+            page.cmd("dbQuery", ["SELECT * FROM topics" + addToQuery], (topics) => {
+>>>>>>> release-17.12b
                 if (f != null && typeof f === "function") {
                     f(topics);
                 }
@@ -1065,20 +1073,22 @@ class ZeroApp extends ZeroFrame {
 
         var f_path = "data/users/" + page.site_info.auth_address + "/" + filename;
 
-        page.cmd("bigfileUploadInit", [f_path, file.size], (init_res) => {
-            var formdata = new FormData();
-            formdata.append(file.name, file);
+        page.checkOptional(false, () => {
+            page.cmd("bigfileUploadInit", [f_path, file.size], (init_res) => {
+                var formdata = new FormData();
+                formdata.append(file.name, file);
 
-            var req = new XMLHttpRequest();
+                var req = new XMLHttpRequest();
 
-            req.upload.addEventListener("progress", console.log);
-            req.upload.addEventListener("loadend", () => {
-                page.cmd("wrapperNotification", ["info", "Upload finished!"]);
-                if (f !== null && typeof f === "function") f(f_path);
+                req.upload.addEventListener("progress", console.log);
+                req.upload.addEventListener("loadend", () => {
+                    page.cmd("wrapperNotification", ["info", "Upload finished!"]);
+                    if (f !== null && typeof f === "function") f(f_path);
+                });
+                req.withCredentials = true;
+                req.open("POST", init_res.url);
+                req.send(formdata);
             });
-            req.withCredentials = true;
-            req.open("POST", init_res.url);
-            req.send(formdata);
         });
     }
 }

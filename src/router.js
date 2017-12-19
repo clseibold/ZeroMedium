@@ -120,11 +120,11 @@ var Router = {
 				if (!message.params.state.url) {
 					message.params.state.url = message.params.href.replace(/.*\?/, "");
 				}
-				this.navigate(message.params.state.url.replace(/^\//, ''));
+				this.navigate(message.params.state.url.replace(/^\//, ''), false);
 			}
 		}
 	},
-	navigate: function(path) {
+	navigate: function(path, doPush = true) {
 		var previousRoute = this.currentRoute;
 		// TODO: Call route-specific 'leave' hook
 		// Call global 'leave' hook
@@ -135,7 +135,9 @@ var Router = {
 		}
 
 		path = path ? path : '';
-		page.cmd("wrapperPushState", [{ "route": path }, null, this.root + this.clearSlashes(path)]);
+		if (doPush) {
+			page.cmd("wrapperPushState", [{ "route": path }, path, this.root + this.clearSlashes(path)]);
+		}
 		this.check(path);
 		return this;
 	},

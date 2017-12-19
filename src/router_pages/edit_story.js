@@ -195,6 +195,12 @@ var EditStory = {
 		},
 		publish: function(tags, description, language) {
 			var that = this;
+
+			if (this.editor.getContent().trim() === "" || this.title.trim() === "") { // TODO: Doesn't work all of the time, need to remove all html elements for body to work correctly
+				page.cmd("wrapperNotification", ["error", "You cannot post an empty story."]);
+				return;
+			}
+			
 			if (language == "") language = null;
 			page.editStory(this.story.story_id, this.title, description, this.editor.getContent(), tags, language, function(storySlug) {
 				//cache_clear();
