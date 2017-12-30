@@ -27,7 +27,7 @@ class Story extends Model {
     }
 
     static get(auth_address, slug) {
-        return Story.fields("story_id", "title", "slug", "description", "body", "tags", "language", "date_updated", "date_added", "value")
+        return Story.fields("story_id", "title", "slug", "description", "body", "tags", "language", "date_updated", "date_added", "directory", "value")
             .leftJoinJson().leftJoinUsing("keyvalue", "json_id")
             .where("directory", "users/" + auth_address)
             .where("slug", slug).where("key", "name")
@@ -35,10 +35,10 @@ class Story extends Model {
     }
 
     static getFromId(auth_address, story_id) {
-        return Story.fields("story_id", "title", "slug", "description", "body", "tags", "language", "date_updated", "date_added", "value")
+        return Story.fields("story_id", "title", "slug", "description", "body", "tags", "language", "date_updated", "date_added", "directory", "value")
             .leftJoinJson().leftJoinUsing("keyvalue", "json_id")
             .where("directory", "users/" + auth_address)
-            .where("story_id", id).where("key", "name")
+            .where("story_id", story_id).where("key", "name")
             .log("<Story: getFromId> ").get(page);
     }
 

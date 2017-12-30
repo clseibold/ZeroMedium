@@ -804,7 +804,9 @@ class ZeroApp extends ZeroFrame {
 
     getResponse(auth_address, response_id, f) {
         //page.cmd("dbQuery", ['SELECT * FROM responses LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND directory="users/' + auth_address + '" AND response_id=' + response_id + " LIMIT 1"], (responses) => {
-        //if (typeof response_id !== '')
+        if (typeof response_id !== "number") {
+            response_id = parseInt(response_id);
+        }
         Models.Response.get(auth_address, response_id)
             .then((responses) => {
                 var response = responses[0];
