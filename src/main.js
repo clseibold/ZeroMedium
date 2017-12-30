@@ -732,7 +732,7 @@ class ZeroApp extends ZeroFrame {
         var data_inner_path = "data/users/" + app.userInfo.auth_address + "/data.json";
         var content_inner_path = "data/users/" + app.userInfo.auth_address + "/content.json";
 
-        var response = new Models.Response();
+        /*var response = new Models.Response();
         response.response_id = app.userInfo.keyvalue["next_response_id"] || 1;
         response.body = page.sanitizeHtml(body);
         response.reference_id = reference_id;
@@ -756,9 +756,9 @@ class ZeroApp extends ZeroFrame {
                 }
 
                 return false;
-            });
+            });*/
 
-        /*page.cmd("fileGet", { "inner_path": data_inner_path, "required": false }, (data) => {
+        page.cmd("fileGet", { "inner_path": data_inner_path, "required": false }, (data) => {
             if (!data) {
                 // TODO: Show registration modal.
                 return;
@@ -793,7 +793,7 @@ class ZeroApp extends ZeroFrame {
                     });
                 }
             });
-        });*/
+        });
     }
 
     getResponses(reference_auth_address, reference_id, reference_type, f) {
@@ -804,6 +804,7 @@ class ZeroApp extends ZeroFrame {
 
     getResponse(auth_address, response_id, f) {
         //page.cmd("dbQuery", ['SELECT * FROM responses LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND directory="users/' + auth_address + '" AND response_id=' + response_id + " LIMIT 1"], (responses) => {
+        //if (typeof response_id !== '')
         Models.Response.get(auth_address, response_id)
             .then((responses) => {
                 var response = responses[0];
