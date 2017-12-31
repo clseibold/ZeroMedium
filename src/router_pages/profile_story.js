@@ -387,10 +387,14 @@ var ProfileStory = {
 			});
 		},
 		getClapAmount: function() {
+			var distinct_directories = {};
 			var amount = 0;
 			for (var i = 0; i < this.claps.length; i++) {
 				var clap = this.claps[i];
-				amount += clap.number;
+				if (!distinct_directories[clap.directory]) {
+					distinct_directories[clap.directory] = clap.number;
+					amount += clap.number ? 1 : 0;
+				}
 			}
 
 			if (amount > 0) {
