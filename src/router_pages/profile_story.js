@@ -26,8 +26,7 @@ var ProfileStory = {
 
 		page.getUserProfileInfo(Router.currentParams["userauthaddress"], false, false, (profileInfo) => {
 			that.profileInfo = profileInfo;
-			page.getStory(Router.currentParams["userauthaddress"], Router.currentParams["slug"], (stories) => {
-				var story = stories[0];
+			page.getStory(Router.currentParams["userauthaddress"], Router.currentParams["slug"], (story) => {
 				that.story = story;
 				that.storyAuthor = story.value;
 				

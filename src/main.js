@@ -39,7 +39,7 @@ var app = new Vue({
                 <div class="container">
                     <div class="has-text-centered">
                         <em>&copy; Copyright 2017 Christian Seibold. BSD License.</em><br>
-                        Current Version: <a :href="'./?/12gAes6NzDS9E2q6Q1UXrpUdbPS6nvuBPu/' + getVersionLink()" v-on:click.prevent="goto('12gAes6NzDS9E2q6Q1UXrpUdbPS6nvuBPu/' + getVersionLink())">{{ version }}</a><br>
+                        Current Version: <a :href="'./?/12gAes6NzDS9E2q6Q1UXrpUdbPS6nvuBPu/' + getVersionLink()">{{ version }}</a><br>
                         <a href="/1BEPbMfV8QtaZCD2cPNbabfDKnmhTAZRPx">Git Center Repo</a>
                     </div>
                 </div>
@@ -609,7 +609,9 @@ class ZeroApp extends ZeroFrame {
             }
         });*/
         return Models.Story.get(auth_address, slug)
-            .then(f);
+            .then((stories) => {
+                return stories[0];
+            }).then(f);
     }
 
     // Used to get story that a response is on (for showing the response on an author's profile)
@@ -625,7 +627,9 @@ class ZeroApp extends ZeroFrame {
             }
         });*/
         return Models.Story.getMinimal(auth_address, story_id)
-            .then(f);
+            .then((stories) => {
+                return stories[0];
+            }).then(f);
     }
 
     // languages - array of languages
@@ -1128,8 +1132,8 @@ VueZeroFrameRouter.VueZeroFrameRouter_Init(app, [
     { route: "me/stories/:slug/edit", component: EditStory },
     { route: "me/stories", component: MeStories },
     { route: ":userauthaddress/response/:id/response", component: ResponseFullscreenEditor },
-    { route: ":userauthaddress/:slug/response", component: ResponseFullscreenEditor },
     { route: ":userauthaddress/response/:id", component: ResponseFullscreen },
+    { route: ":userauthaddress/:slug/response", component: ResponseFullscreenEditor },
     { route: ":userauthaddress/:slug", component: ProfileStory },
     { route: ":userauthaddress", component: Profile }, // TODO: Have tabs use "&tab="?
     { route: "", component: Home }

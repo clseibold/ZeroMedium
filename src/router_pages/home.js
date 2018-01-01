@@ -92,7 +92,7 @@ var Home = {
             }
 
             var topQuery = `
-                SELECT stories.*, story_json.directory,
+                SELECT stories.*, story_json.directory, value,
                     ((SELECT COUNT(DISTINCT body)
                         FROM responses
                         LEFT JOIN json as response_json USING (json_id)
@@ -109,11 +109,13 @@ var Home = {
                             AND REPLACE(story_json.directory, 'users/', '')=claps.reference_auth_address
                             AND REPLACE(story_json.directory, 'users/', '')!=REPLACE(clap_json.directory, 'users/', '')
                             AND claps.reference_type='s'
-                            AND claps.number=1
+                            AND claps.number>=1
                             AND (${now} - date_added) <= ${dayTime}
                         ORDER BY date_added DESC)) AS sort_num
                 FROM stories
                 LEFT JOIN json AS story_json USING (json_id)
+                LEFT JOIN keyvalue USING (json_id)
+                WHERE key='name'
                 ORDER BY sort_num DESC, stories.date_added DESC
                 LIMIT 5
                 `;
@@ -129,6 +131,8 @@ var Home = {
             var recentQuery = `
                 SELECT * FROM stories
                 LEFT JOIN json USING (json_id)
+                LEFT JOIN keyvalue USING (json_id)
+                WHERE key='name'
                 ORDER BY date_added DESC
                 LIMIT 5
                 `;

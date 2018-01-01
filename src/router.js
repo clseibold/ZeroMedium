@@ -91,7 +91,7 @@ var Router = {
 				this.currentRoute = this.routes[i].path;
 				window.scroll(window.pageXOffset, 0);
 				if (this.setView) { // Used for Vue-ZeroFrame-Router-Plugin NOTE: May Change
-					this.setView(i, this.routes[i].object);
+					this.setView(route, this.routes[i].object);
 				}
 				this.routes[i].controller.call(object, routeParams, this.searchQuery);
 				// Call route-specific 'after' hook
