@@ -32,7 +32,6 @@ var Topics = {
 				return;
 			}
 			this.interests = userInfo.keyvalue.interests.split(",");
-			//this.primaryLanguage = userInfo.keyvalue.languages.split(",")[0];
 			this.getTopics();
 		},
 		getTopics: function() {
