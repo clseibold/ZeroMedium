@@ -68,7 +68,7 @@
                 ["json_id", "INTEGER REFERENCES json (json_id)"]
             ],
             "indexes": ["CREATE UNIQUE INDEX tag_uk_key ON topics_uk (json_id, topic_id)"],
-            "schema_changed": 14
+            "schema_changed": 15
         },
         "topics_ru": {
             "cols": [
@@ -79,7 +79,7 @@
                 ["json_id", "INTEGER REFERENCES json (json_id)"]
             ],
             "indexes": ["CREATE UNIQUE INDEX tag_ru_key ON topics_ru (json_id, topic_id)"],
-            "schema_changed": 14
+            "schema_changed": 15
         },
         "stories": {
             "cols": [
