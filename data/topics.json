@@ -10,7 +10,7 @@
 			"topic_id": 2,
 			"name": "Programming",
 			"slug": "programming",
-			"tags": "programming,developer,javascript,python,c,c++,rust,html,css,sass,scss,java,php,node,nodejs,go,golang,functional,object-oriented,oo,oop,declarative,imperative,procedural,fortran,haskell,dev,zeronet dev center,dev center,webpack,,nodejs,gulp"
+			"tags": "programming,developer,javascript,python,c,c++,rust,html,css,sass,scss,java,php,node,nodejs,go,golang,functional,object-oriented,oo,oop,declarative,imperative,procedural,fortran,haskell,dev,zeronet dev center,dev center,webpack,nodejs,gulp"
 		},
 		{
 			"topic_id": 3,
@@ -314,9 +314,9 @@
 		},
 		{
 			"topic_id": 53,
-			"name": "Vtopic_ideo games",
-			"slug": "vtopic_ideo-games",
-			"tags": "vtopic_ideo game,computer game,pc game,mac game,linux game,steam,curse"
+			"name": "Video games",
+			"slug": "video-games",
+			"tags": "video game,computer game,pc game,mac game,linux game,steam,curse"
 		}
 	],
 	"topics_es": [
@@ -330,7 +330,7 @@
 			"topic_id": 2,
 			"name": "Programming",
 			"slug": "programming",
-			"tags": "programming,developer,javascript,python,c,c++,rust,html,css,sass,scss,java,php,node,nodejs,go,golang,functional,object-oriented,oo,oop,declarative,imperative,procedural,fortran,haskell,dev,zeronet dev center,dev center,webpack,,nodejs,gulp"
+			"tags": "programming,developer,javascript,python,c,c++,rust,html,css,sass,scss,java,php,node,nodejs,go,golang,functional,object-oriented,oo,oop,declarative,imperative,procedural,fortran,haskell,dev,zeronet dev center,dev center,webpack,nodejs,gulp"
 		},
 		{
 			"topic_id": 3,
@@ -634,9 +634,9 @@
 		},
 		{
 			"topic_id": 53,
-			"name": "Vtopic_ideo games",
-			"slug": "vtopic_ideo-games",
-			"tags": "vtopic_ideo game,computer game,pc game,mac game,linux game,steam,curse"
+			"name": "Video games",
+			"slug": "video-games",
+			"tags": "video game,computer game,pc game,mac game,linux game,steam,curse"
 		}
 	],
 	"topics_zh": [
@@ -957,6 +957,646 @@
 			"name": "视频游戏",
 			"slug": "视频游戏",
 			"tags": "视频游戏,pc game,mac game,linux game,steam"
+		}
+	],
+	"topics_uk": [
+		{
+			"topic_id": 1,
+			"name": "Рекомендації",
+			"slug": "рекомендації",
+			"tags": ""
+		},
+		{
+			"topic_id": 2,
+			"name": "Програмування",
+			"slug": "програмування",
+			"tags": "програмування,розробник,функціональний,об'єктно-орієнтований,декларативний,programming,developer,javascript,python,c,c++,rust,html,css,sass,scss,java,php,node,nodejs,go,golang,functional,object-oriented,oo,oop,declarative,imperative,procedural,fortran,haskell,dev,zeronet dev center,dev center,webpack,nodejs,gulp"
+		},
+		{
+			"topic_id": 3,
+			"name": "Технології",
+			"slug": "технології",
+			"tags": "програмування,операційна система,комп'ютер,телефон,смартфон,розподілений,інтернет,робот,роботи,programming,windows,linux,mac,macos,operating system,os,computer,phone,smart phone,zeronet,distributed,internet,robot,robots"
+		},
+		{
+			"topic_id": 4,
+			"name": "Політика",
+			"slug": "політика",
+			"tags": "політика,комунізм,капіталізм,імперіалізм"
+		},
+		{
+			"topic_id": 5,
+			"name": "Творчість",
+			"slug": "творчість",
+			"tags": "творчість,мистецтво"
+		},
+		{
+			"topic_id": 6,
+			"name": "Культура",
+			"slug": "культура",
+			"tags": "культура"
+		},
+		{
+			"topic_id": 7,
+			"name": "Мистецтво",
+			"slug": "мистецтво",
+			"tags": "мистецтво,вірші,поезія"
+		},
+		{
+			"topic_id": 8,
+			"name": "Фільми",
+			"slug": "фільми",
+			"tags": "фільми,кіно"
+		},
+		{
+			"topic_id": 9,
+			"name": "Їжа",
+			"slug": "їжа",
+			"tags": "їжа,харчування,здорова їжа"
+		},
+		{
+			"topic_id": 10,
+			"name": "Гумор",
+			"slug": "гумор",
+			"tags": "гумор"
+		},
+		{
+			"topic_id": 11,
+			"name": "Література",
+			"slug": "література",
+			"tags": "література,книги,сучасність,класика,історія,вірші,поезія"
+		},
+		{
+			"topic_id": 12,
+			"name": "Музика",
+			"slug": "музика",
+			"tags": "музика,поп,кантрі,rnb,душевна,класична,реп"
+		},
+		{
+			"topic_id": 13,
+			"name": "Фотографія",
+			"slug": "фотографія",
+			"tags": "фотографія,фото,знімки"
+		},
+		{
+			"topic_id": 14,
+			"name": "Соціальні медіа",
+			"slug": "соціальні-медіа",
+			"tags": "соціальні-медіа,соціальні медіа,фейсбук,твіттер,зероталк,зерновоат,zerome,facebook,twitter,zerotalk,zerovoat"
+		},
+		{
+			"topic_id": 15,
+			"name": "Спорт",
+			"slug": "спорт",
+			"tags": "спорт,футбол,бейсбол,американський футбол,волейбол,баскетбол,тріатлон,хокей,гольф,змагання,nfl,нфл,nba,нба,супер кубок"
+		},
+		{
+			"topic_id": 16,
+			"name": "Бізнес",
+			"slug": "бізнес",
+			"tags": "бізнес,компанія,некомерційна,прибуток,прибуткова,для прибутку"
+		},
+		{
+			"topic_id": 17,
+			"name": "Економіка",
+			"slug": "економіка",
+			"tags": "економіка,світова економіка,гроші,акції,фондові біржі,біткойн,крипто,криптовалюта,bitcoin,namecoin,litecoin"
+		},
+		{
+			"topic_id": 18,
+			"name": "Підприємництво",
+			"slug": "підприємництво",
+			"tags": "підприємництво,компанія"
+		},
+		{
+			"topic_id": 19,
+			"name": "Фріланс",
+			"slug": "фріланс",
+			"tags": "фріланс"
+		},
+		{
+			"topic_id": 20,
+			"name": "Маркетинг",
+			"slug": "маркетинг",
+			"tags": "маркетинг"
+		},
+		{
+			"topic_id": 21,
+			"name": "Продуктивність",
+			"slug": "продуктивність",
+			"tags": "продуктивність"
+		},
+		{
+			"topic_id": 22,
+			"name": "Робота",
+			"slug": "робота",
+			"tags": "робота"
+		},
+		{
+			"topic_id": 23,
+			"name": "Штучний інтелект",
+			"slug": "штучний-інтелект",
+			"tags": "штучний інтелект,ші,мн,ai,ml"
+		},
+		{
+			"topic_id": 24,
+			"name": "Кібербезпека",
+			"slug": "кібербезпека",
+			"tags": "кібербезпека,ssl,tls,bitcoin,біткоїн,zerome,крипто,криптовалюта"
+		},
+		{
+			"topic_id": 25,
+			"name": "Наука про дані",
+			"slug": "наука-про-дані",
+			"tags": "наука про дані,дані,структура даних,структура,об'єкт"
+		},
+		{
+			"topic_id": 26,
+			"name": "Цифровий дизайн",
+			"slug": "цифровий-дизайн",
+			"tags": "цифровий дизайн"
+		},
+		{
+			"topic_id": 27,
+			"name": "Javascript",
+			"slug": "javascript",
+			"tags": "javascript,webpack,nodejs,gulp"
+		},
+		{
+			"topic_id": 28,
+			"name": "Python",
+			"slug": "python",
+			"tags": "python,python3,python2"
+		},
+		{
+			"topic_id": 29,
+			"name": "Математика",
+			"slug": "математика",
+			"tags": "математика,алгебра,обчислення,геометрія,лінійна алгебра"
+		},
+		{
+			"topic_id": 30,
+			"name": "Неврологія",
+			"slug": "неврологія",
+			"tags": "неврологія"
+		},
+		{
+			"topic_id": 31,
+			"name": "Наука",
+			"slug": "наука",
+			"tags": "наука,неврологія"
+		},
+		{
+			"topic_id": 32,
+			"name": "Програмне забезпечення",
+			"slug": "програмне-забезпечення",
+			"tags": "програмне забезпечення,програма,додаток,застосунок,програмування,розробка програмного забезпечення"
+		},
+		{
+			"topic_id": 33,
+			"name": "Космос",
+			"slug": "космос",
+			"tags": "космос,простір,планета,зірка,сонце,сонячна система"
+		},
+		{
+			"topic_id": 34,
+			"name": "Сім'я",
+			"slug": "сім'я",
+			"tags": "сім'я,родина,рід"
+		},
+		{
+			"topic_id": 35,
+			"name": "Здоров'я",
+			"slug": "здоров'я",
+			"tags": "здоров'я, лікар, лікарня, дієта"
+		},
+		{
+			"topic_id": 36,
+			"name": "Психічне здоров'я",
+			"slug": "психічне-здоров'я",
+			"tags": "психічне здоров'я,психологічне здоров'я"
+		},
+		{
+			"topic_id": 37,
+			"name": "Психологія",
+			"slug": "психологія",
+			"tags": "психологія"
+		},
+		{
+			"topic_id": 38,
+			"name": "Відносини",
+			"slug": "відносини",
+			"tags": "відносини,хлопець,подруга,дівчина,стосунки,пара"
+		},
+		{
+			"topic_id": 39,
+			"name": "Особистість",
+			"slug": "особистість",
+			"tags": "особистість"
+		},
+		{
+			"topic_id": 40,
+			"name": "Сексуальність",
+			"slug": "сексуальність",
+			"tags": "сексуальність,геї,лесбіянки,натурали,бі,бісексуали,гомосексуали,гетеросексуали"
+		},
+		{
+			"topic_id": 41,
+			"name": "Духовність",
+			"slug": "духовність",
+			"tags": "духовність,релігія"
+		},
+		{
+			"topic_id": 42,
+			"name": "Подорожі",
+			"slug": "подорожі",
+			"tags": "подорожі"
+		},
+		{
+			"topic_id": 43,
+			"name": "Благополуччя",
+			"slug": "благополуччя",
+			"tags": "благополуччя,щасливий,щастя,спосіб життя"
+		},
+		{
+			"topic_id": 44,
+			"name": "Основний дохід",
+			"slug": "основний-дохід",
+			"tags": "основний дохід"
+		},
+		{
+			"topic_id": 45,
+			"name": "Освіта",
+			"slug": "освіта",
+			"tags": "освіта,школа,коледж,університет,навчання"
+		},
+		{
+			"topic_id": 46,
+			"name": "Навколишнє середовище",
+			"slug": "середовище",
+			"tags": "середовище,довкілля"
+		},
+		{
+			"topic_id": 47,
+			"name": "Соціальна рівність",
+			"slug": "рівність",
+			"tags": "соціальна рівність,держава,країна"
+		},
+		{
+			"topic_id": 48,
+			"name": "Майбутнє",
+			"slug": "майбутнє",
+			"tags": "майбутнє"
+		},
+		{
+			"topic_id": 49,
+			"name": "Історія",
+			"slug": "історія",
+			"tags": "історія"
+		},
+		{
+			"topic_id": 50,
+			"name": "Медіа",
+			"slug": "медіа",
+			"tags": "медіа,телебачення,фільми,соціальні медіа,шоу,новини"
+		},
+		{
+			"topic_id": 51,
+			"name": "Філософія",
+			"slug": "філософія",
+			"tags": "філософія"
+		},
+		{
+			"topic_id": 52,
+			"name": "Світ",
+			"slug": "світ",
+			"tags": "світ"
+		},
+		{
+			"topic_id": 53,
+			"name": "Відео ігри",
+			"slug": "відео-ігри",
+		"tags": "відео гра,комп'ютерна гра,комп'ютерні ігри,лінукс гра,pc гра,mac гра,linux гра,steam,стім,curse"
+		}
+	],
+	"topics_ru": [
+		{
+			"topic_id": 1,
+			"name": "Рекомендации",
+			"slug": "рекомендации",
+			"tags": ""
+		},
+		{
+			"topic_id": 2,
+			"name": "Программирование",
+			"slug": "программирование",
+			"tags": "программирование,разработчик,функциональный,объектно-ориентированный,декларативный,programming,developer,javascript,python,c,c++,rust,html,css,sass,scss,java,php,node,nodejs,go,golang,functional,object-oriented,oo,oop,declarative,imperative,procedural,fortran,haskell,dev,zeronet dev center,dev center,webpack,nodejs,gulp"
+		},
+		{
+			"topic_id": 3,
+			"name": "Технологии",
+			"slug": "технологии",
+			"tags": "программирование,операционная система,компьютер,телефон,смартфон,распределенный,интернет,робот,роботы,programming,windows,linux,mac,macos,operating system,os,computer,phone,smartphone,zeronet,distributed,internet,robot,robots"
+		},
+		{
+			"topic_id": 4,
+			"name": "Политика",
+			"slug": "политика",
+			"tags": "политика,коммунизм,капитализм,империализм"
+		},
+		{
+			"topic_id": 5,
+			"name": "Творчество",
+			"slug": "творчество",
+			"tags": "творчество,искусство"
+		},
+		{
+			"topic_id": 6,
+			"name": "Культура",
+			"slug": "культура",
+			"tags": "культура"
+		},
+		{
+			"topic_id": 7,
+			"name": "Искусство",
+			"slug": "искусство",
+			"tags": "искусство,стихи,поэзия"
+		},
+		{
+			"topic_id": 8,
+			"name": "Фильмы",
+			"slug": "фильмы",
+			"tags": "фильмы, кино"
+		},
+		{
+			"topic_id": 9,
+			"name": "Еда",
+			"slug": "еда",
+			"tags": "еда,пища,питание,здоровая пища"
+		},
+		{
+			"topic_id": 10,
+			"name": "Юмор",
+			"slug": "юмор",
+			"tags": "юмор"
+		},
+		{
+			"topic_id": 11,
+			"name": "Литература",
+			"slug": "литература",
+			"tags": "литература,книги,современность,классика,история,стихи,поэзия"
+		},
+		{
+			"topic_id": 12,
+			"name": "Музыка",
+			"slug": "музыка",
+			"tags": "музыка,поп,кантри,rnb,душевная,классическая,рэп"
+		},
+		{
+			"topic_id": 13,
+			"name": "Фотография",
+			"slug": "фотография",
+			"tags": "фотография,фото,снимки"
+		},
+		{
+			"topic_id": 14,
+			"name": "Социальные медиа",
+			"slug": "социальные-медиа",
+			"tags": "социальные-медиа,социальные медиа,фейсбук,твиттер,зероталк,зерновоат,zerome,facebook,twitter,zerotalk,zerovoat"
+		},
+		{
+			"topic_id": 15,
+			"name": "Спорт",
+			"slug": "спорт",
+			"tags": "спорт,футбол,бейсбол,американский футбол,волейбол,баскетбол,триатлон,хоккей,гольф,соревнования,nfl,НФЛ,nba,НБА,суперкубок"
+		},
+		{
+			"topic_id": 16,
+			"name": "Бизнес",
+			"slug": "бизнес",
+			"tags": "бизнес,компания,некоммерческая,прибыль,прибыльная,для прибыли"
+		},
+		{
+			"topic_id": 17,
+			"name": "Экономика",
+			"slug": "экономика",
+			"tags": "экономика,мировая экономика,деньги,акции,фондовые биржи,биткойн,крипто,криптовалюта,bitcoin,namecoin,litecoin"
+		},
+		{
+			"topic_id": 18,
+			"name": "Предпринимательство",
+			"slug": "предпринимательство",
+			"tags": "предпринимательство,компания"
+		},
+		{
+			"topic_id": 19,
+			"name": "Фриланс",
+			"slug": "фриланс",
+			"tags": "фриланс"
+		},
+		{
+			"topic_id": 20,
+			"name": "Маркетинг",
+			"slug": "маркетинг",
+			"tags": "маркетинг"
+		},
+		{
+			"topic_id": 21,
+			"name": "Производительность",
+			"slug": "производительность",
+			"tags": "производительность"
+		},
+		{
+			"topic_id": 22,
+			"name": "Работа",
+			"slug": "работа",
+			"tags": "работа"
+		},
+		{
+			"topic_id": 23,
+			"name": "Искусственный интеллект",
+			"slug": "искусственный-интеллект",
+			"tags": "искусственный интеллект,ши,мн,ai,ml"
+		},
+		{
+			"topic_id": 24,
+			"name": "Кибербезопасность",
+			"slug": "кибербезопасность",
+			"tags": "кибербезопасность,ssl,tls,bitcoin,биткоин,zerome,крипто,криптовалюта"
+		},
+		{
+			"topic_id": 25,
+			"name": "Наука о данных",
+			"slug": "наука-о-данных",
+			"tags": "наука о данных,данные,структура данных,структура,объект"
+		},
+		{
+			"topic_id": 26,
+			"name": "Цифровой дизайн",
+			"slug": "цифровой-дизайн",
+			"tags": "цифровой дизайн"
+		},
+		{
+			"topic_id": 27,
+			"name": "Javascript",
+			"slug": "javascript",
+			"tags": "javascript,webpack,nodejs,gulp"
+		},
+		{
+			"topic_id": 28,
+			"name": "Python",
+			"slug": "python",
+			"tags": "python,python3,python2"
+		},
+		{
+			"topic_id": 29,
+			"name": "Математика",
+			"slug": "математика",
+			"tags": "математика,алгебра,вычисления,геометрия,линейная алгебра"
+		},
+		{
+			"topic_id": 30,
+			"name": "Неврология",
+			"slug": "неврология",
+			"tags": "неврология"
+		},
+		{
+			"topic_id": 31,
+			"name": "Наука",
+			"slug": "наука",
+			"tags": "наука,неврология"
+		},
+		{
+			"topic_id": 32,
+			"name": "Программное обеспечение",
+			"slug": "программное-обеспечение",
+			"tags": "программное обеспечение,программа,приложение,программирование,разработка программного обеспечения"
+		},
+		{
+			"topic_id": 33,
+			"name": "Космос",
+			"slug": "космос",
+			"tags": "космос,пространство,планета,звезда,солнце,солнечная система"
+		},
+		{
+			"topic_id": 34,
+			"name": "Семья",
+			"slug": "семья",
+			"tags": "семья,род"
+		},
+		{
+			"topic_id": 35,
+			"name": "Здоровье",
+			"slug": "здоровье",
+			"tags": "здоровье,врач,больница,диета"
+		},
+		{
+			"topic_id": 36,
+			"name": "Психическое здоровье",
+			"slug": "психическое-здоровье",
+			"tags": "психическое здоровье,психологическое здоровье"
+		},
+		{
+			"topic_id": 37,
+			"name": "Психология",
+			"slug": "психология",
+			"tags": "психология"
+		},
+		{
+			"topic_id": 38,
+			"name": "Отношения",
+			"slug": "отношения",
+			"tags": "парень,подруга,девушка,отношения,пара"
+		},
+		{
+			"topic_id": 39,
+			"name": "Личность",
+			"slug": "личность",
+			"tags": "личность"
+		},
+		{
+			"topic_id": 40,
+			"name": "Сексуальность",
+			"slug": "сексуальность",
+			"tags": "сексуальность,геи,лесбиянки,натуралы,би,бисексуалы,гомосексуалиы,гетеросексуалы"
+		},
+		{
+			"topic_id": 41,
+			"name": "Духовность",
+			"slug": "духовность",
+			"tags": "духовность, религия"
+		},
+		{
+			"topic_id": 42,
+			"name": "Путешествия",
+			"slug": "путешествия",
+			"tags": "путешествия"
+		},
+		{
+			"topic_id": 43,
+			"name": "Благополучие",
+			"slug": "благополучие",
+			"tags": "благополучие,счастливый,счастье,образ жизни"
+		},
+		{
+			"topic_id": 44,
+			"name": "Основной доход",
+			"slug": "основной-доход",
+			"tags": "основной доход"
+		},
+		{
+			"topic_id": 45,
+			"name": "Образование",
+			"slug": "образование",
+			"tags": "образование,школа,колледж,университет,обучение"
+		},
+		{
+			"topic_id": 46,
+			"name": "Окружающая среда",
+			"slug": "окружающая-среда",
+			"tags": "окружающая среда"
+		},
+		{
+			"topic_id": 47,
+			"name": "Социальное равенство",
+			"slug": "равенство",
+			"tags": "социальное равенство,государство,страна"
+		},
+		{
+			"topic_id": 48,
+			"name": "Будущее",
+			"slug": "будущее",
+			"tags": "будущее"
+		},
+		{
+			"topic_id": 49,
+			"name": "История",
+			"slug": "история",
+			"tags": "история"
+		},
+		{
+			"topic_id": 50,
+			"name": "Медиа",
+			"slug": "медиа",
+			"tags": "медиа,телевидение,фильмы,социальные медиа,шоу,новости"
+		},
+		{
+			"topic_id": 51,
+			"name": "Философия",
+			"slug": "философия",
+			"tags": "философия"
+		},
+		{
+			"topic_id": 52,
+			"name": "Мир",
+			"slug": "мир",
+			"tags": "мир"
+		},
+		{
+			"topic_id": 53,
+			"name": "Видео игры",
+			"slug": "видео-игры",
+			"tags": "видео игра,компьютерная игра,компьютерные игры,линукс игра,pc игра,mac игра,linux игра,steam,стим,curse"
 		}
 	]
 }
