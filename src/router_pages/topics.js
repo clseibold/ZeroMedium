@@ -12,13 +12,14 @@ var Topics = {
 	},
 	beforeMount: function() {
 		this.$emit("navbar-shadow-on");
-		this.getTopics();
 		if (this.userInfo) {
 			this.loadInterests(this.userInfo);
 		} else {
 			this.$emit("get-user-info");
-			this.$parent.$on("setUserInfo", this.loadInterests);
 		}
+	},
+	mounted: function() {
+		this.$parent.$on("setUserInfo", this.loadInterests);
 	},
 	methods: {
 		goto: function(to) {
@@ -31,6 +32,8 @@ var Topics = {
 				return;
 			}
 			this.interests = userInfo.keyvalue.interests.split(",");
+			//this.primaryLanguage = userInfo.keyvalue.languages.split(",")[0];
+			this.getTopics();
 		},
 		getTopics: function() {
 			var that = this;
