@@ -9,6 +9,7 @@ var MeSettings = {
 			name: this.userInfo ? this.userInfo.keyvalue.name : "",
 			about: this.userInfo ? this.userInfo.keyvalue.about : "",
 			followResponsesText: "Follow",
+			origPrimaryLanguage: this.userInfo ? this.userInfo.keyvalue.languages.split(",")[0] : "",
 			primaryLanguage: this.userInfo ? this.userInfo.keyvalue.languages.split(",")[0] : "",
 			secondaryLanguages: this.userInfo ? this.userInfo.keyvalue.languages.split(",").slice(1) : "",
 			languages: [{ code: "EN", name: "English" }, { code: "ES", name: "Español" }, { code: "ZH", name: "Chinese" }, { code: "UK", name: "Українська" }, { code: "RU", name: "Русский" }]
@@ -33,6 +34,7 @@ var MeSettings = {
 
 			var languages = userInfo.keyvalue.languages.split(",");
 			this.primaryLanguage = languages[0];
+			this.origPrimaryLanguage = languages[0];
 			this.secondaryLanguages = languages.slice(1);
 		},
 		saveBasic: function() {
@@ -100,7 +102,11 @@ var MeSettings = {
 					languages += "," + this.secondaryLanguages.join(",");
 				}
 
-                data.languages = languages;
+				data.languages = languages;
+				
+				if (this.primaryLanguage !== this.origPrimaryLanguage) {
+					data.interests = "";
+				}
 
                 var json_raw = unescape(encodeURIComponent(JSON.stringify(data, undefined, "\t")));
 
@@ -224,6 +230,7 @@ var MeSettings = {
 
 						<br>
 						<button class="button is-primary is-outlined" v-on:click.prevent="saveLanguages()" style="margin-top: 10px;">Save</button>
+						<small>Note: Interests will be cleared if primary language was changed</small>
 					</div>
 				</div>
 			</section>
