@@ -386,10 +386,14 @@ var ProfileStory = {
 			});
 		},
 		getClapAmount: function() {
+			var distinct_directories = {};
 			var amount = 0;
 			for (var i = 0; i < this.claps.length; i++) {
 				var clap = this.claps[i];
-				amount += clap.number;
+				if (!distinct_directories[clap.directory]) {
+					distinct_directories[clap.directory] = clap.number;
+					amount += clap.number ? 1 : 0;
+				}
 			}
 
 			if (amount > 0) {
@@ -421,7 +425,7 @@ var ProfileStory = {
 				<div class="columns is-centered">
 					<div class="column is-three-quarters-tablet is-half-desktop">
 						<div v-if="profileInfo && story">
-							<p class="title is-3">{{ story.title }}</p>
+							<p class="title is-3">{{ story.title.trim() !== "" ? story.title : "[NO TITLE]" }}</p>
 							<p class="subtitle is-5">By <a :href="'./?/' + profileInfo.auth_address" v-on:click.prevent="goto(profileInfo.auth_address)">{{ storyAuthor }}</a> - {{ datePosted(story.date_added) }}</p>
 							<div id="storyBody" class="custom-content" v-html="sanitizedBody"></div>
 							<div class="tags" style="margin-top: 10px;" v-if="story.tags != ''">

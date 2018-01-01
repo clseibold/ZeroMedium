@@ -4,6 +4,11 @@ var moment = require("moment");
 var Search = {
 	beforeMount: function() {
 		this.$emit("navbar-shadow-on");
+
+		if (Router.searchQuery.s !== undefined) {
+			this.searchInput = Router.searchQuery.s;
+		}
+
 		var that = this;
 
 		page.getTopics((topics) => {

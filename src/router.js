@@ -2,6 +2,7 @@ var Router = {
 	routes: [],
 	currentRoute: "",
 	currentParams: {},
+	searchQuery: {},
 	root: "/",
 	notFoundFunction: null,
 	hookFunctions: {}, // hooks that are called for each route, functions for 'before' and 'after'.
@@ -9,10 +10,22 @@ var Router = {
 		this.root = options && options.root ? "/" + this.clearSlashes(options.root) + "/" : "/";
 		return this;
 	},
-	getURL: function() { // get's current query string/hash & clears slashes from beginning and end, Note: only for initial load
+	getURL: function() { // get's current query string/route & clears slashes from beginning and end, Note: only for initial load
 		var url = '';
 		url = window.location.search.replace(/&wrapper_nonce=([A-Za-z0-9]+)/, "").replace(/\?wrapper_nonce=([A-Za-z0-9]+)/, "").replace(/\?\//, ''); // TODO: Fix this to replace the root instead of just a slash
 		return this.clearSlashes(url);
+	},
+	getSearchQuery: function(route) {
+		route = route.replace(/&wrapper_nonce=([A-Za-z0-9]+)/, "").replace(/\?wrapper_nonce=([A-Za-z0-9]+)/, "").replace(/\?\//, '');
+		var re = (/&([^&=]+)(=?)([^&]*)/g);
+		var m;
+
+		do {
+			m = re.exec(route);
+			if (m) {
+				this.searchQuery[m[1]] = m[3];
+			}
+		} while (m);
 	},
 	clearSlashes: function(path) {
 		return path.toString().replace(/\/$/, '').replace(/^\//, '');
@@ -41,12 +54,15 @@ var Router = {
 		this.root = '/';
 		return this;
 	},
-	check: function(hash) {
+	check: function(route) {
 		var reg, keys, match, routeParams;
+		this.getSearchQuery(route);
+		routeParams = {
+			searchQuery: this.searchQuery
+		};
 		for (var i = 0, max = this.routes.length; i < max; i++ ) {
-			routeParams = {}
 			keys = this.routes[i].path.match(/:([^\/]+)/g);
-			match = hash.match(new RegExp(this.routes[i].path.replace(/:([^\/]+)/g, "([^\/]*)").replace(/\*/g, '(?:.*)') + '(?:\/|$)'));
+			match = route.replace(/^\//, "").match(new RegExp("^" + this.routes[i].path.replace(/:([^\/]+)/g, "([^\/]*)").replace(/\*/g, '(?:.*)') + '(?:\/|$|&)'));
 			if (match) {
 				match.shift();
 				match.forEach(function (value, i) {
@@ -60,14 +76,14 @@ var Router = {
 				this.currentParams = routeParams;
 				// Call 'before' hook
 				if (this.hookFunctions && this.hookFunctions["before"]) { // TODO: Move this into navigate function?
-					if (!this.hookFunctions["before"].call(object, this.routes[i].path, routeParams)) {
+					if (!this.hookFunctions["before"].call(object, this.routes[i].path, routeParams, this.searchQuery)) {
 						page.cmd("wrapperPushState", [{ "route": this.currentRoute }, null, this.root + this.clearSlashes(this.currentRoute)]);
 						return this;
 					}
 				}
 				// Call route-specific 'before' hook
 				if (this.routes[i].hooks && this.routes[i].hooks["before"]) {
-					if (!this.routes[i].hooks["before"].call(object, routeParams)) {
+					if (!this.routes[i].hooks["before"].call(object, routeParams, this.searchQuery)) {
 						page.cmd("wrapperPushState", [{ "route": this.currentRoute }, null, this.root + this.clearSlashes(this.currentRoute)]);
 						return this;
 					}
@@ -75,16 +91,16 @@ var Router = {
 				this.currentRoute = this.routes[i].path;
 				window.scroll(window.pageXOffset, 0);
 				if (this.setView) { // Used for Vue-ZeroFrame-Router-Plugin NOTE: May Change
-					this.setView(i, this.routes[i].object);
+					this.setView(route, this.routes[i].object);
 				}
-				this.routes[i].controller.call(object, routeParams);
+				this.routes[i].controller.call(object, routeParams, this.searchQuery);
 				// Call route-specific 'after' hook
 				if (this.routes[i].hooks) {
-					this.routes[i].hooks["after"].call(object, routeParams);
+					this.routes[i].hooks["after"].call(object, routeParams, this.searchQuery);
 				}
 				if (this.hookFunctions) {
 					if (this.hookFunctions["after"]) {
-						this.hookFunctions["after"].call(object, this.currentRoute, routeParams);
+						this.hookFunctions["after"].call(object, this.currentRoute, routeParams, this.searchQuery);
 					}
 				}
 				return this;
@@ -103,11 +119,11 @@ var Router = {
 				if (!message.params.state.url) {
 					message.params.state.url = message.params.href.replace(/.*\?/, "");
 				}
-				this.navigate(message.params.state.url.replace(/^\//, ''));
+				this.navigate(message.params.state.url.replace(/^\//, ''), false);
 			}
 		}
 	},
-	navigate: function(path) {
+	navigate: function(path, doPush = true) {
 		var previousRoute = this.currentRoute;
 		// TODO: Call route-specific 'leave' hook
 		// Call global 'leave' hook
@@ -118,7 +134,9 @@ var Router = {
 		}
 
 		path = path ? path : '';
-		page.cmd("wrapperPushState", [{ "route": path }, null, this.root + this.clearSlashes(path)]);
+		if (doPush) {
+			page.cmd("wrapperPushState", [{ "route": path }, path, this.root + this.clearSlashes(path)]);
+		}
 		this.check(path);
 		return this;
 	},
@@ -139,7 +157,7 @@ Router.init = function() {
 	// if '?/' isn't on address - add it
 	var address = window.location.search.replace(/&wrapper_nonce=([A-Za-z0-9]+)/, "").replace(/\?wrapper_nonce=([A-Za-z0-9]+)/, ""); // TODO: Fix this to replace the root instead of just a slash
 	if (address == '') {
-		page.cmd("wrapperPushState", [{ "route": "" }, null, this.root]);
+		page.cmd("wrapperPushState", [{ "route": "" }, "", this.root]);
 	}
 	// Resolve the initial route
 	Router.check(Router.getURL());

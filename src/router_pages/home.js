@@ -32,7 +32,7 @@ var Home = {
             }
         },
         getStories: function() {
-            var that = this;
+            /*var that = this; // NOTE: 5-6 seconds to load this previous version on zerocat.eu
 
             that.recentStories = [];
             that.topStories = [];
@@ -81,7 +81,68 @@ var Home = {
                 }
                 that.topStories = newTopStories;
                 cache_add("home_topStories", that.topStories);
+            });*/
+            var that = this;
+            var now = Date.now();
+            var dayTime = 8.64e+7;
+
+            if (cache_exists("home_recentStories") && cache_exists("home_topStories")) {
+                that.recentStories = cache_get("home_recentStories");
+                that.topStories = cache_get("home_topStories");
+            }
+
+            var topQuery = `
+                SELECT stories.*, story_json.directory, value,
+                    ((SELECT COUNT(DISTINCT body)
+                        FROM responses
+                        LEFT JOIN json as response_json USING (json_id)
+                        WHERE stories.story_id=responses.reference_id 
+                            AND REPLACE(story_json.directory, 'users/', '')=responses.reference_auth_address
+                            AND REPLACE(story_json.directory, 'users/', '')!=REPLACE(response_json.directory, 'users/', '')
+                            AND responses.reference_type='s'
+                            AND (${now} - date_added) <= ${dayTime}
+                        ORDER BY date_added DESC)
+                    + (SELECT COUNT(DISTINCT clap_json.directory)
+                        FROM claps
+                        LEFT JOIN json AS clap_json USING (json_id)
+                        WHERE stories.story_id=claps.reference_id
+                            AND REPLACE(story_json.directory, 'users/', '')=claps.reference_auth_address
+                            AND REPLACE(story_json.directory, 'users/', '')!=REPLACE(clap_json.directory, 'users/', '')
+                            AND claps.reference_type='s'
+                            AND claps.number>=1
+                            AND (${now} - date_added) <= ${dayTime}
+                        ORDER BY date_added DESC)) AS sort_num
+                FROM stories
+                LEFT JOIN json AS story_json USING (json_id)
+                LEFT JOIN keyvalue USING (json_id)
+                WHERE key='name'
+                ORDER BY sort_num DESC, stories.date_added DESC
+                LIMIT 5
+                `;
+            that.topStories = [];
+            
+            page.cmdp("dbQuery", [topQuery])
+            .then((stories) => {
+                console.log(stories);
+                that.topStories = stories;
+                cache_add("home_topStories", that.topStories);
             });
+            
+            var recentQuery = `
+                SELECT * FROM stories
+                LEFT JOIN json USING (json_id)
+                LEFT JOIN keyvalue USING (json_id)
+                WHERE key='name'
+                ORDER BY date_added DESC
+                LIMIT 5
+                `;
+            that.recentStories = [];
+
+            page.cmdp("dbQuery", [recentQuery])
+                .then((stories) => {
+                    that.recentStories = stories;
+                    cache_add("home_recentStories", that.recentStories);
+                });
         },
         showSigninModal: function() {
             // this.signin_modal_visible = !this.signin_modal_visible;
@@ -129,7 +190,7 @@ var Home = {
                         </div>
                         <home-user-interests v-if="userInfo && isLoggedIn && userInfo.keyvalue.interests" :user-info="userInfo"></home-user-interests>
                         <p class="title is-4" style="border-bottom: 1px solid #AAAAAA; padding-bottom: 10px;">Today's Top Stories</p>
-                        <div v-if="topStories.length > 0 && recentStories.length > 0">
+                        <div v-if="topStories.length > 0">
                             <story v-for="story in topStories" :story="story" :show-name="true"></story>
 
                             <p class="title is-4" style="border-bottom: 1px solid #AAAAAA; padding-bottom: 10px;">Recent Stories</p>
