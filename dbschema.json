@@ -59,6 +59,28 @@
             "indexes": ["CREATE UNIQUE INDEX tag_zh_key ON topics_zh (json_id, topic_id)"],
             "schema_changed": 14
         },
+        "topics_uk": {
+            "cols": [
+                ["topic_id", "INTEGER PRIMARY KEY"],
+                ["name", "TEXT"],
+                ["slug", "TEXT"],
+                ["tags", "TEXT"],
+                ["json_id", "INTEGER REFERENCES json (json_id)"]
+            ],
+            "indexes": ["CREATE UNIQUE INDEX tag_zh_key ON topics_zh (json_id, topic_id)"],
+            "schema_changed": 14
+        },
+        "topics_ru": {
+            "cols": [
+                ["topic_id", "INTEGER PRIMARY KEY"],
+                ["name", "TEXT"],
+                ["slug", "TEXT"],
+                ["tags", "TEXT"],
+                ["json_id", "INTEGER REFERENCES json (json_id)"]
+            ],
+            "indexes": ["CREATE UNIQUE INDEX tag_zh_key ON topics_zh (json_id, topic_id)"],
+            "schema_changed": 14
+        },
         "stories": {
             "cols": [
                 ["story_id", "INTEGER"],
