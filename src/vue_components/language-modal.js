@@ -12,7 +12,7 @@ Vue.component("language-modal", {
         return {
             primaryLanguage: "",
             secondaryLanguages: [],
-            languages: [{ code: "EN", name: "English" }, { code: "ES", name: "Espanol" }, { code: "ZH", name: "Chineese" }]
+            languages: [{ code: "EN", name: "English" }, { code: "ES", name: "Español" }, { code: "ZH", name: "Chinese" }, { code: "UK", name: "Українська" }, { code: "RU", name: "Русский" }]
         };
     },
     computed: {

@@ -1,5 +1,5 @@
 version = "17.12b"
-allLanguages = ["EN", "ES", "ZH"]; // TODO: use in signin-modal?
+allLanguages = ["EN", "ES", "ZH", "UK", "RU"]; // TODO: use in signin-modal?
 
 // Zeroframe
 var ZeroFrame = require("./ZeroFrame.js");
@@ -192,12 +192,22 @@ class ZeroApp extends ZeroFrame {
 
             case "ES":
             {
-                return "Espanol";
+                return "Español";
             } break;
 
             case "ZH":
             {
                 return "Chinese";
+            } break;
+
+            case "UK":
+            {
+                return "Українська";
+            } break;
+
+            case "RU":
+            {
+                return "Русский";
             } break;
 
             default:
