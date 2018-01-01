@@ -85,6 +85,9 @@ var Home = {
             var that = this;
             var now = Date.now();
             var dayTime = 8.64e+7;
+            
+            that.topStories = [];
+            that.recentStories = [];
 
             if (cache_exists("home_recentStories") && cache_exists("home_topStories")) {
                 that.recentStories = cache_get("home_recentStories");
@@ -119,7 +122,6 @@ var Home = {
                 ORDER BY sort_num DESC, stories.date_added DESC
                 LIMIT 5
                 `;
-            that.topStories = [];
             
             page.cmdp("dbQuery", [topQuery])
             .then((stories) => {
@@ -136,7 +138,6 @@ var Home = {
                 ORDER BY date_added DESC
                 LIMIT 5
                 `;
-            that.recentStories = [];
 
             page.cmdp("dbQuery", [recentQuery])
                 .then((stories) => {
