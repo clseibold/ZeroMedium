@@ -230,7 +230,7 @@ var MeSettings = {
 
 						<br>
 						<button class="button is-primary is-outlined" v-on:click.prevent="saveLanguages()" style="margin-top: 10px;">Save</button>
-						<small>Note: Interests will be cleared if primary language was changed</small>
+						<br><br><small>Note: Interests will be cleared if primary language was changed</small>
 					</div>
 				</div>
 			</section>
