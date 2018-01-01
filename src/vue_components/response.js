@@ -30,9 +30,13 @@ Vue.component("response", {
 		},
 		getResponseStory: function() {
 			var that = this;
-			page.getStoryMinimal(this.response.reference_auth_address, this.response.reference_id, (story) => {
+			/*page.getStoryMinimal(this.response.reference_auth_address, this.response.reference_id, (story) => {
 				that.story = story;
-			});
+			});*/
+			page.getStoryMinimal(this.response.reference_auth_address, this.response.reference_id)
+				.then((stories) => {
+					that.story = stories[0];
+				});
 		},
 		getResponseResponse: function() {
 			var that = this;

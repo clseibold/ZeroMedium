@@ -10,19 +10,18 @@ var Router = {
 		this.root = options && options.root ? "/" + this.clearSlashes(options.root) + "/" : "/";
 		return this;
 	},
-	getURL: function() { // get's current query string/hash & clears slashes from beginning and end, Note: only for initial load
+	getURL: function() { // get's current query string/route & clears slashes from beginning and end, Note: only for initial load
 		var url = '';
-		url = window.location.search.replace(/&wrapper_nonce=([A-Za-z0-9]+)/, "").replace(/\?wrapper_nonce=([A-Za-z0-9]+)/, "").replace(/\?\//, '').replace(/&.*/, ''); // TODO: Fix this to replace the root instead of just a slash
+		url = window.location.search.replace(/&wrapper_nonce=([A-Za-z0-9]+)/, "").replace(/\?wrapper_nonce=([A-Za-z0-9]+)/, "").replace(/\?\//, ''); // TODO: Fix this to replace the root instead of just a slash
 		return this.clearSlashes(url);
 	},
-	getSearchQuery: function() {
-		var url = "";
-		url = window.location.search.replace(/&wrapper_nonce=([A-Za-z0-9]+)/, "").replace(/\?wrapper_nonce=([A-Za-z0-9]+)/, "").replace(/\?\//, '');
+	getSearchQuery: function(route) {
+		route = route.replace(/&wrapper_nonce=([A-Za-z0-9]+)/, "").replace(/\?wrapper_nonce=([A-Za-z0-9]+)/, "").replace(/\?\//, '');
 		var re = (/&([^&=]+)(=?)([^&]*)/g);
 		var m;
 
 		do {
-			m = re.exec(url);
+			m = re.exec(route);
 			if (m) {
 				this.searchQuery[m[1]] = m[3];
 			}
@@ -55,15 +54,15 @@ var Router = {
 		this.root = '/';
 		return this;
 	},
-	check: function(hash) {
+	check: function(route) {
 		var reg, keys, match, routeParams;
+		this.getSearchQuery(route);
+		routeParams = {
+			searchQuery: this.searchQuery
+		};
 		for (var i = 0, max = this.routes.length; i < max; i++ ) {
-			this.getSearchQuery();
-			routeParams = {
-				searchQuery: this.searchQuery
-			};
 			keys = this.routes[i].path.match(/:([^\/]+)/g);
-			match = hash.match(new RegExp(this.routes[i].path.replace(/:([^\/]+)/g, "([^\/]*)").replace(/\*/g, '(?:.*)') + '(?:\/|$)'));
+			match = route.replace(/^\//, "").match(new RegExp("^" + this.routes[i].path.replace(/:([^\/]+)/g, "([^\/]*)").replace(/\*/g, '(?:.*)') + '(?:\/|$|&)'));
 			if (match) {
 				match.shift();
 				match.forEach(function (value, i) {
@@ -92,7 +91,7 @@ var Router = {
 				this.currentRoute = this.routes[i].path;
 				window.scroll(window.pageXOffset, 0);
 				if (this.setView) { // Used for Vue-ZeroFrame-Router-Plugin NOTE: May Change
-					this.setView(i, this.routes[i].object);
+					this.setView(route, this.routes[i].object);
 				}
 				this.routes[i].controller.call(object, routeParams, this.searchQuery);
 				// Call route-specific 'after' hook
@@ -158,7 +157,7 @@ Router.init = function() {
 	// if '?/' isn't on address - add it
 	var address = window.location.search.replace(/&wrapper_nonce=([A-Za-z0-9]+)/, "").replace(/\?wrapper_nonce=([A-Za-z0-9]+)/, ""); // TODO: Fix this to replace the root instead of just a slash
 	if (address == '') {
-		page.cmd("wrapperPushState", [{ "route": "" }, null, this.root]);
+		page.cmd("wrapperPushState", [{ "route": "" }, "", this.root]);
 	}
 	// Resolve the initial route
 	Router.check(Router.getURL());

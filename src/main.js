@@ -1,4 +1,4 @@
-version = "17.12b"
+version = "18.01"
 allLanguages = ["EN", "ES", "ZH", "UK", "RU"]; // TODO: use in signin-modal?
 
 // Zeroframe
@@ -39,7 +39,7 @@ var app = new Vue({
                 <div class="container">
                     <div class="has-text-centered">
                         <em>&copy; Copyright 2017 Christian Seibold. BSD License.</em><br>
-                        Current Version: <a :href="'./?/12gAes6NzDS9E2q6Q1UXrpUdbPS6nvuBPu/' + getVersionLink()" v-on:click.prevent="goto('12gAes6NzDS9E2q6Q1UXrpUdbPS6nvuBPu/' + getVersionLink())">{{ version }}</a><br>
+                        Current Version: <a :href="'./?/12gAes6NzDS9E2q6Q1UXrpUdbPS6nvuBPu/' + getVersionLink()">{{ version }}</a><br>
                         <a href="/1BEPbMfV8QtaZCD2cPNbabfDKnmhTAZRPx">Git Center Repo</a>
                     </div>
                 </div>
@@ -262,6 +262,7 @@ class ZeroApp extends ZeroFrame {
     getTopics(f = null) {
         if (app.userInfo && app.userInfo.keyvalue && app.userInfo.keyvalue.languages !== "") {
             var primarylang = app.userInfo.keyvalue.languages.split(",")[0].toLowerCase();
+
             var addToQuery = "";
             if (primarylang !== "en" && primarylang !== "EN") {
                 addToQuery = "_" + primarylang;
@@ -608,7 +609,7 @@ class ZeroApp extends ZeroFrame {
 
     getStory(auth_address, slug, f = null) {
         // TODO: If two stories have the same title, go with the oldest (ORDER BY ___)
-        page.cmd("dbQuery", ['SELECT story_id, title, slug, description, body, tags, language, date_updated, date_added, value FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE directory="users/' + auth_address + '" AND slug="' + slug + '" AND key="name"'], (stories) => {
+        /*page.cmd("dbQuery", ['SELECT story_id, title, slug, description, body, tags, language, date_updated, date_added, value FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE directory="users/' + auth_address + '" AND slug="' + slug + '" AND key="name"'], (stories) => {
             if (!stories || stories.length == 0) {
                 f(null);
                 return;
@@ -616,13 +617,17 @@ class ZeroApp extends ZeroFrame {
             if (f != null && typeof f === "function") {
                 f(stories[0]);
             }
-        });
+        });*/
+        return Models.Story.get(auth_address, slug)
+            .then((stories) => {
+                return stories[0];
+            }).then(f);
     }
 
     // Used to get story that a response is on (for showing the response on an author's profile)
     // This will only get the stories id, title, and slug
     getStoryMinimal(auth_address, story_id, f = null) {
-        page.cmd("dbQuery", ['SELECT story_id, title, slug, language, directory, value FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND story_id=' + story_id + ' AND directory="users/' + auth_address + '"'], (stories) => {
+        /*page.cmd("dbQuery", ['SELECT story_id, title, slug, language, directory, value FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND story_id=' + story_id + ' AND directory="users/' + auth_address + '"'], (stories) => {
             if (!stories || stories.length == 0) {
                 f(null);
                 return;
@@ -630,7 +635,11 @@ class ZeroApp extends ZeroFrame {
             if (f != null && typeof f === "function") {
                 f(stories[0]);
             }
-        });
+        });*/
+        return Models.Story.getMinimal(auth_address, story_id)
+            .then((stories) => {
+                return stories[0];
+            }).then(f);
     }
 
     // languages - array of languages
@@ -649,7 +658,9 @@ class ZeroApp extends ZeroFrame {
     }
 
     getStoriesFromTag(tagSlug, f = null) {
-        page.cmd("dbQuery", ['SELECT * FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND REPLACE(tags, " ", "-") LIKE "%' + tagSlug + '%" ORDER BY date_added DESC'], f); // AND includes tag name generated from tag slug
+        //page.cmd("dbQuery", ['SELECT * FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND REPLACE(tags, " ", "-") LIKE "%' + tagSlug + '%" ORDER BY date_added DESC'], f); // AND includes tag name generated from tag slug
+        return Models.Story.getAllFromTag(tagSlug)
+            .then(f);
     }
 
     // Make getExtra true to get claps and responses on the story (TODO: does not include the responses on the responses)
@@ -734,6 +745,32 @@ class ZeroApp extends ZeroFrame {
         var data_inner_path = "data/users/" + app.userInfo.auth_address + "/data.json";
         var content_inner_path = "data/users/" + app.userInfo.auth_address + "/content.json";
 
+        /*var response = new Models.Response();
+        response.response_id = app.userInfo.keyvalue["next_response_id"] || 1;
+        response.body = page.sanitizeHtml(body);
+        response.reference_id = reference_id;
+        response.reference_auth_address = reference_auth_address;
+        response.reference_type = reference_type;
+        response.date_added = Date.now();
+        response.save(page, data_inner_path, (data) => {
+            if (!app.userInfo.keyvalue["next_response_id"] || app.userInfo.keyvalue["next_response_id"] == null) app.userInfo.keyvalue["next_response_id"] = 1;
+            app.userInfo.keyvalue["next_response_id"]++;
+            data["next_response_id"] = app.userInfo.keyvalue["next_response_id"];
+        }).then((success) => {
+                if (success) {
+                    if (f != null && typeof f === "function") f();
+                    return response.sign(page, content_inner_path, false);
+                }
+
+                return false;
+            }).then((success) => {
+                if (success) {
+                    return response.publish(page, content_inner_path);
+                }
+
+                return false;
+            });*/
+
         page.cmd("fileGet", { "inner_path": data_inner_path, "required": false }, (data) => {
             if (!data) {
                 // TODO: Show registration modal.
@@ -773,20 +810,26 @@ class ZeroApp extends ZeroFrame {
     }
 
     getResponses(reference_auth_address, reference_id, reference_type, f) {
-        page.cmd("dbQuery", ['SELECT * FROM responses LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE reference_auth_address="' + reference_auth_address + '" AND reference_id=' + reference_id + ' AND reference_type="' + reference_type + '" AND key="name" ORDER BY date_added DESC'], f);
+        //page.cmd("dbQuery", ['SELECT * FROM responses LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE reference_auth_address="' + reference_auth_address + '" AND reference_id=' + reference_id + ' AND reference_type="' + reference_type + '" AND key="name" ORDER BY date_added DESC'], f);
+        return Models.Response.getAllFromStory(reference_auth_address, reference_id, reference_type)
+            .then(f);
     }
 
     getResponse(auth_address, response_id, f) {
-        page.cmd("dbQuery", ['SELECT * FROM responses LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND directory="users/' + auth_address + '" AND response_id=' + response_id + " LIMIT 1"], (responses) => {
-            var response = responses[0];
+        //page.cmd("dbQuery", ['SELECT * FROM responses LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND directory="users/' + auth_address + '" AND response_id=' + response_id + " LIMIT 1"], (responses) => {
+        if (typeof response_id !== "number") {
+            response_id = parseInt(response_id);
+        }
+        Models.Response.get(auth_address, response_id)
+            .then((responses) => {
+                var response = responses[0];
 
-            page.cmd("dbQuery", ['SELECT * FROM stories LEFT JOIN json USING (json_id) LEFT JOIN keyvalue USING (json_id) WHERE key="name" AND directory="users/' + response.reference_auth_address + '" AND story_id=' + response.reference_id + " LIMIT 1"], (stories) => {
-                response["story"] = stories[0];
-                if (f != null && typeof f === "function") {
-                    f(response);
-                }
-            });
-        });
+                return Models.Story.getFromId(response.reference_auth_address, response.reference_id)
+                    .then((stories) => {
+                        response["story"] = stories[0];
+                        return response;
+                    });
+            }).then(f);
     }
 
     // Reference Types:
@@ -1066,7 +1109,7 @@ class ZeroApp extends ZeroFrame {
 
 page = new ZeroApp();
 
-ZeroGraph = require("./ZeroGraph.js")(page, "info");
+var Models = require("./models.js");
 
 // Router Pages
 var Home = require("./router_pages/home.js");
@@ -1088,7 +1131,7 @@ var Profile = require("./router_pages/profile.js");
 var ResponseFullscreen = require("./router_pages/response_fullscreen.js");
 var ProfileStory = require("./router_pages/profile_story.js");
 
-VueZeroFrameRouter.VueZeroFrameRouter_Init(Router, app, [
+VueZeroFrameRouter.VueZeroFrameRouter_Init(app, [
     { route: "help", component: Help },
     { route: "search", component: Search },
 	{ route: "topics", component: Topics },
@@ -1099,8 +1142,8 @@ VueZeroFrameRouter.VueZeroFrameRouter_Init(Router, app, [
     { route: "me/stories/:slug/edit", component: EditStory },
     { route: "me/stories", component: MeStories },
     { route: ":userauthaddress/response/:id/response", component: ResponseFullscreenEditor },
-    { route: ":userauthaddress/:slug/response", component: ResponseFullscreenEditor },
     { route: ":userauthaddress/response/:id", component: ResponseFullscreen },
+    { route: ":userauthaddress/:slug/response", component: ResponseFullscreenEditor },
     { route: ":userauthaddress/:slug", component: ProfileStory },
     { route: ":userauthaddress", component: Profile }, // TODO: Have tabs use "&tab="?
     { route: "", component: Home }

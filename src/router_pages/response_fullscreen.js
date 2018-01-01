@@ -203,9 +203,11 @@ var ResponseFullscreen = {
 	},
 	computed: {
 		getStoryAuthAddress: function() {
+			console.log(this.response.story);
 			return this.response.story.directory.replace(/users\//, '').replace(/\//g, "");
 		},
 		getAuthAddress: function() {
+			console.log(this.response);
 			return this.response.directory.replace(/users\//, '').replace(/\//g, "");
 		},
 		datePosted: function() {
