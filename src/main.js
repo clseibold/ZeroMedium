@@ -192,12 +192,22 @@ class ZeroApp extends ZeroFrame {
 
             case "ES":
             {
-                return "Espanol";
+                return "Español";
             } break;
 
             case "ZH":
             {
                 return "Chinese";
+            } break;
+
+            case "UK":
+            {
+                return "Українська";
+            } break;
+
+            case "RU":
+            {
+                return "Русский";
             } break;
 
             default:
