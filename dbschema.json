@@ -4,7 +4,7 @@
     "version": 2,
     "maps": {
         "topics.json": {
-            "to_table": ["topics", "topics_es", "topics_zh"]
+            "to_table": ["topics", "topics_es", "topics_zh", "topics_uk", "topics_ru"]
         },
         "users/.+/data.json": {
             "to_table": ["stories", "responses", "claps", "files"],
@@ -67,7 +67,7 @@
                 ["tags", "TEXT"],
                 ["json_id", "INTEGER REFERENCES json (json_id)"]
             ],
-            "indexes": ["CREATE UNIQUE INDEX tag_zh_key ON topics_zh (json_id, topic_id)"],
+            "indexes": ["CREATE UNIQUE INDEX tag_uk_key ON topics_zh (json_id, topic_id)"],
             "schema_changed": 14
         },
         "topics_ru": {
@@ -78,7 +78,7 @@
                 ["tags", "TEXT"],
                 ["json_id", "INTEGER REFERENCES json (json_id)"]
             ],
-            "indexes": ["CREATE UNIQUE INDEX tag_zh_key ON topics_zh (json_id, topic_id)"],
+            "indexes": ["CREATE UNIQUE INDEX tag_ru_key ON topics_zh (json_id, topic_id)"],
             "schema_changed": 14
         },
         "stories": {
