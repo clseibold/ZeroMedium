@@ -165,7 +165,7 @@ class ZeroApp extends ZeroFrame {
     }
     
     selectUser(f = null) {
-        this.cmd("certSelect", { accepted_domains: ["zeroid.bit", "kaffie.bit", "cryptoid.bit"] }, () => {
+        this.cmd("certSelect", { accepted_domains: ["zeroid.bit", "kaffie.bit", "cryptoid.bit", "peak.id", "kxoid.bit"] }, () => {
             cache_remove("user_profileInfo");
             cache_remove("user_claps");
             cache_remove("home_recentStories");
