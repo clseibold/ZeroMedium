@@ -1,6 +1,11 @@
 version = "18.01.2"
 allLanguages = ["EN", "ES", "ZH", "UK", "RU"]; // TODO: use in signin-modal?
 
+jdenticon = require("jdenticon");
+jdenticon.config = {
+    replaceMode: "observe"
+};
+
 // Zeroframe
 var ZeroFrame = require("./ZeroFrame.js");
 
