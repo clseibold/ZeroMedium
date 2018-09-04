@@ -163,6 +163,9 @@ Vue.component("profile-hero", {
 			this.$emit("mute");
 		}
 	},
+	updated: function() {
+		jdenticon.update();
+	},
     template: `
         <div class="hero" style="border-top: 1px solid rgba(0,0,0,.05);">
             <div class="container">
