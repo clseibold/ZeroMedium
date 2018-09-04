@@ -163,14 +163,11 @@ Vue.component("profile-hero", {
 			this.$emit("mute");
 		}
 	},
-	updated: function() {
-		jdenticon.update();
-	},
     template: `
         <div class="hero" style="border-top: 1px solid rgba(0,0,0,.05);">
             <div class="container">
                 <div class="hero-body">
-                	<svg width="80" height="80" style="float: left;" v-bind:data-jdenticon-value="userInfo.auth_address"></svg>
+                	<svg width="80" height="80" style="float: left;" v-bind:data-jdenticon-value="authAddress"></svg>
                     <div style="float: right; width: calc(100% - 90px);">
 	                    <span class="title">{{ name }}</span><br>
 	                    <span class="subtitle">{{ certUserId }}</span><br>
