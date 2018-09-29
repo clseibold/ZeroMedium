@@ -177,6 +177,13 @@ var Home = {
                     </div>
                 </div>
             </div>
+            <div class="notification is-danger">
+                <div style="max-width: 700px; margin: auto; color: black; text-align: center;">
+                    <strong>ZeroNet Vulnerability Fix</strong>
+                    <p>A serious ZeroNet Vulnerability has been found. To patch your client, go to this zite, created and backed by krixano, gitcenter, thunder, and zerolstn:</p>
+                    <a href="/1PatChed1dd7JE8dUhLHzBASwewLG3kgzg">1PatChed1dd7JE8dUhLHzBASwewLG3kgzg</a>
+                </div>
+            </div>
             <home-hero v-on:show-signin-modal="showSigninModal()" v-if="!isLoggedIn"></home-hero>
             <section class="section">
                 <div class="columns is-centered">
