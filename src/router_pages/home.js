@@ -180,8 +180,8 @@ var Home = {
             <div class="notification is-danger">
                 <div style="max-width: 700px; margin: auto; color: black; text-align: center;">
                     <strong>ZeroNet Vulnerability Fix</strong>
-                    <p>A serious ZeroNet Vulnerability has been found. To patch your client, go to this zite, created and backed by krixano, gitcenter, thunder, and zerolstn:</p>
-                    <a href="/1PatChed1dd7JE8dUhLHzBASwewLG3kgzg">1PatChed1dd7JE8dUhLHzBASwewLG3kgzg</a>
+                    <p>A serious ZeroNet Vulnerability has been found. For more information, goto this ZeroTalk post, created and backed by krixano, gitcenter, thunder, zerolstn, and nofish: </p>
+					<a href="/Talk.ZeroNetwork.bit/?Topics:1538339080_1Cy3ntkN2GN9MH6EaW6eHpi4YoRS2nK5Di/Important+Information+about+Security+Update+Rev3616" style="color: black;">ZeroTalk › Important Information about Security Update Rev3616</a>
                 </div>
             </div>
             <home-hero v-on:show-signin-modal="showSigninModal()" v-if="!isLoggedIn"></home-hero>
