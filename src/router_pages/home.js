@@ -9,7 +9,12 @@ var Home = {
         this.$emit("navbar-shadow-off");
         var that = this;
         this.getTopics();
-        this.getStories();
+        // Delay to make sure user's keyvalue information inside
+        // userInfo is populated so that we can only query
+        // for stories in the user's selected languages
+        setTimeout(function() {
+            that.getStories();
+        }, 200);
     },
     computed: {
         isLoggedIn: function() {
