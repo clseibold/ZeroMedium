@@ -12,6 +12,12 @@ var Home = {
         // Delay to make sure user's keyvalue information inside
         // userInfo is populated so that we can only query
         // for stories in the user's selected languages
+
+        if (cache_exists("home_recentStories") && cache_exists("home_topStories")) {
+            that.recentStories = cache_get("home_recentStories");
+            that.topStories = cache_get("home_topStories");
+        }
+
         setTimeout(function() {
             that.getStories();
         }, 200);
