@@ -69,13 +69,14 @@ function VueZeroFrameRouter_Init(vueInstance, routes) {
 	Router.vueInstance = vueInstance;
 	Router.setView = function(route, object) {
 		if (this.vueInstance.currentView == object) {
-			var prevobj = object;
+			/*var prevobj = object;
 			object = Object.assign({route: route}, object)
-			console.log(object == prevobj);
+			console.log(object == prevobj);*/
+			vueInstance.$refs.view.$mount();
+			vueInstance.$refs.view.$forceUpdate();
+		} else {
+			this.vueInstance.currentView = object;
 		}
-		this.vueInstance.currentView = object;
-		vueInstance.$refs.view.$mount();
-		vueInstance.$refs.view.$forceUpdate();
 	}
 	Router.init();
 }
