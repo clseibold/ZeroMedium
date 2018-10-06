@@ -85,10 +85,20 @@ var Home = {
             var that = this;
             var now = Date.now();
             var dayTime = 8.64e+7;
+            
+            that.topStories = [];
+            that.recentStories = [];
 
             if (cache_exists("home_recentStories") && cache_exists("home_topStories")) {
                 that.recentStories = cache_get("home_recentStories");
                 that.topStories = cache_get("home_topStories");
+            }
+
+            var languageDBQuery = "";
+
+            if (that.userInfo && that.userInfo.keyvalue.languages) {
+                var userLanguages = that.userInfo.keyvalue.languages.split(",");
+                languageDBQuery = "AND " + page.generateLanguageDBQuery(userLanguages);
             }
 
             var topQuery = `
@@ -101,6 +111,7 @@ var Home = {
                             AND REPLACE(story_json.directory, 'users/', '')!=REPLACE(response_json.directory, 'users/', '')
                             AND responses.reference_type='s'
                             AND (${now} - date_added) <= ${dayTime}
+                            ${languageDBQuery}
                         ORDER BY date_added DESC)
                     + (SELECT COUNT(DISTINCT clap_json.directory)
                         FROM claps
@@ -119,7 +130,6 @@ var Home = {
                 ORDER BY sort_num DESC, stories.date_added DESC
                 LIMIT 5
                 `;
-            that.topStories = [];
             
             page.cmdp("dbQuery", [topQuery])
             .then((stories) => {
@@ -133,10 +143,10 @@ var Home = {
                 LEFT JOIN json USING (json_id)
                 LEFT JOIN keyvalue USING (json_id)
                 WHERE key='name'
+                ${languageDBQuery}
                 ORDER BY date_added DESC
                 LIMIT 5
                 `;
-            that.recentStories = [];
 
             page.cmdp("dbQuery", [recentQuery])
                 .then((stories) => {
@@ -174,6 +184,13 @@ var Home = {
                         <a class="navbar-item" v-on:click.prevent="goto('topics')">All Topics</a>
                         <a class="navbar-item" v-for="topic in topics" :key="topic.topic_id" :href="'./?/topic/' + topic.slug" v-on:click.prevent="topicClick(topic.slug)">{{topic.name}}</a>
                     </div>
+                </div>
+            </div>
+            <div class="notification is-danger">
+                <div style="max-width: 700px; margin: auto; color: black; text-align: center;">
+                    <strong>ZeroNet Vulnerability Fix</strong>
+                    <p>A serious ZeroNet Vulnerability has been found. For more information, goto this ZeroTalk post, created and backed by krixano, gitcenter, thunder, zerolstn, and nofish: </p>
+					<a href="/Talk.ZeroNetwork.bit/?Topics:1538339080_1Cy3ntkN2GN9MH6EaW6eHpi4YoRS2nK5Di/Important+Information+about+Security+Update+Rev3616" style="color: black;">ZeroTalk › Important Information about Security Update Rev3616</a>
                 </div>
             </div>
             <home-hero v-on:show-signin-modal="showSigninModal()" v-if="!isLoggedIn"></home-hero>

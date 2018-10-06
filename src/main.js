@@ -1,6 +1,11 @@
 version = "18.01.2"
 allLanguages = ["EN", "ES", "ZH", "UK", "RU"]; // TODO: use in signin-modal?
 
+jdenticon = require("jdenticon");
+jdenticon.config = {
+    replaceMode: "observe"
+};
+
 // Zeroframe
 var ZeroFrame = require("./ZeroFrame.js");
 
@@ -165,7 +170,7 @@ class ZeroApp extends ZeroFrame {
     }
     
     selectUser(f = null) {
-        this.cmd("certSelect", { accepted_domains: ["zeroid.bit", "kaffie.bit", "cryptoid.bit"] }, () => {
+        this.cmd("certSelect", { accepted_domains: ["zeroid.bit", "kaffie.bit", "cryptoid.bit", "peak.id", "kxoid.bit"] }, () => {
             cache_remove("user_profileInfo");
             cache_remove("user_claps");
             cache_remove("home_recentStories");

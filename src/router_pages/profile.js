@@ -167,12 +167,16 @@ Vue.component("profile-hero", {
         <div class="hero" style="border-top: 1px solid rgba(0,0,0,.05);">
             <div class="container">
                 <div class="hero-body">
-                    <span class="title">{{ name }}</span><br>
-                    <span class="subtitle">{{ certUserId }}</span><br>
-                    <p v-if="authAddress" style="margin-top: 5px;">Donate: <a :href="'bitcoin:' + authAddress + '?message=Donation to ' + name">{{ authAddress }}</a></p>
-                    <p style="margin-top: 5px; margin-bottom: 15px;">{{ about }}</p>
-                    <a class="button is-success is-small" :class="{ 'is-outlined': followText == 'Follow' }" v-on:click.prevent="follow()">{{ followText }}</a>
-                    <a class="button is-danger is-small" v-on:click.prevent="mute()" v-if="userInfo && userInfo.auth_address != authAddress">Mute</a>
+                	<svg width="80" height="80" style="float: left;" v-bind:data-jdenticon-value="authAddress"></svg>
+                    <div style="float: right; width: calc(100% - 90px);">
+	                    <span class="title">{{ name }}</span><br>
+	                    <span class="subtitle">{{ certUserId }}</span><br>
+	                    <p v-if="authAddress" style="margin-top: 5px;">Donate: <a :href="'bitcoin:' + authAddress + '?message=Donation to ' + name">{{ authAddress }}</a></p>
+	                    <p style="margin-top: 5px; margin-bottom: 15px;">{{ about }}</p>
+	                    <a class="button is-success is-small" :class="{ 'is-outlined': followText == 'Follow' }" v-on:click.prevent="follow()">{{ followText }}</a>
+	                    <a class="button is-danger is-small" v-on:click.prevent="mute()" v-if="userInfo && userInfo.auth_address != authAddress">Mute</a>
+	                </div>
+	                <div style="clear: both;"></div>
                 </div>
             </div>
         </div>
