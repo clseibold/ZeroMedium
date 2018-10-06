@@ -111,7 +111,6 @@ var Home = {
                             AND REPLACE(story_json.directory, 'users/', '')!=REPLACE(response_json.directory, 'users/', '')
                             AND responses.reference_type='s'
                             AND (${now} - date_added) <= ${dayTime}
-                            ${languageDBQuery}
                         ORDER BY date_added DESC)
                     + (SELECT COUNT(DISTINCT clap_json.directory)
                         FROM claps
@@ -127,9 +126,12 @@ var Home = {
                 LEFT JOIN json AS story_json USING (json_id)
                 LEFT JOIN keyvalue USING (json_id)
                 WHERE key='name'
+                    ${languageDBQuery}
                 ORDER BY sort_num DESC, stories.date_added DESC
                 LIMIT 5
                 `;
+
+                console.log(topQuery);
             
             page.cmdp("dbQuery", [topQuery])
             .then((stories) => {
@@ -143,7 +145,7 @@ var Home = {
                 LEFT JOIN json USING (json_id)
                 LEFT JOIN keyvalue USING (json_id)
                 WHERE key='name'
-                ${languageDBQuery}
+                    ${languageDBQuery}
                 ORDER BY date_added DESC
                 LIMIT 5
                 `;
