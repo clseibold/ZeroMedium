@@ -94,6 +94,13 @@ var Home = {
                 that.topStories = cache_get("home_topStories");
             }
 
+            var languageDBQuery = "";
+
+            if (that.userInfo && that.userInfo.keyvalue.languages) {
+                var userLanguages = that.userInfo.keyvalue.languages.split(",");
+                languageDBQuery = "AND " + page.generateLanguageDBQuery(userLanguages);
+            }
+
             var topQuery = `
                 SELECT stories.*, story_json.directory, value,
                     ((SELECT COUNT(DISTINCT body)
@@ -104,6 +111,7 @@ var Home = {
                             AND REPLACE(story_json.directory, 'users/', '')!=REPLACE(response_json.directory, 'users/', '')
                             AND responses.reference_type='s'
                             AND (${now} - date_added) <= ${dayTime}
+                            ${languageDBQuery}
                         ORDER BY date_added DESC)
                     + (SELECT COUNT(DISTINCT clap_json.directory)
                         FROM claps
@@ -135,6 +143,7 @@ var Home = {
                 LEFT JOIN json USING (json_id)
                 LEFT JOIN keyvalue USING (json_id)
                 WHERE key='name'
+                ${languageDBQuery}
                 ORDER BY date_added DESC
                 LIMIT 5
                 `;
