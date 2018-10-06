@@ -157,7 +157,7 @@ Router.init = function() {
 	// if '?/' isn't on address - add it
 	var address = window.location.search.replace(/&wrapper_nonce=([A-Za-z0-9]+)/, "").replace(/\?wrapper_nonce=([A-Za-z0-9]+)/, ""); // TODO: Fix this to replace the root instead of just a slash
 	if (address == '') {
-		page.cmd("wrapperPushState", [{ "route": "" }, "", this.root]);
+		page.cmd("wrapperReplaceState", [{ "route": "" }, "", this.root]);
 	}
 	// Resolve the initial route
 	Router.check(Router.getURL());

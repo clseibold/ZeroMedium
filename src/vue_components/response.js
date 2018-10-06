@@ -97,7 +97,7 @@ Vue.component("response", {
 			<small>Published {{ datePosted(response.date_added) }}</small>
 			<div style="margin-top: 10px;">
 				<a class="button is-small is-outlined is-primary" v-on:click.prevent="respond()">Respond</a>
-				<a class="button is-small is-outlined is-info" :href="'./?/' + getAuthAddress + '/response/' + response.response_id" v-if="subResponses && subResponses.length > 0">{{ subResponses.length }} Responses</a>
+				<a class="button is-small is-outlined is-info" :href="'./?/' + getAuthAddress + '/response/' + response.response_id" v-on:click.prevent="goto(getAuthAddress + '/response/' + response.response_id)" v-if="subResponses && subResponses.length > 0">{{ subResponses.length }} Responses</a>
 			</div>
 		</div>
 		`
