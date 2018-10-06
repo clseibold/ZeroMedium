@@ -74,6 +74,8 @@ function VueZeroFrameRouter_Init(vueInstance, routes) {
 			console.log(object == prevobj);
 		}
 		this.vueInstance.currentView = object;
+		vueInstance.$refs.view.$mount();
+		vueInstance.$refs.view.$forceUpdate();
 	}
 	Router.init();
 }
